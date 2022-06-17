@@ -24,11 +24,11 @@ class CreateUsersTable extends Migration
             $table->string('last_name')->nullable();
             $table->string('display_name')->nullable();
             $table->string('image')->nullable();
-            $table->dateTime('registered_date')->nullable();
+            $table->rememberToken();
             $table->tinyInteger('lock_rank')->default(0)->nullable();
             $table->tinyInteger('display_status')->default(0)->nullable();
             $table->string('reg_status')->nullable();
-            $table->rememberToken();
+            $table->dateTime('registered_date')->nullable();
             $table->timestamps();
             $table->softDeletes();        
            
