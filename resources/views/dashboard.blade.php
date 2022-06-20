@@ -5,14 +5,19 @@
             <h6>Engage. Debate. Make. Change</h6>
         </div>
     </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    You're logged in!
-                </div>
-            </div>
-        </div>
-    </div>
+    @if(!empty($politicians))
+        <ul class="politicians-list-ul">
+            @foreach($politicians as $item)
+                <li>
+                    <a target="_blank" href="https://devuforiawork239.site/#/politician/{{$item['id']}}">
+                        <img src="{{$item['politician_image']}}" />
+                    </a>
+                    <span>{{$item['name_alias']}} {{$item['affiliation']}}</span>
+                </li>
+            @endforeach
+        </ul>
+        <x-nav-link :href="route('politicians')" class="btn btn-primary">
+            View all
+        </x-nav-link>
+    @endif
 </x-app-layout>

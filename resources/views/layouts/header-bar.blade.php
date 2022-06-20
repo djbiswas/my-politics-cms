@@ -28,7 +28,14 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" href="#">Profile</a>
-                <a class="dropdown-item" href="logout.php">Logout</a>
+                <form  method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <x-nav-link :href="route('logout')"
+                            onclick="event.preventDefault();
+                            this.closest('form').submit(); " class="dropdown-item">
+                        {{ __('Logout') }}
+                    </x-nav-link>
+                </form>
             </div>
             </li>
         </ul>
