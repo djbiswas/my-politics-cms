@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\CustomApiResponse;
+use App\Http\Requests\UserLoginValidationRequest; 
 use App\Repositories\UserRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -101,9 +102,9 @@ class UserController extends Controller
     /**
      * login API
      *
-     * @param Request $request
+     * @param UserLoginValidationRequest $request
      */
-    public function login(Request $request)
+    public function login(UserLoginValidationRequest $request)
     {
         try {
             $user = $this->userRepository->login($request);
@@ -117,6 +118,7 @@ class UserController extends Controller
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
             }
         } catch (Exception $e) {
+            echo '<pre>'; print_r($e->getMessage()); die;
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
