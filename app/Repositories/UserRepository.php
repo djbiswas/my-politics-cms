@@ -23,6 +23,7 @@ class UserRepository
         $loginCondition = [
             $request->type => $request->value,
             'password' => $request->password,
+            'role' => config('constants.role.user')
         ];
 
         $userLogin = Auth::guard()->attempt($loginCondition);

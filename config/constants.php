@@ -10,4 +10,9 @@ return [
         'true' => 'TRUE',
         'false' => 'FALSE',
     ],
+
+    'role' => [
+        'admin' => 1,
+        'user' => 2,
+    ],
 ];
