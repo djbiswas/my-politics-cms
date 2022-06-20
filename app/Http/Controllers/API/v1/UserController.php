@@ -118,7 +118,6 @@ class UserController extends Controller
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
             }
         } catch (Exception $e) {
-            echo '<pre>'; print_r($e->getMessage()); die;
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
