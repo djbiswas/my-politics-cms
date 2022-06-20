@@ -22,4 +22,5 @@ use App\Http\Controllers\API\v1\UserController;
 Route::group(['namespace' => 'API\v1'], function() {
     // User API
     Route::post('login', [UserController::class, 'login'])->name('user.login');
+    Route::post('forgot-password', [UserController::class, 'forgotPassword'])->name('user.forgot-password');
 });
