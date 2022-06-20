@@ -27,8 +27,8 @@ class UserLoginValidationRequest extends FormRequest
     public function rules()
     {
         return [
-            'type'  => 'required',
-            'value'  => 'required',
+            'fieldType'  => 'required',
+            'fieldValue'  => 'required',
             'password'  => 'required',  
         ];
     }
@@ -36,8 +36,8 @@ class UserLoginValidationRequest extends FormRequest
     public function messages()
     {
         return [
-            'type.required' => 'login type is required.!',
-            'value.required' => 'login value is required.!',
+            'fieldType.required' => 'login field type is required.!',
+            'fieldValue.required' => 'login field value is required.!',
             'password.required' => 'login password is required.!',
         ];
     }

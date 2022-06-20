@@ -21,7 +21,7 @@ class UserRepository
     public function login(Request $request)
     {
         $loginCondition = [
-            $request->type => $request->value,
+            $request->fieldType => $request->fieldValue,
             'password' => $request->password,
             'role' => config('constants.role.user')
         ];
