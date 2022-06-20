@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'My Politics CMS'),
+    'name' => env('APP_NAME', 'My Politics'),
 
     /*
     |--------------------------------------------------------------------------
