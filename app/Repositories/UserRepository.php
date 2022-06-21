@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Exceptions\InvalidCredentialsException;
 use App\Models\User;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Mail;
@@ -57,7 +58,6 @@ class UserRepository
     {
         switch($request->fieldType){
             case('phone'):
-
                 $user = [
                     'phone' => $request->fieldValue
                 ];
@@ -65,11 +65,11 @@ class UserRepository
                 $userDetails = self::fetchUserDetails($user);
 
                 return [
-                    'user' => $userDetails
+                   'action' => 'phoneExistence',
+                   'user' => $userDetails
                 ];
 
             case('email'):
-
                 $user = [
                     'email' => $request->fieldValue
                 ];
@@ -83,6 +83,7 @@ class UserRepository
                 Mail::to($request->fieldValue)->send(new SendForgotPasswordOtpMail($otp));   
 
                 return [
+                    'action' => 'email',
                     'user' => $userDetails
                 ];
 
@@ -117,10 +118,12 @@ class UserRepository
      */
     public function storeOTP(string $otp)
     {
-        $data['otp'] = $otp;
-        $data['expiry_date'] = date("Y-m-d H:i:s", strtotime('+24 hours'));
+        $otpData = [
+            'otp' => $otp,
+            'expiry_date' =>  Carbon::now()->addHours(24)
+        ];
 
-        return OtpData::create($data);        
+        return OtpData::create($otpData);        
     }
 }
 

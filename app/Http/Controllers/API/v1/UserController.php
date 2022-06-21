@@ -178,7 +178,6 @@ class UserController extends Controller
     public function forgotPassword(UserForgotPasswordValidationRequest $request)
     {
         try {
-            echo '<pre>'; print_r($request->all()); die;
             $user = $this->userRepository->forgotPassword($request);
 
             if (!empty($user)) {
