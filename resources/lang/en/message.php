@@ -6,6 +6,6 @@ return [
     'wrong_with_system' => 'Something is going wrong with our system.!',
     'invalid_data' => 'The given data is invalid.!',
     'invalid_otp_user' => 'Invalid OTP.!',
-    'failed' => 'We can not find any account of this email or phone number, please signup.!',
+    'failed' => 'Invalid phone number / email or password.!',
 ]
 ?>

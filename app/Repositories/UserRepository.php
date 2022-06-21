@@ -27,7 +27,7 @@ class UserRepository
         $loginCondition = [
             $request->fieldType => $request->fieldValue,
             'password' => $request->password,
-            'role_id' => config('constants.role.user')
+            //'role_id' => config('constants.role.user')
         ];
 
         $userLogin = Auth::guard()->attempt($loginCondition);
@@ -126,13 +126,12 @@ class UserRepository
     public function changePassword(Request $request)
     {
         $condition = [
-            'id' =>  Auth::user()->id(),
+            'id' =>  Auth::user()->id
         ];
 
         $fields = [
             'password' => bcrypt($request->password)
         ];
-
         $updateUser = self::updateUserData($condition, $fields);
 
         if($updateUser) {
