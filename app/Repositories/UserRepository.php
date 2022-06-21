@@ -11,6 +11,7 @@ use JWTAuth;
 use Mail;
 use App\Mail\SendForgotPasswordOtpMail;
 use App\Models\OtpData;
+use App\Models\UserMeta;
 
 /**
  * Class UserRepository.
@@ -73,14 +74,14 @@ class UserRepository
                 $user = [
                     'email' => $request->fieldValue
                 ];
-               
+
                 $userDetails = self::fetchUserDetails($user);
 
                 $otp = self::generateOTP();
 
                 $storeOtp = self::storeOTP($otp);
 
-                Mail::to($request->fieldValue)->send(new SendForgotPasswordOtpMail($otp));   
+                Mail::to($request->fieldValue)->send(new SendForgotPasswordOtpMail($otp));
 
                 return [
                     'action' => 'email',
@@ -167,7 +168,7 @@ class UserRepository
     {
         return User::where($condition)->firstOrFail();
     }
-    
+
 
     /**
      * For generate otp data
@@ -189,7 +190,7 @@ class UserRepository
             'expiry_date' =>  Carbon::now()->addHours(24)
         ];
 
-        return OtpData::create($otpData);        
+        return OtpData::create($otpData);
     }
 
     /**
@@ -199,6 +200,56 @@ class UserRepository
     {
         return User::where($condition)->update($fields);
     }
+
+    /**
+     * For Updating record into user_meta table
+     */
+    public function updateUserMetaData($condition, $fields)
+    {
+        return UserMeta::updateOrCreate($condition, $fields);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $condition = [
+            'id' =>  Auth::user()->id
+        ];
+
+        $fields = [
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+        ];
+
+        $userDetails = self::fetchUserDetails($condition);
+
+        $updateUser = self::updateUserData($condition, $fields);
+
+        $metaRequest = $request->except('first_name', 'last_name');
+
+        foreach($metaRequest as $key=>$value){
+
+            $metaCondition = [
+                'user_id' =>  Auth::user()->id,
+                'meta_key' => $key
+            ];
+
+            $metaFields = [
+                'user_id' =>  Auth::user()->id,
+                'meta_key' => $key,
+                'meta_value' => $value
+            ];
+
+            $updateUserMeta = self::updateUserMetaData($metaCondition, $metaFields);
+
+        }
+
+        if($updateUser) {
+            return [
+                'user' => self::fetchUserDetails($condition)
+            ];
+        }
+    }
+
 }
 
 ?>

@@ -4,10 +4,10 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\CustomApiResponse;
-use App\Http\Requests\UserChangePasswordValidationRequest; 
-use App\Http\Requests\UserForgotPasswordValidationRequest; 
-use App\Http\Requests\UserLoginValidationRequest; 
-use App\Http\Requests\UserUpdatePasswordValidationRequest; 
+use App\Http\Requests\UserChangePasswordValidationRequest;
+use App\Http\Requests\UserForgotPasswordValidationRequest;
+use App\Http\Requests\UserLoginValidationRequest;
+use App\Http\Requests\UserUpdatePasswordValidationRequest;
 use App\Repositories\UserRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -37,7 +37,7 @@ class UserController extends Controller
      */
     private $userRepository;
 
-    
+
     /**
      * @var CustomApiResponse
      */
@@ -103,7 +103,7 @@ class UserController extends Controller
      *           type="password"
      *       )
      *     ),
-     * 
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Success",
@@ -173,7 +173,7 @@ class UserController extends Controller
      *          type="string"
      *       )
      *     ),
-     * 
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Success",
@@ -214,18 +214,18 @@ class UserController extends Controller
                     case('phone'):
                         $message = trans('lang.phone_otp');
 
-                        return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);      
-        
+                        return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
+
                     case('email'):
                         $message = trans('lang.email_otp');
 
                         return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
-                    
+
                     default:
                         $message = trans('message.record_not_found');
 
                         return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
-            
+
                 }
             }
         } catch (Exception $e) {
@@ -265,7 +265,7 @@ class UserController extends Controller
      *           type="password"
      *       )
      *     ),
-     * 
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Success",
@@ -303,7 +303,7 @@ class UserController extends Controller
                 ];
                 $message = trans('lang.password_update');
 
-                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);   
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
@@ -318,15 +318,15 @@ class UserController extends Controller
     public function updateProfile(Request $request)
     {
         try {
-            $updatePassword = $this->userRepository->updatePassword($request);
+            $updateProfile = $this->userRepository->updateProfile($request);
 
-            if (!empty($updatePassword)) {
+            if (!empty($updateProfile)) {
                 $success = [
-                    $updatePassword
+                    $updateProfile
                 ];
                 $message = trans('lang.profile_update');
 
-                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);   
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
@@ -357,7 +357,7 @@ class UserController extends Controller
      *           type="password"
      *       )
      *     ),
-     * 
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Success",
@@ -442,8 +442,8 @@ class UserController extends Controller
             $this->userRepository->logout($request);
 
             $message = trans('lang.logout');
-            
-            return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), '', $message);   
+
+            return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), '', $message);
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
         }
