@@ -48,13 +48,13 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/v1/login",
+     *     path="/api/login",
      *     tags={"Login"},
      *     summary="User Login",
      *     operationId="user-login",
      *
      *     @OA\Parameter(
-     *       name="type",
+     *       name="fieldType",
      *       in="query",
      *       required=true,
      *       description="mobile or email",
@@ -63,7 +63,7 @@ class UserController extends Controller
      *       )
      *     ),
      *     @OA\Parameter(
-     *       name="value",
+     *       name="fieldValue",
      *       in="query",
      *       required=true,
      *       @OA\Schema(
@@ -78,6 +78,7 @@ class UserController extends Controller
      *           type="password"
      *       )
      *     ),
+     * 
      *     @OA\Response(
      *         response=200,
      *         description="Success",
@@ -125,13 +126,13 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/v1/forgot-password",
+     *     path="/api/forgot-password",
      *     tags={"Forgot Password"},
      *     summary="User Forgot Password",
-     *     operationId="user-forgot-password",
+     *     operationId="forgot-password",
      *
      *     @OA\Parameter(
-     *       name="type",
+     *       name="fieldType",
      *       in="query",
      *       required=true,
      *       description="mobile or email",
@@ -140,13 +141,14 @@ class UserController extends Controller
      *       )
      *     ),
      *     @OA\Parameter(
-     *       name="value",
+     *       name="fieldValue",
      *       in="query",
      *       required=true,
      *       @OA\Schema(
      *          type="string"
      *       )
      *     ),
+     * 
      *     @OA\Response(
      *         response=200,
      *         description="Success",
@@ -176,6 +178,7 @@ class UserController extends Controller
     public function forgotPassword(UserForgotPasswordValidationRequest $request)
     {
         try {
+            echo '<pre>'; print_r($request->all()); die;
             $user = $this->userRepository->forgotPassword($request);
 
             if (!empty($user)) {
@@ -183,7 +186,7 @@ class UserController extends Controller
                     $user
                 ];
 
-                switch($request->fieldType){
+                switch($request->fieldType) {
                     case('phone'):
                         $message = trans('lang.phone_otp');
 

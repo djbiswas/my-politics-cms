@@ -49,17 +49,6 @@ class UserRepository
     }
 
     /**
-     * For selecting the data
-     *
-     * @param array $condition
-     * @throws InvalidOtpException
-     */
-    public function fetchUserDetails(array $condition)
-    {
-        return User::where($condition)->firstOrFail();
-    }
-
-    /**
      * For Forgot Password send otp by email or phone
      *
      * @param Request $request
@@ -103,6 +92,17 @@ class UserRepository
     }
 
     /**
+     * For selecting the data
+     *
+     * @param array $condition
+     * @throws InvalidOtpException
+     */
+    public function fetchUserDetails(array $condition)
+    {
+        return User::where($condition)->firstOrFail();
+    }
+
+    /**
      * For generate otp data
      */
     public function generateOTP()
@@ -120,7 +120,7 @@ class UserRepository
         $data['otp'] = $otp;
         $data['expiry_date'] = date("Y-m-d H:i:s", strtotime('+24 hours'));
 
-        $otpData = OtpData::create($data);        
+        return OtpData::create($data);        
     }
 }
 
