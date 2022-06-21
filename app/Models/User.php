@@ -33,7 +33,8 @@ class User extends Authenticatable implements JWTSubject
         'lock_rank',
         'display_status',
         'reg_status',
-        'registered_date'
+        'registered_date',
+        'phone'
     ];
 
     /**
