@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\CustomApiResponse;
+use App\Http\Requests\UserChangePasswordValidationRequest; 
 use App\Http\Requests\UserForgotPasswordValidationRequest; 
 use App\Http\Requests\UserLoginValidationRequest; 
 use App\Http\Requests\UserUpdatePasswordValidationRequest; 
@@ -333,14 +334,60 @@ class UserController extends Controller
     }
 
     /**
+     * @OA\Patch(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/change-password",
+     *     tags={"Change Password"},
+     *     summary="Change Password",
+     *     operationId="change-password",
+     *
+     *    @OA\Parameter(
+     *       name="password",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="password"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="confirm_password",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *           type="password"
+     *       )
+     *     ),
+     * 
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
      * change-password API
      *
-     * @param Request $request
+     * @param UserChangePasswordValidationRequest $request
      */
-    public function changePassword(Request $request)
+    public function changePassword(UserChangePasswordValidationRequest $request)
     {
         try {
-            $user = $this->userRepository->login($request);
+            $user = $this->userRepository->changePassword($request);
 
             if (!empty($user)) {
                 $success = [
