@@ -24,6 +24,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 Route::middleware('auth')->group(function () {
     Route::get('dashboard', [PoliticianController::class, 'dashboard'])->name('dashboard');
 
-    Route::get('politicians', [PoliticianController::class, 'index'])->name('politicians');
+    Route::get('politicians', [PoliticianController::class, 'index'])->name('politicians.index');
+
+
 });
 require __DIR__.'/auth.php';

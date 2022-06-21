@@ -16,7 +16,7 @@
                 </li>
             @endforeach
         </ul>
-        <x-nav-link :href="route('politicians')" class="btn btn-primary">
+        <x-nav-link :href="route('politicians.index')" class="btn btn-primary">
             View all
         </x-nav-link>
     @endif

@@ -19,6 +19,7 @@
         <link href="{{ asset('assets/css/quill.snow.css') }}" rel="stylesheet">
         <link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet">
         <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
+        @stack('css')
     </head>
 
     <body class="page-index">
@@ -46,6 +47,6 @@
             </main> -->
         </div>
         @include('layouts.footer')
-
+        @stack('scripts')
     </body>
 </html>
