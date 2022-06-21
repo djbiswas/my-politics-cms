@@ -7,6 +7,7 @@ use App\Models\Politician;
 use Exception;
 use Illuminate\Http\Request;
 use Datatables;
+Use App\Services\CommonService;
 
 class PoliticianController extends Controller
 {
@@ -14,10 +15,15 @@ class PoliticianController extends Controller
      * @var politicianRepository
      */
     private $politicianRepository;
-    //
 
-    public function __construct(PoliticianRepository $politicianRepository) {
+    /**
+     * @var commonService
+     */
+    private $commonService;
+
+    public function __construct(PoliticianRepository $politicianRepository, CommonService $commonService) {
         $this->politicianRepository = $politicianRepository;
+        $this->commonService = $commonService;
     }
 
     /**
@@ -44,13 +50,20 @@ class PoliticianController extends Controller
     public function index(Request $request){
         try {
             if ($request->ajax()) {
-                $data = Politician::select('*');
+                $data = Politician::select('*')->where(['deleted_at' => null]);
                 return Datatables::of($data)
                         ->addIndexColumn()
+                        ->editColumn('politician_description',function($row){
+                            return $this->commonService->limit_text($row->politician_description,10);
+                        })
+                        ->editColumn('updated_at',function($row){
+                            if(empty($row->updated_at)){
+                                return '';
+                            }
+                            return date('Y-m-d H:i',strtotime($row->updated_at));
+                        })
                         ->addColumn('action', function($row){
-           
-                                $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
-          
+                                $btn = '<a href="{{route("get.politician")}}/'.$row->id.'">Edit </a> | <a class="btn-delete" href="{{route("get.politician")}}/'.$row->id.'">Delete </a>';
                                 return $btn;
                         })
                         ->rawColumns(['action'])
@@ -62,5 +75,23 @@ class PoliticianController extends Controller
             echo '<pre>'; print_r($e->getMessage()); die;
             return $this->apiResponse->handleAndResponseException($e);
         }
+    }
+    /**
+     * Method to get Politician Data through id
+     * 
+     * @param $id
+     */
+    public function getPolitician($id=null){
+        $politician=Politician::select('*')->where(['id' => $id]);
+        return view('politician.add-form',['data'=>$politician]);
+    }
+
+    /**
+     * Method to post politician data
+     * 
+     */
+    public function postPolitician(){
+        $politician=Politician::select('*');
+        return view('politician.add-form',['data'=>$politician]);
     }
 }

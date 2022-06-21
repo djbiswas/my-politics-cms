@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PoliticianController;
+use App\Http\Controllers\UserController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -24,8 +25,16 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 Route::middleware('auth')->group(function () {
     Route::get('dashboard', [PoliticianController::class, 'dashboard'])->name('dashboard');
 
+    //Route for politician
     Route::get('politicians', [PoliticianController::class, 'index'])->name('politicians.index');
+    Route::get('get-politician/{id}', [PoliticianController::class, 'getPolitician'])->name('get.politician');
+    Route::post('post-politician', [PoliticianController::class, 'postPolitician'])->name('post.politician');
 
+    //Route for user
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('get-user/{id}', [UserController::class, 'getUser'])->name('get.user');
+    Route::post('post-user', [UserController::class, 'postUser'])->name('post.user');
 
+    
 });
 require __DIR__.'/auth.php';
