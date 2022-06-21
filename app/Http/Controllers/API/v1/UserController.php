@@ -48,6 +48,29 @@ class UserController extends Controller
     }
 
     /**
+     * Register API
+     *
+     * @param Request $request
+     */
+    public function Register(Request $request)
+    {
+        try {
+            $user = $this->userRepository->login($request);
+
+            if (!empty($user)) {
+                $success = [
+                    $user
+                ];
+                $message = trans('lang.register');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
      * @OA\Post(
      *     path="/v1/login",
      *     tags={"Login"},
@@ -280,6 +303,52 @@ class UserController extends Controller
                 $message = trans('lang.password_update');
 
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);   
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * Update-profile API
+     *
+     * @param Request $request
+     */
+    public function updateProfile(Request $request)
+    {
+        try {
+            $updatePassword = $this->userRepository->updatePassword($request);
+
+            if (!empty($updatePassword)) {
+                $success = [
+                    $updatePassword
+                ];
+                $message = trans('lang.profile_update');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);   
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * change-password API
+     *
+     * @param Request $request
+     */
+    public function changePassword(Request $request)
+    {
+        try {
+            $user = $this->userRepository->login($request);
+
+            if (!empty($user)) {
+                $success = [
+                    $user
+                ];
+                $message = trans('lang.password_update');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);

@@ -21,12 +21,15 @@ use App\Http\Controllers\API\v1\UserController;
 
 Route::group(['namespace' => 'API\v1'], function() {
     // User API
+    Route::post('register', [UserController::class, 'register'])->name('user.register');
     Route::post('login', [UserController::class, 'login'])->name('user.login');
     Route::post('forgot-password', [UserController::class, 'forgotPassword'])->name('user.forgot-password');
     Route::post('update-password', [UserController::class, 'updatePassword'])->name('user.update-password');
 
     Route::group(['middleware' => ['jwt.verify']], function () {
-        // User Logout API
+        // User API
+        Route::post('update-profile', [UserController::class, 'updateProfile'])->name('user.update-profile');
+        Route::patch('change-password', [UserController::class, 'changePassword'])->name('user.change-password');
         Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
     });
 });
