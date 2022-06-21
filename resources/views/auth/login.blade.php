@@ -2,7 +2,7 @@
 @section('content')
     <form class="form-signin {{($errors->any())? 'shake': ''}}" action="{{ route('login') }}" method="post">
         @csrf
-        <img class="logo" src="{{ asset('login-assets/img/logo.png')}}" alt="">
+        <img class="logo" src="{{ asset('assets/img/logo.png')}}" alt="">
         <h1 class="h3 mb-3 font-weight-normal"> CMS Login</h1>
         <div class="form-group">
             <label for="inputEmail">Email address</label>
