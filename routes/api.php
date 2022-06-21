@@ -24,4 +24,9 @@ Route::group(['namespace' => 'API\v1'], function() {
     Route::post('login', [UserController::class, 'login'])->name('user.login');
     Route::post('forgot-password', [UserController::class, 'forgotPassword'])->name('user.forgot-password');
     Route::post('update-password', [UserController::class, 'updatePassword'])->name('user.update-password');
+
+    Route::group(['middleware' => ['jwt.verify']], function () {
+        // User Logout API
+        Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
+    });
 });

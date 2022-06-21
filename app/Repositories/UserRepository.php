@@ -27,7 +27,7 @@ class UserRepository
         $loginCondition = [
             $request->fieldType => $request->fieldValue,
             'password' => $request->password,
-            'role_id' => config('constants.role.user')
+            // 'role_id' => config('constants.role.user')
         ];
 
         $userLogin = Auth::guard()->attempt($loginCondition);
@@ -119,6 +119,22 @@ class UserRepository
     }
 
     /**
+     * For Logout user
+     *
+     * @param Request $request
+     */
+    public function logout($request)
+    {
+        $token = $request->header('Authorization');
+        $parseValue = JWTAuth::parseToken();
+        $userId = $parseValue->authenticate()->id;
+        $parseValue->invalidate($token);
+
+        return true;
+    }
+
+
+    /**
      * For selecting the data
      *
      * @param array $condition
@@ -128,6 +144,7 @@ class UserRepository
     {
         return User::where($condition)->firstOrFail();
     }
+    
 
     /**
      * For generate otp data

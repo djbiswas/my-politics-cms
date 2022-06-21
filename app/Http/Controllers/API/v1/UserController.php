@@ -285,4 +285,51 @@ class UserController extends Controller
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
+
+    /**
+     * @OA\Get(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/logout",
+     *     tags={"Logout"},
+     *     description="Logout API for user",
+     *     operationId="logout",
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Logout API
+     *
+     * @param Request $request
+     */
+    public function logout(Request $request)
+    {
+        try {
+            $this->userRepository->logout($request);
+
+            $message = trans('lang.logout');
+            
+            return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), '', $message);   
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
 }
