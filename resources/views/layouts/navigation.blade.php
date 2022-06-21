@@ -27,24 +27,28 @@ $current_page = '';
                     <i class="nc-icon nc-minimal-down dropdown-btn"></i>
                 </x-nav-link>
                 <div class="dropdown-container">
-                    <a href="{{route('politicians.index')}}" class="">All Politicians</a>
+                    <x-nav-link :href="route('politicians.index')" :active="request()->routeIs('politicians.index')" >
+                        All Politicians
+                    </x-nav-link>
                     <a href="add-politician.php" class="">Add New</a>
                     <a href="p-categories.php" class="">Categories</a>
                 </div>
             </x-nav-li>
-            <x-nav-li :active="request()->routeIs('politicians.index')" class="v-dropdown">
-                <x-nav-link :href="route('dashboard')">
+            <x-nav-li  :active="request()->routeIs('users.index')" class="v-dropdown">
+                <x-nav-link :href="route('users.index')">
                     <i class="nc-icon nc-single-02"></i>
                     <p>Users</p>
                     <i class="nc-icon nc-minimal-down dropdown-btn"></i>
                 </x-nav-link>
                 <div class="dropdown-container">
-                    <a href="users.php" class="">All Users</a>
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')" >
+                        All Users
+                    </x-nav-link>
                     <a href="add-user.php" class="">Add New</a>
                     <a href="user-ranks.php" class="">Ranks</a>
                 </div>
             </x-nav-li>
-            <x-nav-li :active="request()->routeIs('politicians.index')" class="v-dropdown">
+            <x-nav-li  class="v-dropdown">
                 <x-nav-link :href="route('dashboard')">
                     <i class="nc-icon nc-tag-content"></i>
                     <p>Pages</p>
@@ -55,7 +59,7 @@ $current_page = '';
                     <a href="add-page.php" class="">Add New</a>
                 </div>
             </x-nav-li>
-            <x-nav-li :active="request()->routeIs('politicians.index')" class="v-dropdown">
+            <x-nav-li  class="v-dropdown">
                 <x-nav-link :href="route('dashboard')">
                     <i class="nc-icon nc-laptop"></i>
                     <p>Lessons</p>
@@ -66,7 +70,7 @@ $current_page = '';
                     <a href="add-lesson.php" class="<?php echo ($current_page == 'add-lesson.php') ? 'active' : ''; ?>">Add New</a>
                 </div>
             </x-nav-li>
-            <x-nav-li :active="request()->routeIs('politicians.index')" class="v-dropdown">
+            <x-nav-li  class="v-dropdown">
                 <x-nav-link :href="route('dashboard')">
                 <i class="nc-icon nc-atom"></i>
                     <p>Issues</p>
@@ -76,7 +80,7 @@ $current_page = '';
                     <a href="issues.php" class="<?php echo ($current_page == 'settings.php') ? 'active' : ''; ?>">All Issues</a>
                 </div>
             </x-nav-li>
-            <x-nav-li :active="request()->routeIs('politicians.index')" class="v-dropdown">
+            <x-nav-li  class="v-dropdown">
                 <x-nav-link :href="route('dashboard')">
                     <i class="nc-icon nc-settings-gear-65"></i>
                     <p>Settings</p>
