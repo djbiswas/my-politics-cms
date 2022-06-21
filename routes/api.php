@@ -23,4 +23,5 @@ Route::group(['namespace' => 'API\v1'], function() {
     // User API
     Route::post('login', [UserController::class, 'login'])->name('user.login');
     Route::post('forgot-password', [UserController::class, 'forgotPassword'])->name('user.forgot-password');
+    Route::post('update-password', [UserController::class, 'updatePassword'])->name('user.update-password');
 });

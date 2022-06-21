@@ -4,8 +4,9 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\CustomApiResponse;
-use App\Http\Requests\UserLoginValidationRequest; 
 use App\Http\Requests\UserForgotPasswordValidationRequest; 
+use App\Http\Requests\UserLoginValidationRequest; 
+use App\Http\Requests\UserUpdatePasswordValidationRequest; 
 use App\Repositories\UserRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -48,7 +49,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/login",
+     *     path="/v1/login",
      *     tags={"Login"},
      *     summary="User Login",
      *     operationId="user-login",
@@ -126,7 +127,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/forgot-password",
+     *     path="/v1/forgot-password",
      *     tags={"Forgot Password"},
      *     summary="User Forgot Password",
      *     operationId="forgot-password",
@@ -178,11 +179,11 @@ class UserController extends Controller
     public function forgotPassword(UserForgotPasswordValidationRequest $request)
     {
         try {
-            $user = $this->userRepository->forgotPassword($request);
+            $forgotPassword = $this->userRepository->forgotPassword($request);
 
-            if (!empty($user)) {
+            if (!empty($forgotPassword)) {
                 $success = [
-                    $user
+                    $forgotPassword
                 ];
 
                 switch($request->fieldType) {
@@ -202,6 +203,83 @@ class UserController extends Controller
                         return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
             
                 }
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/v1/update-password",
+     *     tags={"Update Password"},
+     *     summary="User Update Password",
+     *     operationId="update-password",
+     *
+     *     @OA\Parameter(
+     *       name="fieldType",
+     *       in="query",
+     *       required=true,
+     *       description="mobile or email",
+     *       @OA\Schema(
+     *          type="string"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="fieldValue",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="string"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="password",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *           type="password"
+     *       )
+     *     ),
+     * 
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * update-password API
+     *
+     * @param UserUpdatePasswordValidationRequest $request
+     */
+    public function updatePassword(UserUpdatePasswordValidationRequest $request)
+    {
+        try {
+            $updatePassword = $this->userRepository->updatePassword($request);
+
+            if (!empty($updatePassword)) {
+                $success = [
+                    $updatePassword
+                ];
+                $message = trans('lang.password_update');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);   
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);

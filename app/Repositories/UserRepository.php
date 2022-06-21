@@ -93,6 +93,32 @@ class UserRepository
     }
 
     /**
+     * For Updating the record respective model in storage
+     *
+     * @param Request $request
+     */
+    public function updatePassword(Request $request)
+    {
+        $condition = [
+            $request->fieldType => $request->fieldValue,
+        ];
+
+        $fields = [
+            'password' => bcrypt($request->password)
+        ];
+
+        $userDetails = self::fetchUserDetails($condition);
+
+        $updateUser = self::updateUserData($condition, $fields);
+
+        if($updateUser) {
+            return [
+                'user' => self::fetchUserDetails($condition)
+            ];
+        }
+    }
+
+    /**
      * For selecting the data
      *
      * @param array $condition
@@ -124,6 +150,14 @@ class UserRepository
         ];
 
         return OtpData::create($otpData);        
+    }
+
+    /**
+     * For Updating record into table
+     */
+    public function updateUserData($condition, $fields)
+    {
+        return User::where($condition)->update($fields);
     }
 }
 
