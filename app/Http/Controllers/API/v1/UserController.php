@@ -53,10 +53,10 @@ class UserController extends Controller
      *
      * @param Request $request
      */
-    public function Register(Request $request)
+    public function register(Request $request)
     {
         try {
-            $user = $this->userRepository->login($request);
+            $user = $this->userRepository->register($request);
 
             if (!empty($user)) {
                 $success = [
@@ -67,6 +67,7 @@ class UserController extends Controller
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
             }
         } catch (Exception $e) {
+            dd($e);
             return $this->apiResponse->handleAndResponseException($e);
         }
     }

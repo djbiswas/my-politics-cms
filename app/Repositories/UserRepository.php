@@ -169,6 +169,15 @@ class UserRepository
         return User::where($condition)->firstOrFail();
     }
 
+    /**
+     * For selecting the data
+     *
+     * @param array $condition
+     */
+    public function getUserDetails(array $condition)
+    {
+        return User::where($condition)->first();
+    }
 
     /**
      * For generate otp data
@@ -250,6 +259,305 @@ class UserRepository
         }
     }
 
+    public function register(Request $request){
+
+        switch ($request->step) {
+
+            case (1):
+
+                $result = self::sendVerificationCode($request);
+
+                return $result;
+
+                break;
+
+            case (2):
+
+                $result = self::userRegistrationStepTwo($request);
+
+                return $result;
+
+                break;
+
+            case (3):
+
+                $result = self::userRegistrationStepThree($request);
+
+                return $result;
+
+                break;
+
+            default:
+
+                return [];
+        }
+    }
+
+
+    public function sendVerificationCode(object $request){
+
+        switch ($request->fieldType) {
+
+            case('email'):
+
+            case('resendVerificationEmail'):
+
+                $user = [
+                    'email' => $request->fieldValue
+                ];
+
+                $userDetails = self::getUserDetails($user);
+
+                if(empty($userDetails)){
+
+                    $otp = self::generateOTP();
+
+                    $storeOtp = self::storeOTP($otp);
+
+                    Mail::to($request->fieldValue)->send(new SendForgotPasswordOtpMail($otp));
+
+                    return [
+                        'action' => 'emailOTPsend',
+                        'status' => 'success'
+                    ];
+
+                }
+
+                break;
+
+            case('phone'):
+
+                $user = [
+                    'phone' => $request->fieldValue
+                ];
+
+                $userDetails = self::getUserDetails($user);
+
+                if(empty($userDetails)){
+
+                    //send otp
+
+                    return [
+                        'action' => 'phoneOTPsend',
+                        'status' => 'success'
+                     ];
+
+                }
+
+                break;
+
+            default:
+
+                return [
+                    'action' => 'step1',
+                    'status' => 'error'
+                ];
+
+        }
+
+    }
+
+    public function userRegistrationStepTwo(object $request) {
+
+        switch ($request->fieldType) {
+
+            case ('email'):
+
+                $user = [
+                    'email' => $request->fieldValue
+                ];
+
+                $userDetails = self::getUserDetails($user);
+
+                break;
+
+            case ('phone'):
+
+                $user = [
+                    'phone' => $request->fieldValue
+                ];
+
+                $userDetails = self::getUserDetails($user);
+
+        }
+        if (empty($userDetails)) {
+
+            $data = self::registerUserSetpTwo($request);
+
+            if (!empty($data)) {
+                return [
+                    'action' => 'step_two',
+                    'status' => 'success'
+                ];
+            }
+
+        } else {
+
+           return [
+                'action' => 'step_two',
+                'status' => 'error'
+            ];
+
+        }
+
+        return $result;
+    }
+
+    public function registerUserSetpTwo($request) {
+
+        switch ($request->fieldType) {
+
+            case ('email'):
+
+                $otp = $request->validationCode;
+
+                $data = self::verifyOtp($otp);
+
+                if (!empty($data)) {
+
+                    self::deleteOtp($otp);
+
+                    $userData = self::registerUser($request);
+
+                    return $userData;
+
+                }
+
+                break;
+
+            case ('phone'):
+
+                $userData = self::registerUser($request);
+
+                return $userData;
+
+                break;
+
+        }
+    }
+
+    public function verifyOtp($otp) {
+
+       $otpData = OtpData::where('otp', $otp)->where('expiry_date', '>=', now())->first();
+
+        return $otpData;
+    }
+
+    public function deleteOtp($otp) {
+
+        $otpData = OtpData::where('otp', $otp)->where('expiry_date', '>=', now())->first();
+
+        $otpData->delete();
+
+        return $otpData;
+    }
+
+    public function registerUser($request) {
+
+        $fields = [
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'reg_status' => 2,
+            'registered_date' => now(),
+            'rank_id' => 0,
+            'role_id' => 1
+        ];
+
+        $user = User::create($fields);
+
+        return $user;
+    }
+
+    public function userRegistrationStepThree($request){
+
+        $email = $request->email;
+
+        $fieldType = $request->fieldType;
+
+        if ($fieldType == 'phone') {
+
+            $user = [
+                    'email' => $request->fieldValue
+                ];
+
+                $userDetails = self::getUserDetails($user);
+
+            if (empty($userDetails)) {
+
+                $status = self::registerUserStepThree($request);
+                if ($status == 1) {
+                    return [
+                        'action' => 'step_three',
+                        'status' => 'success'
+                    ];
+                }
+            } else {
+                return [
+                    'action' => 'step_three',
+                    'status' => 'error'
+                ];
+            }
+        } else {
+
+            $registeredUser = self::registerUserStepThree($request);
+
+            if (!empty($registeredUser)) {
+                return [
+                    'action' => 'step_three',
+                    'status' => 'success'
+                ];
+            } else {
+                return [
+                    'action' => 'step_three',
+                    'status' => 'error'
+                ];
+            }
+        }
+
+        return $result;
+
+    }
+
+    public function registerUserStepThree($request){
+
+        $condition = [
+            'email' => $request->email
+        ];
+
+        $fields = [
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'reg_status' => 3
+        ];
+
+        $userDetails = self::fetchUserDetails($condition);
+
+        $updateUser = self::updateUserData($condition, $fields);
+
+        $metaRequest = $request->except('first_name', 'last_name', 'email', 'phone', 'reg_status', 'registered_date');
+
+        foreach($metaRequest as $key=>$value){
+
+            $metaCondition = [
+                'user_id' =>  $userDetails->id,
+                'meta_key' => $key
+            ];
+
+            $metaFields = [
+                'user_id' =>  $userDetails->id,
+                'meta_key' => $key,
+                'meta_value' => $value
+            ];
+
+            $updateUserMeta = self::updateUserMetaData($metaCondition, $metaFields);
+
+            return $userDetails;
+        }
+
+    }
 }
+
 
 ?>
