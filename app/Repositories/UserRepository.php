@@ -457,7 +457,7 @@ class UserRepository
         $fields = [
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'reg_status' => 2,
+            'reg_status' => '{"step":2,"status":0}',
             'registered_date' => now(),
             'rank_id' => 0,
             'role_id' => 1
@@ -529,7 +529,7 @@ class UserRepository
             'last_name' => $request->last_name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'reg_status' => 3
+            'reg_status' => '{"step":3,"status":1}'
         ];
 
         $userDetails = self::fetchUserDetails($condition);
