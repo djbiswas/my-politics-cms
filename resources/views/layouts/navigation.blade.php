@@ -34,7 +34,7 @@ $current_page = '';
                     <a href="p-categories.php" class="">Categories</a>
                 </div>
             </x-nav-li>
-            <x-nav-li  :active="request()->routeIs('users.index')" class="v-dropdown">
+            <x-nav-li  :active="request()->routeIs('users.index', 'ranks.index', 'get.rank')" class="v-dropdown">
                 <x-nav-link :href="route('users.index')">
                     <i class="nc-icon nc-single-02"></i>
                     <p>Users</p>
@@ -45,7 +45,9 @@ $current_page = '';
                         All Users
                     </x-nav-link>
                     <a href="add-user.php" class="">Add New</a>
-                    <a href="user-ranks.php" class="">Ranks</a>
+                    <x-nav-link :href="route('ranks.index')" :active="request()->routeIs('ranks.index', 'get.rank')" >
+                        Ranks
+                    </x-nav-link>
                 </div>
             </x-nav-li>
             <x-nav-li  class="v-dropdown">

@@ -48,5 +48,25 @@
         </div>
         @include('layouts.footer')
         @stack('scripts')
+        <script>
+            $('document').ready(function(){
+                    $("#validForm").validate({
+                        ignore:":not(:visible)",
+                        highlight: function(element) {
+                            $(element).closest('.form-group').addClass('has-error was-validated');
+                        },
+                        unhighlight: function(element) {
+                            $(element).closest('.form-group').removeClass('has-error was-validated');
+                        },
+                        errorClass:"error error_preview",
+                        invalidHandler: function(event, validator) {
+                            validator.numberOfInvalids()&&validator.errorList[0].element.focus();
+                        },
+                        submitHandler: function (form) {
+                            return true;
+                        }
+                    });
+            });
+        </script>
     </body>
 </html>
