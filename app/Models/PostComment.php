@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-class Category extends Model
+class PostComment extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name', 'description', 'created_by', 'updated_by', 'status'
+        'parent_comment_id', 'user_id', 'post_id ', 'comment', 'gif', 'image', 'status'
     ];
 
     /**
@@ -25,23 +25,23 @@ class Category extends Model
     {
         return $query->where('status', config('constants.status.active'));
     }
-
-    public function getIconAttribute()
+    
+    public function getImageAttribute()
     {
-        if (Str::of($this->attributes['icon'], 'uploads')) {
-            $image = Str::of($this->attributes['icon'])->explode('/');
+        if (Str::of($this->attributes['image'], 'uploads')) {
+            $image = Str::of($this->attributes['image'])->explode('/');
             $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
         } else {
-            $imagePath = config('constants.image.category') . DIRECTORY_SEPARATOR . $this->attributes['icon'];
+            $imagePath = config('constants.image.post_comment_image') . DIRECTORY_SEPARATOR . $this->attributes['image'];
         }
         
         $disk = Storage::disk(config('constants.image.driver'));
         if (!empty($this->attributes['avatar']) && $disk->exists($imagePath)) {
-            $fetchIcon = Storage::url($imagePath);
+            $fetchImage = Storage::url($imagePath);
         } else {
-            $fetchIcon = config('constants.image.defaultImage');
+            $fetchImage = config('constants.image.defaultImage');
         }
 
-        return $fetchIcon;
+        return $fetchImage;
     }
 }

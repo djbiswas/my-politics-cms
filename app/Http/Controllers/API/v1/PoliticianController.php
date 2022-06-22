@@ -9,7 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 
 
-class PoliticianCategoryController extends Controller
+class PoliticianController extends Controller
 {
 
     /**
@@ -62,16 +62,16 @@ class PoliticianCategoryController extends Controller
      *
      * 
      */
-    public function getPoliticianCategories()
+    public function getPoliticians()
     {
         try {
-            $category = $this->categoryRepository->getPoliticianCategories();
+            $politicians = $this->categoryRepository->getPoliticians();
 
-            if (!empty($category)) {
+            if (!empty($politicians)) {
                
-                $message = trans('lang.get_categories');
+                $message = trans('lang.get_politicians');
 
-                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $category, $message);
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicians, $message);
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);

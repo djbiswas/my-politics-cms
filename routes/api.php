@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\v1\UserController;
 use App\Http\Controllers\API\v1\PoliticianCategoryController;
+use App\Http\Controllers\API\v1\PoliticianController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,6 +30,9 @@ Route::group(['namespace' => 'API\v1'], function() {
 
     // Get Potician Catgory API 
     Route::get('get-politician-categories', [PoliticianCategoryController::class, 'getPoliticianCategories'])->name('get.politician.categories');
+
+    // Get Potician API 
+    Route::post('get-politicians', [PoliticianController::class, 'getPoliticians'])->name('get.politicians');
 
     Route::group(['middleware' => ['jwt.verify']], function () {
         // User API

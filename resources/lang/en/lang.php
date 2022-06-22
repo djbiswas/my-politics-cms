@@ -8,6 +8,7 @@ return [
     'password_update' => 'Password is updated successfully.!',
     'profile_update' => 'Profile is updated successfully.!',
     'logout' => 'Logout successfully.!',
-    'categories' => 'Categories are fetched successfully.!'
+    'get_categories' => 'Categories are fetched successfully.!',
+    'get_politicians' => 'Politicans are fetched successfully.!',
 ]
 ?>
