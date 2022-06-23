@@ -2,7 +2,7 @@
 
 @php
 $classes = ($active ?? false)
-            ? ''
+            ? 'active'
             : '';
 @endphp
 

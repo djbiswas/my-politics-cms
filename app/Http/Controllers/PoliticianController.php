@@ -76,6 +76,7 @@ class PoliticianController extends Controller
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
+    
     /**
      * Method to get Politician Data through id
      * 

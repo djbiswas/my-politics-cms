@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PoliticianController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RankController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -34,6 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('get-user/{id}', [UserController::class, 'getUser'])->name('get.user');
     Route::post('post-user', [UserController::class, 'postUser'])->name('post.user');
+
+    //Route for rank
+    Route::get('ranks', [RankController::class, 'index'])->name('ranks.index');
+    Route::get('get-rank/{id}', [RankController::class, 'getRank'])->name('get.rank');
+    Route::post('post-rank', [RankController::class, 'postRank'])->name('post.rank');
 
     
 });
