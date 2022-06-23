@@ -10,5 +10,6 @@ return [
     'logout' => 'Logout successfully.!',
     'get_categories' => 'Categories are fetched successfully.!',
     'get_politicians' => 'Politicans are fetched successfully.!',
+    'create_post' => 'Post is created successfully.!',
 ]
 ?>

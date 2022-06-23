@@ -28,7 +28,7 @@ class Category extends Model
 
     public function getIconAttribute()
     {
-        if (Str::of($this->attributes['icon'], 'uploads')) {
+        if (Str::contains($this->attributes['icon'], 'uploads')) {
             $image = Str::of($this->attributes['icon'])->explode('/');
             $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
         } else {

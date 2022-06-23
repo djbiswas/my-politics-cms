@@ -2,18 +2,17 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -54,9 +53,24 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    /**
+     *
+     * @param type $query
+     * @return type Illuminate\Support\Collection
+     */
+    public function scopeOnlyActive($query)
+    {
+        return $query->where('status', config('constants.status.active'));
+    }
+
     public function getImageAttribute()
     {
-        if (Str::of($this->attributes['image'], 'uploads')) {
+        if (Str::contains($this->attributes['image'], 'uploads')) {
             $image = Str::of($this->attributes['image'])->explode('/');
             $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
         } else {
