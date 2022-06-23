@@ -43,6 +43,7 @@ Route::group(['namespace' => 'API\v1'], function() {
         Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
 
         //Post API
-        Route::post('create-post', [PostController::class, 'createPost'])->name('create.post');
+        Route::post('create-post', [PostController::class, 'createPost'])->name('user.create.post');
+        Route::delete('delete-post', [PostController::class, 'deletePost'])->name('user.delete.post');
     });
 });

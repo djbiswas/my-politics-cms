@@ -67,6 +67,23 @@ class PostRepository
             'post' => $post
         ];
     }
+
+    /**
+     * For delteting the record respective model in storage
+     *
+     * @param Request $request
+     */
+    public function deletePost(Request $request)
+    {
+        $postData = [
+            'user_id' => Auth::user()->id,
+            'post_id' => $request->post_id,
+        ];    
+
+        $post = Post::where($postData)->delete();
+
+        return true;
+    }
 }
 
 ?>
