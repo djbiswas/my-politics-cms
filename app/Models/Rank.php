@@ -28,20 +28,16 @@ class Rank extends Model
     
     public function getImageAttribute()
     {
-        if (Str::of($this->attributes['image'], 'uploads')) {
-            $image = Str::of($this->attributes['image'])->explode('/');
-            $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
-        } else {
-            $imagePath = config('constants.image.politican') . DIRECTORY_SEPARATOR . $this->attributes['image'];
+        $fetchPath = "";
+        if (!empty($this->attributes['image'])) {
+            if (Str::contains($this->attributes['image'], 'uploads')) {
+                $image = Str::of($this->attributes['image'])->explode('/');
+                $fetchPath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
+            } else {
+                $imagePath = config('constants.image.rank') . DIRECTORY_SEPARATOR . $this->attributes['image'];
+                $fetchPath = Storage::url($imagePath);
+            }
         }
-        
-        $disk = Storage::disk(config('constants.image.driver'));
-        if (!empty($this->attributes['avatar']) && $disk->exists($imagePath)) {
-            $fetchImage = Storage::url($imagePath);
-        } else {
-            $fetchImage = config('constants.image.defaultImage');
-        }
-
-        return $fetchImage;
+        return $fetchPath;
     }
 }

@@ -33,26 +33,21 @@
         </div>
         <div class="form-group-two">
             <label for="formFile" class="form-label">Image</label>
-                @if($data && $path)
+                @if($data && $data->image)
                     <div class="p-image-sec">
                         <div class="p-image-container">
-                            <img class="p-image" src="{{$path}}"/>
+                            <img class="p-image" src="{{asset($data->image)}}"/>
                             <button type="button" class="close btn-img-clear" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <input type="hidden" class="existing_image" name="image_existing" value="1" />
                         <input class="form-control form-file" type="file" id="formFile" name='image'>
-                        <input value="{{$path}}" type="hidden" name='ex_img_path'>
+                        <input value="{{asset($data->image)}}" type="hidden" name='ex_img_path'>
                     </div>
                 @else
                     <input class="form-control" type="file" id="formFile" name='image'>
                 @endif
-            <?php
-            if (isset($_GET['id'])) {
-                echo '<input type="hidden" name="id" value="' . $_GET['id'] . '" />';
-            }
-            ?>
         </div>
         <div class="form-group">
             <label for="inputPostcount">Number of Post Count(to qualify this Rank)</label>
@@ -69,13 +64,6 @@
             <label for="inputtexteditor">Description</label>
             <textarea id='long_desc' class="ckeditor" name='long_desc' >{{ (!empty($data)) ? $data->long_desc : '' }}</textarea><br>
         </div>
-
-        
-        <?php
-        if (isset($_GET['id'])) {
-            echo '<input type="hidden" name="id" value="' . $_GET['id'] . '" />';
-        }
-        ?>
         <input type="submit" name='Save' class="btn btn-primary" />
     </form>
 </div>

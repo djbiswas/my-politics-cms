@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\RankRepository;
+use Datatables;
 use App\Models\Rank;
 
 class RankController extends Controller
@@ -30,17 +31,12 @@ class RankController extends Controller
     public function index(Request $request){
         try {
             if ($request->ajax()) {
-                $data = Rank::select('*')->where(['deleted_at' => null]);
-                return \Datatables::of($data)
+                $data = Rank::select('*');
+                return Datatables::of($data)
                         ->addIndexColumn()
                         ->editColumn('image',function($row){
                             if(!empty($row->image)){
-                                if (str_contains($row->image, 'uploads')) { 
-                                    $path = asset($row->image);
-                                }else{
-                                    $path = asset('storage/rank/'.$row->image);
-                                }
-                                $img = '<img src="'.$path.'" alt="'.$row->title.'"/>';
+                                $img = '<img src="'.asset($row->image).'" alt="'.$row->title.'"/>';
                                 return $img;
                             }
                             return "";
@@ -66,15 +62,7 @@ class RankController extends Controller
      */
     public function getRank($id=null){
         $getRank=Rank::select('*')->where(['id' => $id])->first();
-        $path = "";
-        if($getRank->image){
-            if (str_contains($getRank->image, 'uploads')) { 
-                $path = asset($getRank->image);
-            }else{
-                $path = asset('storage/rank/'.$getRank->image);
-            }
-        }
-        return view('ranks.main-rank',['data'=>$getRank, 'path'=>$path]);
+        return view('ranks.main-rank',['data'=>$getRank]);
     }
 
     /**
@@ -94,7 +82,7 @@ class RankController extends Controller
                 // });
                 $img->stream(); // <-- Key point
                 //dd();
-                \Storage::disk('local')->put('public/rank/'.$fileName, $img, 'public');
+                \Storage::disk(config('constants.disk.driver'))->put('public/'.config('constants.image.rank').'/'.$fileName, $img);
                 $data['image'] = $fileName;
             }
             unset($data['Save']);
