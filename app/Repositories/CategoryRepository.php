@@ -19,6 +19,18 @@ class CategoryRepository
     {
         return Category::select('id', 'name', 'icon')->get();
     }
+
+    /**
+     * For Create / Updating record into category table
+     */
+    public function saveData($condition = [], $fields)
+    {
+        if(!empty($condition)){
+            return Category::updateOrCreate($condition, $fields);
+        }else{
+            return Category::create($fields);
+        }
+    }
 }
 
 
