@@ -45,14 +45,13 @@ class CategoryController extends Controller
                         ->make(true);
             }
             return view('categories.main-category',['data'=>[]]);
-        } catch (Exception $e) {
-            echo '<pre>'; print_r($e->getMessage()); die;
+        } catch (\Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
 
     /**
-     * Method to get Rank Data through id
+     * Method to get Category Data through id
      * 
      * @param $id
      */
@@ -62,7 +61,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Method to post politician data
+     * Method to post category data
      * 
      */
     public function postCategory(Request $request){
