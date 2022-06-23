@@ -75,18 +75,11 @@ class RankController extends Controller
             if ($request->hasFile('image')) {
                 $image      = $request->file('image');
                 $fileName   = time() . '.' . $image->getClientOriginalExtension();
-
                 $img = \Image::make($image->getRealPath());
-                // $img->resize(120, 120, function ($constraint) {
-                //     $constraint->aspectRatio();                 
-                // });
-                $img->stream(); // <-- Key point
-                //dd();
+                $img->stream();
                 \Storage::disk(config('constants.disk.driver'))->put('public/'.config('constants.image.rank').'/'.$fileName, $img);
                 $data['image'] = $fileName;
             }
-            unset($data['Save']);
-            unset($data['_token']);
             $condition = [];
             if($data['id']){
                 $condition = ['id' => $data['id']];
@@ -95,9 +88,34 @@ class RankController extends Controller
             \Session::flash('success','Data has been saved successfully.');
             return redirect()->route('ranks.index');
         }catch (\Exception $e){
-            echo $e->getMessage();exit;
+            \Log::info($e->getMessage());
             \Session::flash('error',$e->getMessage());
             return redirect()->route('ranks.index');
+        }
+    }
+    
+    /**
+     * Method to check exist title for rank
+     * 
+     */
+    public function checkTitle(Request $request){
+        $data=$request->all();
+        $id = $request->header('post-id');
+        try{
+            if(empty($id)){
+                $existData = Rank::where('title', $data['title'])->first();
+            }else{
+                $existData = Rank::where('title', $data['title'])->where('id','!=', $id)->first();
+            }
+            if (!empty($existData)) {
+                $flag = 'false';
+            } else {
+                $flag = 'true';
+            }
+            return $flag;
+        }catch (\Exception $e){
+            \Log::info($e->getMessage());
+            return response()->json(['code'=>300,'msg'=>"Error - ".$e->getMessage()]);
         }
     }
 }
