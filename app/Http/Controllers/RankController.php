@@ -49,8 +49,7 @@ class RankController extends Controller
                         ->make(true);
             }
             return view('ranks.main-rank',['data'=>[]]);
-        } catch (Exception $e) {
-            echo '<pre>'; print_r($e->getMessage()); die;
+        } catch (\Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
@@ -66,7 +65,7 @@ class RankController extends Controller
     }
 
     /**
-     * Method to post politician data
+     * Method to post rank data
      * 
      */
     public function postRank(Request $request){
@@ -85,7 +84,7 @@ class RankController extends Controller
                 $condition = ['id' => $data['id']];
             }
             $rank = $this->rankRepository->saveData($condition, $data);
-            \Session::flash('success','Data has been saved successfully.');
+            \Session::flash('success',trans('message.success'));
             return redirect()->route('ranks.index');
         }catch (\Exception $e){
             \Log::info($e->getMessage());
@@ -93,7 +92,7 @@ class RankController extends Controller
             return redirect()->route('ranks.index');
         }
     }
-    
+
     /**
      * Method to check exist title for rank
      * 
