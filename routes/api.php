@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\v1\UserController;
+use App\Http\Controllers\API\v1\PoliticianCategoryController;
+use App\Http\Controllers\API\v1\PoliticianController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,6 +27,12 @@ Route::group(['namespace' => 'API\v1'], function() {
     Route::post('login', [UserController::class, 'login'])->name('user.login');
     Route::post('forgot-password', [UserController::class, 'forgotPassword'])->name('user.forgot-password');
     Route::post('update-password', [UserController::class, 'updatePassword'])->name('user.update-password');
+
+    // Get Potician Catgory API 
+    Route::get('get-politician-categories', [PoliticianCategoryController::class, 'getPoliticianCategories'])->name('get.politician.categories');
+
+    // Get Potician API 
+    Route::post('get-politicians', [PoliticianController::class, 'getPoliticians'])->name('get.politicians');
 
     Route::group(['middleware' => ['jwt.verify']], function () {
         // User API

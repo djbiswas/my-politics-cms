@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-class Rank extends Model
+class PostComment extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'title', 'image', 'post_count', 'trust_percentage', 'long_desc', 'created_by', 'updated_by', 'status'
+        'parent_comment_id', 'user_id', 'post_id ', 'comment', 'gif', 'image', 'status'
     ];
 
     /**
@@ -32,7 +32,7 @@ class Rank extends Model
             $image = Str::of($this->attributes['image'])->explode('/');
             $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
         } else {
-            $imagePath = config('constants.image.politican') . DIRECTORY_SEPARATOR . $this->attributes['image'];
+            $imagePath = config('constants.image.post_comment_image') . DIRECTORY_SEPARATOR . $this->attributes['image'];
         }
         
         $disk = Storage::disk(config('constants.image.driver'));
