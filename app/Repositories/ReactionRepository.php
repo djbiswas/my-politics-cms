@@ -13,22 +13,19 @@ use Illuminate\Http\Request;
 class ReactionRepository
 {
     /**
-     * @var userId
-     */
-    private $userId;
-
-    public function __construct() {
-        $this->userId = Auth::user()->id;
-    }
-
-    /**
      * For Storing the record respective model in storage
      *
      * @param Request $request
      */
     public function createPost(Request $request)
     {
-        $postData = [
+        $condition = [
+            'user_id' => Auth::user()->id,
+            'm_id' => $request->mId,
+            'm_type' => $request->mType,
+        ]; 
+        
+        $reactionData = [
             'user_id' => $this->userId,
             'm_id' => $request->mId,
             'm_type' => $request->mType,
@@ -37,7 +34,7 @@ class ReactionRepository
             'status' => config('constants.status.active'),
         ];    
 
-        $reaction = Reaction::create($postData);
+        $reaction = Reaction::updateOrCreate($condition, $reactionData);
 
         return [
             'reaction' => $reaction

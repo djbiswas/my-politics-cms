@@ -8,6 +8,7 @@ use App\Http\Requests\CreatePostValidationRequest;
 use App\Http\Requests\DeletePostValidationRequest;
 use App\Http\Requests\PostReactionValidationRequest;
 use App\Repositories\PostRepository;
+use App\Repositories\ReactionRepository;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -19,15 +20,21 @@ class PostController extends Controller
      */
     private $postRepository;
 
+    /**
+     * @var ReactionRepository
+     */
+    private $reactionRepository;
+
 
     /**
      * @var CustomApiResponse
      */
     private $apiResponse;
 
-    public function __construct(CustomApiResponse $customApiResponse, PostRepository $postRepository) {
+    public function __construct(CustomApiResponse $customApiResponse, PostRepository $postRepository, ReactionRepository $reactionRepository) {
         $this->apiResponse = $customApiResponse;
         $this->postRepository = $postRepository;
+        $this->reactionRepository = $reactionRepository;
     }
 
     /**
@@ -452,12 +459,13 @@ class PostController extends Controller
     public function postReaction(PostReactionValidationRequest $request)
     {
         try {
-            $post = $this->postRepository->postReaction($request);
+            echo '<pre>'; print_r($request->all()); die;
+            $reaction = $this->reactionRepository->postReaction($request);
 
-            if (!empty($post)) {
+            if (!empty($reaction)) {
                 $message = trans('lang.post_reaction');
 
-                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), '', $message);
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $reaction, $message);
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
