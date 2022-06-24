@@ -52,15 +52,19 @@ $current_page = '';
                     </x-nav-link>
                 </div>
             </x-nav-li>
-            <x-nav-li  class="v-dropdown">
-                <x-nav-link :href="route('dashboard')">
+            <x-nav-li  :active="request()->routeIs('pages.index', 'get.page', 'add.page')" class="v-dropdown" >
+                <x-nav-link :href="route('pages.index')" >
                     <i class="nc-icon nc-tag-content"></i>
                     <p>Pages</p>
                     <i class="nc-icon nc-minimal-down dropdown-btn"></i>
                 </x-nav-link>
                 <div class="dropdown-container">
-                    <a href="pages.php" class="">All Pages</a>
-                    <a href="add-page.php" class="">Add New</a>
+                    <x-nav-link :href="route('pages.index')" :active="request()->routeIs('pages.index')" >
+                        All Pages
+                    </x-nav-link>
+                    <x-nav-link :href="route('add.page')" :active="request()->routeIs('get.page')" >
+                        Add New
+                    </x-nav-link>
                 </div>
             </x-nav-li>
             <x-nav-li  class="v-dropdown">
