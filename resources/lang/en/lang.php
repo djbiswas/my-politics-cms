@@ -11,6 +11,10 @@ return [
     'get_categories' => 'Categories are fetched successfully.!',
     'get_politicians' => 'Politicans are fetched successfully.!',
     'create_post' => 'Post is created successfully.!',
+    'media_upload' => 'is uplaoded successfully.!',
+    'update_post' => 'Post is updated successfully.!',
     'delete_post' => 'Post is deleted successfully.!',
+    'post_reaction' => 'is stord successfully.!',
+    'add_post_comment' => 'Post comment is stord successfully.!',
 ]
 ?>

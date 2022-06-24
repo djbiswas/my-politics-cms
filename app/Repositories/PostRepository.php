@@ -15,6 +15,15 @@ use Illuminate\Http\Request;
 class PostRepository
 {
     /**
+     * @var userId
+     */
+    private $userId;
+
+    public function __construct() {
+        $this->userId = Auth::user()->id;
+    }
+
+    /**
      * For Storing the record respective model in storage
      *
      * @param Request $request
@@ -22,7 +31,7 @@ class PostRepository
     public function createPost(Request $request)
     {
         $postData = [
-            'user_id' => Auth::user()->id,
+            'user_id' => $this->userId,
             'politician_id' => $request->politicianId,
             'content' => $request->postContent,
             'gif' => $request->postGif,
@@ -76,7 +85,7 @@ class PostRepository
     public function deletePost(Request $request)
     {
         $postData = [
-            'user_id' => Auth::user()->id,
+            'user_id' => $this->userId,
             'post_id' => $request->post_id,
         ];    
 
