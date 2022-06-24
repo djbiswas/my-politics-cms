@@ -20,6 +20,14 @@
         <link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet">
         <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
         @stack('css')
+        <style>
+            .dataTable tr td { 
+                text-align: left;
+            }
+            .dataTable td:last-child {
+                text-align: right;
+            }
+        </style>
     </head>
 
     <body class="page-index">

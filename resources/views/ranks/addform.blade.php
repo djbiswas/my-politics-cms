@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
                 </button>
             </div>
         @endif
-    <h4>{{$data?'Edit' : 'Add'}} new rank</h4>
+    <h4>{{$data?'Edit' : 'Add new'}} rank</h4>
     <form class="needs-validation-1" id="validRankForm" method="post" action="{{route('post.rank')}}" enctype="multipart/form-data" novalidate>
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         @if(!$data) 
