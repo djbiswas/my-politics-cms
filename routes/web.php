@@ -3,6 +3,7 @@
 use App\Http\Controllers\PoliticianController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RankController;
+use App\Http\Controllers\CategoryController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -40,6 +41,13 @@ Route::middleware('auth')->group(function () {
     Route::get('ranks', [RankController::class, 'index'])->name('ranks.index');
     Route::get('get-rank/{id}', [RankController::class, 'getRank'])->name('get.rank');
     Route::post('post-rank', [RankController::class, 'postRank'])->name('post.rank');
+    Route::post('check-rank-title', [RankController::class, 'checkTitle'])->name('check.rank.title');
+
+    //Route for category
+    Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('get-category/{id}', [CategoryController::class, 'getCategory'])->name('get.category');
+    Route::post('post-category', [CategoryController::class, 'postCategory'])->name('post.category');
+    Route::post('check-category-name', [CategoryController::class, 'checkName'])->name('check.category.name');
 
     
 });

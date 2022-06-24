@@ -13,7 +13,7 @@ class Category extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name', 'description', 'created_by', 'updated_by', 'status'
+        'name', 'description', 'icon', 'created_by', 'updated_by', 'status'
     ];
 
     /**
@@ -28,20 +28,22 @@ class Category extends Model
 
     public function getIconAttribute()
     {
-        if (Str::contains($this->attributes['icon'], 'uploads')) {
-            $image = Str::of($this->attributes['icon'])->explode('/');
-            $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
-        } else {
-            $imagePath = config('constants.image.category') . DIRECTORY_SEPARATOR . $this->attributes['icon'];
-        }
-        
-        $disk = Storage::disk(config('constants.image.driver'));
-        if (!empty($this->attributes['avatar']) && $disk->exists($imagePath)) {
-            $fetchIcon = Storage::url($imagePath);
-        } else {
-            $fetchIcon = config('constants.image.defaultImage');
+        if (!empty($this->attributes['icon'])) {
+            if (Str::contains($this->attributes['icon'], 'uploads')) {
+                $image = Str::of($this->attributes['icon'])->explode('/');
+                $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
+            } else {
+                $imagePath = config('constants.image.category') . DIRECTORY_SEPARATOR . $this->attributes['icon'];
+            }
         }
 
-        return $fetchIcon;
+        $disk = Storage::disk(config('constants.image.driver'));
+        if (!empty($this->attributes['icon']) && $disk->exists($imagePath)) {
+            $fetchImage = Storage::url($imagePath);
+        } else {
+            $fetchImage = config('constants.image.defaultImage');
+        }
+
+        return $fetchImage;           
     }
 }

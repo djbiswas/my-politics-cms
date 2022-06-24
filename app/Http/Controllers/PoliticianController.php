@@ -50,7 +50,7 @@ class PoliticianController extends Controller
     public function index(Request $request){
         try {
             if ($request->ajax()) {
-                $data = Politician::select('*')->where(['deleted_at' => null]);
+                $data = Politician::select('*');
                 return Datatables::of($data)
                         ->addIndexColumn()
                         ->editColumn('politician_description',function($row){

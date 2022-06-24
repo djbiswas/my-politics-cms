@@ -459,7 +459,7 @@ class PostController extends Controller
     public function postReaction(PostReactionValidationRequest $request)
     {
         try {
-            echo '<pre>'; print_r($request->all()); die;
+            echo '<pre>'; print_r(); die;
             $reaction = $this->reactionRepository->postReaction($request);
 
             if (!empty($reaction)) {

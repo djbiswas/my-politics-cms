@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\RankRepository;
+use Datatables;
 use App\Models\Rank;
 
 class RankController extends Controller
@@ -30,17 +31,12 @@ class RankController extends Controller
     public function index(Request $request){
         try {
             if ($request->ajax()) {
-                $data = Rank::select('*')->where(['deleted_at' => null]);
-                return \Datatables::of($data)
+                $data = Rank::select('*');
+                return Datatables::of($data)
                         ->addIndexColumn()
                         ->editColumn('image',function($row){
                             if(!empty($row->image)){
-                                if (str_contains($row->image, 'uploads')) { 
-                                    $path = asset($row->image);
-                                }else{
-                                    $path = asset('storage/rank/'.$row->image);
-                                }
-                                $img = '<img src="'.$path.'" alt="'.$row->title.'"/>';
+                                $img = '<img src="'.asset($row->image).'" alt="'.$row->title.'"/>';
                                 return $img;
                             }
                             return "";
@@ -53,8 +49,7 @@ class RankController extends Controller
                         ->make(true);
             }
             return view('ranks.main-rank',['data'=>[]]);
-        } catch (Exception $e) {
-            echo '<pre>'; print_r($e->getMessage()); die;
+        } catch (\Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
@@ -66,19 +61,11 @@ class RankController extends Controller
      */
     public function getRank($id=null){
         $getRank=Rank::select('*')->where(['id' => $id])->first();
-        $path = "";
-        if($getRank->image){
-            if (str_contains($getRank->image, 'uploads')) { 
-                $path = asset($getRank->image);
-            }else{
-                $path = asset('storage/rank/'.$getRank->image);
-            }
-        }
-        return view('ranks.main-rank',['data'=>$getRank, 'path'=>$path]);
+        return view('ranks.main-rank',['data'=>$getRank]);
     }
 
     /**
-     * Method to post politician data
+     * Method to post rank data
      * 
      */
     public function postRank(Request $request){
@@ -87,29 +74,47 @@ class RankController extends Controller
             if ($request->hasFile('image')) {
                 $image      = $request->file('image');
                 $fileName   = time() . '.' . $image->getClientOriginalExtension();
-
                 $img = \Image::make($image->getRealPath());
-                // $img->resize(120, 120, function ($constraint) {
-                //     $constraint->aspectRatio();                 
-                // });
-                $img->stream(); // <-- Key point
-                //dd();
-                \Storage::disk('local')->put('public/rank/'.$fileName, $img, 'public');
+                $img->stream();
+                \Storage::disk(config('constants.disk.driver'))->put('public/'.config('constants.image.rank').'/'.$fileName, $img);
                 $data['image'] = $fileName;
             }
-            unset($data['Save']);
-            unset($data['_token']);
             $condition = [];
             if($data['id']){
                 $condition = ['id' => $data['id']];
             }
             $rank = $this->rankRepository->saveData($condition, $data);
-            \Session::flash('success','Data has been saved successfully.');
+            \Session::flash('success',trans('message.success'));
             return redirect()->route('ranks.index');
         }catch (\Exception $e){
-            echo $e->getMessage();exit;
+            \Log::info($e->getMessage());
             \Session::flash('error',$e->getMessage());
             return redirect()->route('ranks.index');
+        }
+    }
+
+    /**
+     * Method to check exist title for rank
+     * 
+     */
+    public function checkTitle(Request $request){
+        $data=$request->all();
+        $id = $request->header('post-id');
+        try{
+            if(empty($id)){
+                $existData = Rank::where('title', $data['title'])->first();
+            }else{
+                $existData = Rank::where('title', $data['title'])->where('id','!=', $id)->first();
+            }
+            if (!empty($existData)) {
+                $flag = 'false';
+            } else {
+                $flag = 'true';
+            }
+            return $flag;
+        }catch (\Exception $e){
+            \Log::info($e->getMessage());
+            return response()->json(['code'=>300,'msg'=>"Error - ".$e->getMessage()]);
         }
     }
 }
