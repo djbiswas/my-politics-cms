@@ -10,7 +10,7 @@
             @foreach($politicians as $item)
                 <li>
                     <a target="_blank" href="https://devuforiawork239.site/#/politician/{{$item['id']}}">
-                        <img src="{{$item['politician_image']}}" />
+                        <img src="{{asset($item['politician_image'])}}" />
                     </a>
                     <span>{{$item['name_alias']}} {{$item['affiliation']}}</span>
                 </li>

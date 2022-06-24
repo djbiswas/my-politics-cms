@@ -20,7 +20,7 @@ $current_page = '';
                     <p>Dashboard</p>
                 </x-nav-link>
             </x-nav-li>
-            <x-nav-li :active="request()->routeIs('politicians.index', 'categories.index')" class="v-dropdown">
+            <x-nav-li :active="request()->routeIs('politicians.index', 'categories.index', 'get.category')" class="v-dropdown">
                 <x-nav-link :href="route('politicians.index')">
                     <i class="nc-icon nc-umbrella-13"></i>
                     <p>Politicians</p>

@@ -56,7 +56,7 @@ class CategoryController extends Controller
      * @param $id
      */
     public function getCategory($id=null){
-        $getData=Category::select('*')->where(['id' => $id])->first();
+        $getData=Category::find($id);
         return view('categories.main-category',['data'=>$getData]);
     }
 

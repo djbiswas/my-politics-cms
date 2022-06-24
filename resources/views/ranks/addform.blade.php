@@ -1,3 +1,6 @@
+@php
+use Illuminate\Support\Str;
+@endphp
 <div class="generic-form">
     
         @if(session()->has('success'))
@@ -16,9 +19,6 @@
                 </button>
             </div>
         @endif
-    <?php
-    $edit_data = $sub_action = $sub_btn_text = "";
-    ?>
     <h4>{{$data?'Edit' : 'Add'}} new rank</h4>
     <form class="needs-validation-1" id="validRankForm" method="post" action="{{route('post.rank')}}" enctype="multipart/form-data" novalidate>
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -33,7 +33,7 @@
         </div>
         <div class="form-group-two">
             <label for="formFile" class="form-label">Image</label>
-                @if($data && $data->image)
+                @if($data && !Str::contains($data->image, 'text=Default'))
                     <div class="p-image-sec">
                         <div class="p-image-container">
                             <img class="p-image" src="{{asset($data->image)}}"/>

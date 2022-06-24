@@ -17,7 +17,7 @@ return [
     ],
 
     'image' => [
-        'driver' => 'local',
+        'driver' => 'public',
         'defaultImage' => 'https://via.placeholder.com/150x150?text=Default%20Image',
         'category' => 'category',
         'politican' => 'politican',
