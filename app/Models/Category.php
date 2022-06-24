@@ -28,16 +28,22 @@ class Category extends Model
 
     public function getIconAttribute()
     {
-        $fetchPath = "";
         if (!empty($this->attributes['icon'])) {
             if (Str::contains($this->attributes['icon'], 'uploads')) {
                 $image = Str::of($this->attributes['icon'])->explode('/');
-                $fetchPath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
+                $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
             } else {
                 $imagePath = config('constants.image.category') . DIRECTORY_SEPARATOR . $this->attributes['icon'];
-                $fetchPath = Storage::url($imagePath);
             }
         }
-        return $fetchPath;
+
+        $disk = Storage::disk(config('constants.image.driver'));
+        if (!empty($this->attributes['icon']) && $disk->exists($imagePath)) {
+            $fetchImage = Storage::url($imagePath);
+        } else {
+            $fetchImage = config('constants.image.defaultImage');
+        }
+
+        return $fetchImage;           
     }
 }

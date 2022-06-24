@@ -17,6 +17,11 @@ class Politician extends Model
         'image', 'created_by', 'updated_by', 'status'
     ];
 
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
     /**
      *
      * @param type $query
@@ -37,7 +42,7 @@ class Politician extends Model
         }
         
         $disk = Storage::disk(config('constants.image.driver'));
-        if (!empty($this->attributes['avatar']) && $disk->exists($imagePath)) {
+        if (!empty($this->attributes['affiliation_icon']) && $disk->exists($imagePath)) {
             $fetchIcon = Storage::url($imagePath);
         } else {
             $fetchIcon = config('constants.image.defaultImage');
@@ -56,7 +61,7 @@ class Politician extends Model
         }
         
         $disk = Storage::disk(config('constants.image.driver'));
-        if (!empty($this->attributes['avatar']) && $disk->exists($imagePath)) {
+        if (!empty($this->attributes['image']) && $disk->exists($imagePath)) {
             $fetchImage = Storage::url($imagePath);
         } else {
             $fetchImage = config('constants.image.defaultImage');

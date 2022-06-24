@@ -2,11 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Exceptions\InvalidCredentialsException;
 use App\Models\Rank;
-use Auth;
-use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class RankRepository.

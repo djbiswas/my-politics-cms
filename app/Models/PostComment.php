@@ -36,7 +36,7 @@ class PostComment extends Model
         }
         
         $disk = Storage::disk(config('constants.image.driver'));
-        if (!empty($this->attributes['avatar']) && $disk->exists($imagePath)) {
+        if (!empty($this->attributes['image']) && $disk->exists($imagePath)) {
             $fetchImage = Storage::url($imagePath);
         } else {
             $fetchImage = config('constants.image.defaultImage');

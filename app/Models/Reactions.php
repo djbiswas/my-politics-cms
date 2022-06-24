@@ -6,34 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Post extends Model
+class Reaction extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id', 'politician_id', 'content', 'gif', 'status'
+        'user_id', 'm_id', 'm_type', 'reaction', 'status'
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function politican()
-    {
-        return $this->belongsTo(Politician::class);
-    }
-
-    public function postImages()
-    {
-        return $this->hasMany(PostImage::class);
-    }
-
-    public function postVideos()
-    {
-        return $this->hasMany(PostVideo::class);
-    }
-    
     /**
      *
      * @param type $query
