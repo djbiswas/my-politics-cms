@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Traits\FormRequestValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteUserPostValidationRequest extends FormRequest
+class CreatePostCommentValidationRequest extends FormRequest
 {
     use FormRequestValidationTrait;
 

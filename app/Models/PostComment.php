@@ -13,7 +13,7 @@ class PostComment extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'parent_comment_id', 'user_id', 'post_id ', 'comment', 'gif', 'image', 'status'
+        'parent_comment_id', 'post_id', 'user_id', 'comment', 'gif', 'image', 'status'
     ];
 
     /**

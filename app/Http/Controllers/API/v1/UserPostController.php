@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Response\CustomApiResponse;
 use App\Repositories\PostRepository;
 use App\Repositories\ReactionRepository;
+use App\Repositories\PostCommentRepository;
 use App\Http\Requests\CreateUserPostValidationRequest;
 use App\Http\Requests\UpdateUserPostValidationRequest;
 use App\Http\Requests\DeleteUserPostValidationRequest;
 use App\Http\Requests\UserPostReactionValidationRequest;
+use App\Http\Requests\CreatePostCommentValidationRequest;
 use Exception;
 
 class UserPostController extends Controller
@@ -26,14 +28,21 @@ class UserPostController extends Controller
     private $reactionRepository;
 
     /**
+     * @var postCommentRepository
+     */
+    private $postCommentRepository;
+
+    /**
      * @var apiResponse
      */
     private $apiResponse;
 
-    public function __construct(CustomApiResponse $customApiResponse, PostRepository $postRepository, ReactionRepository $reactionRepository) {
+    public function __construct(CustomApiResponse $customApiResponse, PostRepository $postRepository, 
+    ReactionRepository $reactionRepository, PostCommentRepository $postCommentRepository) {
         $this->apiResponse = $customApiResponse;
         $this->postRepository = $postRepository;
         $this->reactionRepository = $reactionRepository;
+        $this->postCommentRepository = $postCommentRepository;
     }
 
     /**
@@ -352,6 +361,92 @@ class UserPostController extends Controller
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $reaction, $message);
             }
         } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/v1/post-comment",
+     *     tags={"Post Comment"},
+     *     summary="Post Comment",
+     *     operationId="post-comment",
+     *
+     *     @OA\Parameter(
+     *       name="post_id",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="comment",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *          type="string"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="gif",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *           type="string"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="postImage",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *           type="string"
+     *       )
+     *     ),
+     * 
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+
+    /**
+     * Post Comment API
+     *
+     * @param CreatePostCommentValidationRequest $request
+     */
+    public function postComment(CreatePostCommentValidationRequest $request)
+    {
+        try {
+            $comment = $this->postCommentRepository->postComment($request);
+
+            if (!empty($comment)) {
+                $success = [
+                    $comment
+                ];
+                $message = trans('lang.add_post_comment');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
+            }
+        } catch (Exception $e) {
+            echo '<pre>'; print_r($e->getMessage()); die;
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
