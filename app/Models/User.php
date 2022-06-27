@@ -9,10 +9,14 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Kodeine\Metable\Metable;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, Metable;
+
+    protected $metaTable = 'user_metas'; 
+    protected $disableFluentMeta = true;
 
     /**
      * The attributes that are mass assignable.
