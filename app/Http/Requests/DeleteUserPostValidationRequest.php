@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Traits\FormRequestValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeletePostValidationRequest extends FormRequest
+class DeleteUserPostValidationRequest extends FormRequest
 {
+    use FormRequestValidationTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,14 +27,14 @@ class DeletePostValidationRequest extends FormRequest
     public function rules()
     {
         return [
-            'post_id'  => 'required',
+            'post_id'  => 'required',  
         ];
     }
 
     public function messages()
     {
         return [
-            'post_id.required' => 'Post id is required.!',
+            'post_id.required' => 'post id is required.!',
         ];
     }
 }

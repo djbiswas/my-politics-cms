@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\v1\UserController;
 use App\Http\Controllers\API\v1\PoliticianCategoryController;
 use App\Http\Controllers\API\v1\PoliticianController;
-use App\Http\Controllers\API\v1\PostController;
+use App\Http\Controllers\API\v1\UserPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,11 +43,11 @@ Route::group(['namespace' => 'API\v1'], function() {
         Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
 
         //Post API
-        Route::post('create-post', [PostController::class, 'createPost'])->name('user.create.post');
-        Route::post('media-uplaod', [PostController::class, 'mediaUpload'])->name('user.media.uplaod');
-        Route::patch('update-post', [PostController::class, 'updatePost'])->name('user.update.post');
-        Route::delete('delete-post', [PostController::class, 'deletePost'])->name('user.delete.post');
-        Route::post('post-reaction', [PostController::class, 'postReaction'])->name('user.post.reaction');
-        Route::post('post-comment', [PostController::class, 'postComment'])->name('user.post.comment');
+        Route::post('create-post', [UserPostController::class, 'createUserPost'])->name('user.create.post');
+        Route::post('media-uplaod', [UserPostController::class, 'mediaUpload'])->name('user.media.uplaod');
+        Route::patch('update-post', [UserPostController::class, 'updatePost'])->name('user.update.post');
+        Route::delete('delete-post', [UserPostController::class, 'deletePost'])->name('user.delete.post');
+        Route::post('post-reaction', [UserPostController::class, 'postReaction'])->name('user.post.reaction');
+        Route::post('post-comment', [UserPostController::class, 'postComment'])->name('user.post.comment');
     });
 });

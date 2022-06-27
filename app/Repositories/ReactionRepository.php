@@ -17,7 +17,7 @@ class ReactionRepository
      *
      * @param Request $request
      */
-    public function createPost(Request $request)
+    public function postReaction(Request $request)
     {
         $condition = [
             'user_id' => Auth::user()->id,

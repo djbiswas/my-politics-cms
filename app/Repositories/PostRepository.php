@@ -19,7 +19,7 @@ class PostRepository
      *
      * @param Request $request
      */
-    public function createPost(Request $request)
+    public function createUserPost(Request $request)
     {
         $postData = [
             'user_id' => Auth::user()->id,

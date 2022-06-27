@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Traits\FormRequestValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostReactionValidationRequest extends FormRequest
+class UpdateUserPostValidationRequest extends FormRequest
 {
+    use FormRequestValidationTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,18 +27,16 @@ class PostReactionValidationRequest extends FormRequest
     public function rules()
     {
         return [
-            'mId'  => 'required',
-            'reaction' => 'required', 
-            'mType' => 'required', 
+            'post_id' => 'required', 
+            'politicianId'  => 'required',  
         ];
     }
 
     public function messages()
     {
         return [
-            'mId.required' => 'mid is required.!',
-            'reaction.required' => 'reaction is required.!',
-            'mType.required' => 'mtype is required.!',
+            'post_id.required' => 'post id is required.!',
+            'politicianId.required' => 'politician id is required.!',
         ];
     }
 }
