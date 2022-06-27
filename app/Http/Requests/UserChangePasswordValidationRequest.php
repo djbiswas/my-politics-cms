@@ -27,16 +27,14 @@ class UserChangePasswordValidationRequest extends FormRequest
     public function rules()
     {
         return [
-            'password'  => 'required',
-            'confirm_password'  => 'required|same:password',  
+            'password'  => 'required'
         ];
     }
 
     public function messages()
     {
         return [
-            'password.required' => 'Password is required.!',
-            'confirm_password.required' => 'Confirm Password is required.!',
+            'password.required' => 'Password is required.!'
         ];
     }
 }
