@@ -36,7 +36,10 @@ Route::middleware('auth')->group(function () {
     //Route for user
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('get-user/{id}', [UserController::class, 'getUser'])->name('get.user');
+    Route::get('add-page', [UserController::class, 'getUser'])->name('add.user');
     Route::post('post-user', [UserController::class, 'postUser'])->name('post.user');
+    Route::post('check-user-email', [UserController::class, 'checkEmail'])->name('check.user.email');
+    Route::post('check-user-phone', [UserController::class, 'checkPhone'])->name('check.user.phone');
 
     //Route for rank
     Route::get('ranks', [RankController::class, 'index'])->name('ranks.index');

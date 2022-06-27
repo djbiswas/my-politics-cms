@@ -15,12 +15,14 @@ class RankRepository
      * @param array $condition
      * @throws InvalidOtpException
      */
-    public function fetchAllData(array $condition = [], $limit = 8)
+    public function fetchAllData(array $condition = [], $limit = "")
     {
-        return Rank::where($condition)
-                ->orderBy('name')
-                ->take($limit)
-                ->get();
+        $data = Rank::where($condition)
+                ->orderBy('title');
+        if($limit){
+            $data->take($limit);
+        }
+        return $data->get();
     }
 
     /**

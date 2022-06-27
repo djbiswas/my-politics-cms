@@ -31,7 +31,7 @@
                         {data: 'first_name', name: 'first_name'},
                         {data: 'last_name', name: 'last_name'},
                         {data: 'email', name: 'email'},
-                        {data: 'user_phone', name: 'user_phone'},
+                        {data: 'phone', name: 'phone'},
                         {data: 'title', name: 'r.title'},
                         {data: 'action', name: 'action', orderable: false, searchable: false},
                     ]

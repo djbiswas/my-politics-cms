@@ -34,7 +34,7 @@ class PoliticianController extends Controller
     {
         try {
             $condition = [];
-            $politicians = $this->politicianRepository->fetchAllData($condition);
+            $politicians = $this->politicianRepository->fetchAllData($condition, 8);
             return view('dashboard', ['politicians' => $politicians]);
         } catch (Exception $e) {
             echo '<pre>'; print_r($e->getMessage()); die;

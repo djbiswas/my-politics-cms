@@ -557,6 +557,23 @@ class UserRepository
         }
 
     }
+
+    /**
+     * For Create / Updating record into ranks table
+     */
+    public function saveData($condition = [], $fields, $metaData = [])
+    {
+        if(!empty($condition)){
+            $userObj = User::updateOrCreate($condition, $fields);
+        }else{
+            $userObj = User::create($fields);
+        }
+        if(!empty($metaData)){
+            $userObj->setMeta($metaData);
+            $userObj->save();
+        }
+        return $userObj;
+    }
 }
 
 
