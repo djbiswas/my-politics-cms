@@ -14,7 +14,7 @@ return [
     'media_upload' => 'is uplaoded successfully.!',
     'update_post' => 'Post is updated successfully.!',
     'delete_post' => 'Post is deleted successfully.!',
-    'post_reaction' => 'is stord successfully.!',
+    'post_reaction' => 'Rection is stord successfully.!',
     'add_post_comment' => 'Post comment is stord successfully.!',
 ]
 ?>
