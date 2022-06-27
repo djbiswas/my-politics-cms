@@ -2,18 +2,17 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,20 +20,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $fillable = [
-        'rank_id',
-        'role_id',
-        'login',
-        'email',
-        'password',
-        'first_name',
-        'last_name',
-        'display_name',
-        'image',
-        'lock_rank',
-        'display_status',
-        'reg_status',
-        'registered_date',
-        'phone'
+        'rank_id', 'role_id', 'login', 'email', 'password', 'first_name', 'last_name', 'display_name', 'phone',
+        'image', 'lock_rank', 'display_status', 'reg_status', 'status',
     ];
 
     /**
@@ -69,5 +56,39 @@ class User extends Authenticatable implements JWTSubject
     public function userMeta()
     {
         return $this->hasMany(UserMeta::class, 'user_id', 'id');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    /**
+     *
+     * @param type $query
+     * @return type Illuminate\Support\Collection
+     */
+    public function scopeOnlyActive($query)
+    {
+        return $query->where('status', config('constants.status.active'));
+    }
+
+    public function getImageAttribute()
+    {
+        if (Str::contains($this->attributes['image'], 'uploads')) {
+            $image = Str::of($this->attributes['image'])->explode('/');
+            $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
+        } else {
+            $imagePath = config('constants.image.user') . DIRECTORY_SEPARATOR . $this->attributes['image'];
+        }
+        
+        $disk = Storage::disk(config('constants.image.driver'));
+        if (!empty($this->attributes['avatar']) && $disk->exists($imagePath)) {
+            $fetchImage = Storage::url($imagePath);
+        } else {
+            $fetchImage = config('constants.image.defaultImage');
+        }
+
+        return $fetchImage;
     }
 }

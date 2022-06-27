@@ -50,7 +50,7 @@ class PoliticianController extends Controller
     public function index(Request $request){
         try {
             if ($request->ajax()) {
-                $data = Politician::select('*')->where(['deleted_at' => null]);
+                $data = Politician::select('*');
                 return Datatables::of($data)
                         ->addIndexColumn()
                         ->editColumn('politician_description',function($row){
@@ -76,6 +76,7 @@ class PoliticianController extends Controller
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
+    
     /**
      * Method to get Politician Data through id
      * 
@@ -93,5 +94,16 @@ class PoliticianController extends Controller
     public function postPolitician(){
         $politician=Politician::select('*');
         return view('politician.add-form',['data'=>$politician]);
+    }
+
+    /**
+     * Method to delete Politician Data through id
+     * 
+     * @param $id
+     */
+    public function delete($id=null){
+        $data = Politician::find($id)->delete();
+        \Session::flash('success',trans('message.success'));
+        return redirect()->route('politicians.index');
     }
 }

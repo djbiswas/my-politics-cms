@@ -1,0 +1,99 @@
+<div class="generic-form">
+    
+        @if(session()->has('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session()->get('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @endif
+        @if(session()->has('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Oops!! Something went wrong. Please try again.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+    <?php
+    $edit_data = $sub_action = $sub_btn_text = "";
+    ?>
+    <h4>{{$data?'Edit' : 'Add'}} new category</h4>
+    <form class="needs-validation-1" id="validRankForm" method="post" action="{{route('post.category')}}" enctype="multipart/form-data" novalidate>
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        @if(!$data) 
+            <input type="hidden" name="created_by" value="{{ auth()->user()->id }}"> 
+        @endif
+        <input type="hidden" name="updated_by" value="{{ auth()->user()->id }}">
+        <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
+        <div class="form-group">
+            <label for="inputTitle">Name</label>
+            <input type="text" class="form-control" name='name' id="inputTitle" placeholder="Name" value="{{ (!empty($data)) ? $data->name : '' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="inputtexteditor">Description</label>
+            <textarea class="form-control" name="description" id="textareaDescription" placeholder="Description">{{ (!empty($data)) ? $data->description : '' }}</textarea>
+        </div>
+        <div class="form-group-two">
+            <label for="formFile" class="form-label">Icon</label>
+                @if($data && $data->icon)
+                    <div class="p-image-sec">
+                        <div class="p-image-container">
+                            <img class="p-image" src="{{asset($data->icon)}}"/>
+                            <button type="button" class="close btn-img-clear" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <input type="hidden" class="existing_image" name="image_existing" value="1" />
+                        <input class="form-control form-file" type="file" id="formFile" name='icon'>
+                        <input value="{{asset($data->icon)}}" type="hidden" name='ex_img_path'>
+                    </div>
+                @else
+                    <input class="form-control" type="file" id="formFile" name='icon'>
+                @endif
+        </div>
+        <input type="submit" name='Save' class="btn btn-primary" />
+    </form>
+</div>
+
+@push('scripts')
+    <script>
+        $('document').ready(function(){
+            $("#validRankForm").validate({
+                ignore:":not(:visible)",
+                highlight: function(element) {
+                    $(element).closest('.form-group').addClass('has-error was-validated');
+                },
+                unhighlight: function(element) {
+                    $(element).closest('.form-group').removeClass('has-error was-validated');
+                },
+                errorClass:"error error_preview",
+                rules: {
+                    name:{
+                        required:true,
+                        remote: {
+                            url: "{{ route('check.category.name') }}",
+                            type: "post",
+                            beforeSend: function (xhr) { // Handle csrf errors
+                                xhr.setRequestHeader('X-CSRF-Token', "{{ csrf_token() }}");
+                                xhr.setRequestHeader('category-id', "{{ (!empty($data)) ? $data->id : '' }}");
+                            },
+                        }
+                    },
+                },
+                messages: {
+                    name: {
+                        remote: "Name already exist"
+                    }
+                },
+                invalidHandler: function(event, validator) {
+                    validator.numberOfInvalids()&&validator.errorList[0].element.focus();
+                },
+                submitHandler: function (form) {
+                    return true;
+                }
+            });
+        });
+    </script>
+@endpush

@@ -7,5 +7,6 @@ return [
     'invalid_data' => 'The given data is invalid.!',
     'invalid_otp_user' => 'Invalid OTP.!',
     'failed' => 'Invalid phone number / email or password.!',
+    'success' => 'Data has been saved successfully.',
 ]
 ?>
