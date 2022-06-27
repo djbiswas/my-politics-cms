@@ -9,10 +9,12 @@ use App\Repositories\ReactionRepository;
 use App\Repositories\PostCommentRepository;
 use App\Http\Requests\CreateUserPostValidationRequest;
 use App\Http\Requests\UpdateUserPostValidationRequest;
+use App\Http\Requests\MediaUploadValidationRequest;
 use App\Http\Requests\DeleteUserPostValidationRequest;
 use App\Http\Requests\UserPostReactionValidationRequest;
 use App\Http\Requests\CreatePostCommentValidationRequest;
 use Exception;
+
 
 class UserPostController extends Controller
 {
@@ -47,6 +49,7 @@ class UserPostController extends Controller
 
     /**
      * @OA\Post(
+     *     security={{"bearerAuth":{}}},
      *     path="/v1/create-post",
      *     tags={"Create Post"},
      *     summary="Create Post",
@@ -136,7 +139,7 @@ class UserPostController extends Controller
     }
 
     /**
-     * @OA\PATCH(
+     * @OA\Patch(
      *     path="/v1/update-post",
      *     tags={"Update Post"},
      *     summary="Update Post",
@@ -227,6 +230,64 @@ class UserPostController extends Controller
                 $message = trans('lang.update_post');
 
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicians, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/v1/media-uplaod",
+     *     tags={"Update Post"},
+     *     summary="Update Post",
+     *     operationId="media-uplaod",
+     *     
+     *     @OA\Parameter(
+     *       name="file",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="string"
+     *       )
+     *     ), 
+     *     
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Update Post API
+     *
+     * @param MediaUploadValidationRequest $request
+     */
+    public function mediaUpload(MediaUploadValidationRequest $request)
+    {
+        try {
+            $image = $this->postRepository->mediaUpload($request);
+
+            if (!empty($image)) {
+               
+                $message = trans('lang.media_upload');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $image, $message);
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
@@ -446,7 +507,6 @@ class UserPostController extends Controller
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
             }
         } catch (Exception $e) {
-            echo '<pre>'; print_r($e->getMessage()); die;
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
