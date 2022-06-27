@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Repositories\RankRepository;
 use Datatables;
 use App\Models\Rank;
+use Illuminate\Support\Str;
+
 
 class RankController extends Controller
 {
@@ -35,7 +37,7 @@ class RankController extends Controller
                 return Datatables::of($data)
                         ->addIndexColumn()
                         ->editColumn('image',function($row){
-                            if(!empty($row->image)){
+                            if(!empty($row->image) && !Str::contains($row->image, 'text=Default')){
                                 $img = '<img src="'.asset($row->image).'" alt="'.$row->title.'"/>';
                                 return $img;
                             }
@@ -60,7 +62,7 @@ class RankController extends Controller
      * @param $id
      */
     public function getRank($id=null){
-        $getRank=Rank::select('*')->where(['id' => $id])->first();
+        $getRank=Rank::find($id);
         return view('ranks.main-rank',['data'=>$getRank]);
     }
 
@@ -99,7 +101,7 @@ class RankController extends Controller
      */
     public function checkTitle(Request $request){
         $data=$request->all();
-        $id = $request->header('post-id');
+        $id = $request->header('rank-id');
         try{
             if(empty($id)){
                 $existData = Rank::where('title', $data['title'])->first();

@@ -95,4 +95,15 @@ class PoliticianController extends Controller
         $politician=Politician::select('*');
         return view('politician.add-form',['data'=>$politician]);
     }
+
+    /**
+     * Method to delete Politician Data through id
+     * 
+     * @param $id
+     */
+    public function delete($id=null){
+        $data = Politician::find($id)->delete();
+        \Session::flash('success',trans('message.success'));
+        return redirect()->route('politicians.index');
+    }
 }
