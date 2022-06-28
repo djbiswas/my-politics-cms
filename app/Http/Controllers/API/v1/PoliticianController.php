@@ -88,7 +88,7 @@ class PoliticianController extends Controller
      *     operationId="get-politician-detail",
      * 
      *     @OA\Parameter(
-     *       name="politican_id",
+     *       name="politicanId",
      *       in="query",
      *       required=true,
      *       @OA\Schema(
@@ -125,7 +125,7 @@ class PoliticianController extends Controller
     public function getPoliticianDetail(CreateUserPostValidationRequest $request)
     {
         try {
-            $politicianDetails = $this->politicianRepository->getPoliticians($request);
+            $politicianDetails = $this->politicianRepository->getPoliticianDetail($request);
 
             if (!empty($politicianDetails)) {
                
@@ -147,7 +147,7 @@ class PoliticianController extends Controller
      *     operationId="get-politician-votes",
      * 
      *     @OA\Parameter(
-     *       name="politican_id",
+     *       name="politicanId",
      *       in="query",
      *       required=true,
      *       @OA\Schema(
@@ -193,7 +193,65 @@ class PoliticianController extends Controller
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicianDetails, $message);
             }
         } catch (Exception $e) {
-            echo '<pre>'; print_r($e->getMessage()); die;
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/get-trust",
+     *     tags={"Get Trust"},
+     *     summary="Get Trust",
+     *     operationId="get-trust",
+     * 
+     *     @OA\Parameter(
+     *       name="respondedId",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Get Trust API
+     *
+     * @param Request $request
+     */
+    public function getTrust(Request $request)
+    {
+        try {
+            $politicianDetails = $this->politicianRepository->getTrust($request);
+
+            if (!empty($politicianDetails)) {
+               
+                $message = trans('lang.politician_vote');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicianDetails, $message);
+            }
+        } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
         }
     }

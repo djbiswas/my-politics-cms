@@ -40,7 +40,10 @@ Route::group(['namespace' => 'API\v1'], function() {
     Route::get('get-politician-detail', [PoliticianController::class, 'getPoliticianDetail'])->name('get.politician.detail');
 
     // Get Potician Votes API
-    Route::get('get-politician-votes', [PoliticianController::class, 'getPoliticianVotes'])->name('get.politician.votes');
+    Route::get('get-politician-votes', [PoliticianController::class, 'getPoliticianVotes'])->name('get.politician.votes'); 
+    
+    // Get Potician Votes API
+    Route::get('get-trust', [PoliticianController::class, 'getTrust'])->name('get.politician.votes');
     
     Route::group(['middleware' => ['jwt.verify']], function () {
         // User API

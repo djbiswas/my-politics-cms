@@ -44,6 +44,18 @@ class PoliticianRepository
      *
      * @param Request $request
      */
+    public function getPoliticianDetail($request)
+    {
+        echo '<pre>'; print_r($request->all()); die;
+        return [
+        ];
+    }
+
+    /**
+     * For counting the Politicans records
+     *
+     * @param Request $request
+     */
     public function getPoliticianVotes($request)
     {
         $user_vote = '';
@@ -75,6 +87,18 @@ class PoliticianRepository
             'users_vote' => $user_vote,
         ];
 
+    }
+
+    /**
+     * For fetching Trust
+     *
+     * @param Request $request
+     */
+    public function getTrust($request)
+    {
+        echo '<pre>'; print_r($request->all()); die;
+        return [
+        ];
     }
 
     /**

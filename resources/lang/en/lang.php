@@ -12,6 +12,7 @@ return [
     'get_politicians' => 'Politicans are fetched successfully.!',
     'politician_detail' => 'Politican Detail is fetched successfully.!',
     'politician_vote' => 'Politican vote is fetched successfully.!',
+    'politician_trust' => 'Trust is fetched successfully.!',
     'create_post' => 'Post is created successfully.!',
     'media_upload' => 'is uplaoded successfully.!',
     'update_post' => 'Post is updated successfully.!',
