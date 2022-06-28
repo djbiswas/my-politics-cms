@@ -8,5 +8,6 @@ return [
     'invalid_otp_user' => 'Invalid OTP.!',
     'failed' => 'Invalid phone number / email or password.!',
     'success' => 'Data has been saved successfully.',
+    'error_sending_email' => 'Error occured while sending an email. Please try again later.!',
 ]
 ?>

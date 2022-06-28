@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\PostImage;
 use App\Models\PostVideo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class PostRepository.
@@ -19,7 +20,7 @@ class PostRepository
      *
      * @param Request $request
      */
-    public function createPost(Request $request)
+    public function createUserPost(Request $request)
     {
         $postData = [
             'user_id' => Auth::user()->id,
@@ -83,6 +84,23 @@ class PostRepository
         $post = Post::where($postData)->delete();
 
         return true;
+    }
+
+    /**
+     * For Uploading the file into storage
+     *
+     * @param Request $request
+     */
+    public function mediaUpload(Request $request)
+    {
+        $path = public_path('post_comment_image/');
+        if(!Storage::exists($path)){
+            Storage::makeDirectory($path, 0777, true, true);
+        }
+
+        $fileName = uploadFile('post_comment_image', $request->file);
+        
+        return $fileName;
     }
 }
 
