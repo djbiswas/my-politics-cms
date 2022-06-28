@@ -34,7 +34,7 @@ Route::group(['namespace' => 'API\v1'], function() {
     Route::get('get-politician-categories', [PoliticianCategoryController::class, 'getPoliticianCategories'])->name('get.politician.categories');
 
     // Get Potician API 
-    Route::post('get-politicians', [PoliticianController::class, 'getPoliticians'])->name('get.politicians');
+    Route::get('get-politicians', [PoliticianController::class, 'getPoliticians'])->name('get.politicians');
 
     Route::group(['middleware' => ['jwt.verify']], function () {
         // User API

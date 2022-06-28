@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\CustomApiResponse;
-use App\Repositories\CategoryRepository;
+use App\Repositories\PoliticianRepository;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -13,9 +13,9 @@ class PoliticianController extends Controller
 {
 
     /**
-     * @var CategoryRepository
+     * @var PoliticianRepository
      */
-    private $categoryRepository;
+    private $politicianRepository;
 
 
     /**
@@ -23,18 +23,18 @@ class PoliticianController extends Controller
      */
     private $apiResponse;
 
-    public function __construct(CustomApiResponse $customApiResponse, CategoryRepository $categoryRepository) {
+    public function __construct(CustomApiResponse $customApiResponse, PoliticianRepository $politicianRepository) {
         $this->apiResponse = $customApiResponse;
-        $this->categoryRepository = $categoryRepository;
+        $this->politicianRepository = $politicianRepository;
     }
 
     /**
      * @OA\Get(
      *     security={{"bearerAuth":{}}},
-     *     path="/v1/get-politician-categories",
-     *     tags={"get-politician-categories"},
-     *     description="Get Politician Categories",
-     *     operationId="get-politician-categories",
+     *     path="/v1/get-politicians",
+     *     tags={"get-politicians"},
+     *     description="Get Politicians",
+     *     operationId="get-politicians",
      *
      *     @OA\Response(
      *         response=200,
@@ -58,14 +58,14 @@ class PoliticianController extends Controller
      * )
      */
     /**
-     * Get Potician Category API
+     * Get Poticians API
      *
-     * 
+     * @param Request $request
      */
-    public function getPoliticians()
+    public function getPoliticians(Request $request)
     {
         try {
-            $politicians = $this->categoryRepository->getPoliticians();
+            $politicians = $this->politicianRepository->getPoliticians($request);
 
             if (!empty($politicians)) {
                

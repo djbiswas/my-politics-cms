@@ -35,7 +35,7 @@ class PostCommentRepository
     }
 
     /**
-     * For Getting the comments from model
+     * For selecting the data
      *
      * @param Request $request
      */
