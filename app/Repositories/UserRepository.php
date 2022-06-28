@@ -563,6 +563,9 @@ class UserRepository
      */
     public function saveData($condition = [], $fields, $metaData = [])
     {
+        if($fields['password']){
+            $fields['password'] = \Hash::make($fields['password']);
+        }
         if(!empty($condition)){
             $userObj = User::updateOrCreate($condition, $fields);
         }else{
