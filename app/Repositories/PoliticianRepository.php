@@ -15,12 +15,14 @@ class PoliticianRepository
      * @param array $condition
      * @throws InvalidOtpException
      */
-    public function fetchAllData(array $condition = [], $limit = 8)
+    public function fetchAllData(array $condition = [], $limit = '')
     {
-        return Politician::where($condition)
-                ->orderBy('name')
-                ->take($limit)
-                ->get();
+        $data = Politician::where($condition)
+                ->orderBy('name');
+        if($limit){
+            $data->take($limit);
+        }
+        return $data->get();
     }
 }
 
