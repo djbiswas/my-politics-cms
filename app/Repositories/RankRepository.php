@@ -30,11 +30,7 @@ class RankRepository
      */
     public function saveData($condition = [], $fields)
     {
-        if(!empty($condition)){
-            return Rank::updateOrCreate($condition, $fields);
-        }else{
-            return Rank::create($fields);
-        }
+        return Rank::updateOrCreate($condition, $fields);
     }
 }
 
