@@ -33,6 +33,20 @@ class PostCommentRepository
             'postComment' => $postComment,
         ];
     }
+
+    /**
+     * For Getting the comments from model
+     *
+     * @param Request $request
+     */
+    public function getComments(Request $request)
+    {
+        $postComments = PostComment::onlyActive()->where('post_id', $request->postId)->get();
+        
+        return [
+            'postComments' => $postComments,
+        ];
+    }
 }
 
 ?>
