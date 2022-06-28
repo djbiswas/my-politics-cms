@@ -4,41 +4,51 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\CustomApiResponse;
-use App\Http\Requests\CreatePostValidationRequest;
-use App\Http\Requests\DeletePostValidationRequest;
-use App\Http\Requests\PostReactionValidationRequest;
 use App\Repositories\PostRepository;
 use App\Repositories\ReactionRepository;
+use App\Repositories\PostCommentRepository;
+use App\Http\Requests\CreateUserPostValidationRequest;
+use App\Http\Requests\UpdateUserPostValidationRequest;
+use App\Http\Requests\MediaUploadValidationRequest;
+use App\Http\Requests\DeleteUserPostValidationRequest;
+use App\Http\Requests\UserPostReactionValidationRequest;
+use App\Http\Requests\CreatePostCommentValidationRequest;
 use Exception;
-use Illuminate\Http\Request;
 
-class PostController extends Controller
+class UserPostController extends Controller
 {
 
     /**
-     * @var PostRepository
+     * @var postRepository
      */
     private $postRepository;
 
     /**
-     * @var ReactionRepository
+     * @var reactionRepository
      */
     private $reactionRepository;
 
+    /**
+     * @var postCommentRepository
+     */
+    private $postCommentRepository;
 
     /**
-     * @var CustomApiResponse
+     * @var apiResponse
      */
     private $apiResponse;
 
-    public function __construct(CustomApiResponse $customApiResponse, PostRepository $postRepository, ReactionRepository $reactionRepository) {
+    public function __construct(CustomApiResponse $customApiResponse, PostRepository $postRepository, 
+    ReactionRepository $reactionRepository, PostCommentRepository $postCommentRepository) {
         $this->apiResponse = $customApiResponse;
         $this->postRepository = $postRepository;
         $this->reactionRepository = $reactionRepository;
+        $this->postCommentRepository = $postCommentRepository;
     }
 
     /**
      * @OA\Post(
+     *     security={{"bearerAuth":{}}},
      *     path="/v1/create-post",
      *     tags={"Create Post"},
      *     summary="Create Post",
@@ -106,21 +116,21 @@ class PostController extends Controller
      *     ),
      * )
      */
-
     /**
      * Create Post API
      *
-     * @param CreatePostValidationRequest $request
+     * @param CreateUserPostValidationRequest $request
      */
-    public function createPost(CreatePostValidationRequest $request)
+    public function createUserPost(CreateUserPostValidationRequest $request)
     {
         try {
-            $post = $this->postRepository->createPost($request);
+            $politicians = $this->postRepository->createUserPost($request);
 
-            if (!empty($post)) {
+            if (!empty($politicians)) {
+               
                 $message = trans('lang.create_post');
 
-                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $post, $message);
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicians, $message);
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
@@ -128,12 +138,21 @@ class PostController extends Controller
     }
 
     /**
-     * @OA\Post(
-     *     path="/v1/create-post",
-     *     tags={"Create Post"},
-     *     summary="Create Post",
-     *     operationId="create-post",
-     *
+     * @OA\Patch(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/update-post",
+     *     tags={"Update Post"},
+     *     summary="Update Post",
+     *     operationId="update-post",
+     *     
+     *     @OA\Parameter(
+     *       name="post_id",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ), 
      *     @OA\Parameter(
      *       name="politicianId",
      *       in="query",
@@ -196,111 +215,21 @@ class PostController extends Controller
      *     ),
      * )
      */
-
-    /**
-     * Upload the media of post API
-     *
-     * @param CreatePostValidationRequest $request
-     */
-    public function mediaUpload(CreatePostValidationRequest $request)
-    {
-        try {
-            $post = $this->postRepository->createPost($request);
-
-            if (!empty($post)) {
-                $message = trans('lang.create_post');
-
-                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $post, $message);
-            }
-        } catch (Exception $e) {
-            return $this->apiResponse->handleAndResponseException($e);
-        }
-    }
-
-    /**
-     * @OA\Post(
-     *     path="/v1/create-post",
-     *     tags={"Create Post"},
-     *     summary="Create Post",
-     *     operationId="create-post",
-     *
-     *     @OA\Parameter(
-     *       name="politicianId",
-     *       in="query",
-     *       required=true,
-     *       @OA\Schema(
-     *          type="integer"
-     *       )
-     *     ),
-     *     @OA\Parameter(
-     *       name="postContent",
-     *       in="query",
-     *       required=false,
-     *       @OA\Schema(
-     *          type="string"
-     *       )
-     *     ),
-     *     @OA\Parameter(
-     *       name="postGif",
-     *       in="query",
-     *       required=false,
-     *       @OA\Schema(
-     *           type="string"
-     *       )
-     *     ),
-     *     @OA\Parameter(
-     *       name="postImages",
-     *       in="query",
-     *       required=false,
-     *       @OA\Schema(
-     *           type="string"
-     *       )
-     *     ),
-     *     @OA\Parameter(
-     *       name="postVideos",
-     *       in="query",
-     *       required=false,
-     *       @OA\Schema(
-     *           type="string"
-     *       )
-     *     ), 
-     *
-     *     @OA\Response(
-     *         response=200,
-     *         description="Success",
-     *         @OA\MediaType(
-     *             mediaType="application/json",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Invalid request"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="not found"
-     *     ),
-     * )
-     */
-
     /**
      * Update Post API
      *
-     * @param CreatePostValidationRequest $request
+     * @param UpdateUserPostValidationRequest $request
      */
-    public function updatePost(CreatePostValidationRequest $request)
+    public function updatePost(UpdateUserPostValidationRequest $request)
     {
         try {
-            $post = $this->postRepository->createPost($request);
+            $politicians = $this->postRepository->createUserPost($request);
 
-            if (!empty($post)) {
-                $message = trans('lang.create_post');
+            if (!empty($politicians)) {
+               
+                $message = trans('lang.update_post');
 
-                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $post, $message);
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicians, $message);
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
@@ -309,52 +238,80 @@ class PostController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/v1/create-post",
-     *     tags={"Create Post"},
-     *     summary="Create Post",
-     *     operationId="create-post",
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/media-uplaod",
+     *     tags={"Update Post"},
+     *     summary="Update Post",
+     *     operationId="media-uplaod",
+     *     
+     *     @OA\Parameter(
+     *       name="file",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="string"
+     *       )
+     *     ), 
+     *     
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Update Post API
+     *
+     * @param MediaUploadValidationRequest $request
+     */
+    public function mediaUpload(MediaUploadValidationRequest $request)
+    {
+        try {
+            $image = $this->postRepository->mediaUpload($request);
+
+            if (!empty($image)) {
+               
+                $message = trans('lang.media_upload');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $image, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Delete(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/delete-post",
+     *     tags={"Delete Post"},
+     *     summary="Delete Post",
+     *     operationId="delete-post",
      *
      *     @OA\Parameter(
-     *       name="politicianId",
+     *       name="post_id",
      *       in="query",
      *       required=true,
      *       @OA\Schema(
      *          type="integer"
      *       )
      *     ),
-     *     @OA\Parameter(
-     *       name="postContent",
-     *       in="query",
-     *       required=false,
-     *       @OA\Schema(
-     *          type="string"
-     *       )
-     *     ),
-     *     @OA\Parameter(
-     *       name="postGif",
-     *       in="query",
-     *       required=false,
-     *       @OA\Schema(
-     *           type="string"
-     *       )
-     *     ),
-     *     @OA\Parameter(
-     *       name="postImages",
-     *       in="query",
-     *       required=false,
-     *       @OA\Schema(
-     *           type="string"
-     *       )
-     *     ),
-     *     @OA\Parameter(
-     *       name="postVideos",
-     *       in="query",
-     *       required=false,
-     *       @OA\Schema(
-     *           type="string"
-     *       )
-     *     ), 
-     *
+     *     
      *     @OA\Response(
      *         response=200,
      *         description="Success",
@@ -380,9 +337,9 @@ class PostController extends Controller
     /**
      * Delete Post API
      *
-     * @param DeletePostValidationRequest $request
+     * @param DeleteUserPostValidationRequest $request
      */
-    public function deletePost(DeletePostValidationRequest $request)
+    public function deletePost(DeleteUserPostValidationRequest $request)
     {
         try {
             $post = $this->postRepository->deletePost($request);
@@ -399,6 +356,7 @@ class PostController extends Controller
 
     /**
      * @OA\Post(
+     *     security={{"bearerAuth":{}}},
      *     path="/v1/post-reaction",
      *     tags={"Post Reaction"},
      *     summary="Post Reaction",
@@ -454,12 +412,11 @@ class PostController extends Controller
     /**
      * Post Reaction API
      *
-     * @param PostReactionValidationRequest $request
+     * @param UserPostReactionValidationRequest $request
      */
-    public function postReaction(PostReactionValidationRequest $request)
+    public function postReaction(UserPostReactionValidationRequest $request)
     {
         try {
-            echo '<pre>'; print_r(); die;
             $reaction = $this->reactionRepository->postReaction($request);
 
             if (!empty($reaction)) {
@@ -474,13 +431,14 @@ class PostController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/v1/create-post",
-     *     tags={"Create Post"},
-     *     summary="Create Post",
-     *     operationId="create-post",
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/post-comment",
+     *     tags={"Post Comment"},
+     *     summary="Post Comment",
+     *     operationId="post-comment",
      *
      *     @OA\Parameter(
-     *       name="politicianId",
+     *       name="post_id",
      *       in="query",
      *       required=true,
      *       @OA\Schema(
@@ -488,7 +446,7 @@ class PostController extends Controller
      *       )
      *     ),
      *     @OA\Parameter(
-     *       name="postContent",
+     *       name="comment",
      *       in="query",
      *       required=false,
      *       @OA\Schema(
@@ -496,7 +454,7 @@ class PostController extends Controller
      *       )
      *     ),
      *     @OA\Parameter(
-     *       name="postGif",
+     *       name="gif",
      *       in="query",
      *       required=false,
      *       @OA\Schema(
@@ -504,22 +462,14 @@ class PostController extends Controller
      *       )
      *     ),
      *     @OA\Parameter(
-     *       name="postImages",
+     *       name="postImage",
      *       in="query",
      *       required=false,
      *       @OA\Schema(
      *           type="string"
      *       )
      *     ),
-     *     @OA\Parameter(
-     *       name="postVideos",
-     *       in="query",
-     *       required=false,
-     *       @OA\Schema(
-     *           type="string"
-     *       )
-     *     ), 
-     *
+     * 
      *     @OA\Response(
      *         response=200,
      *         description="Success",
@@ -545,17 +495,82 @@ class PostController extends Controller
     /**
      * Post Comment API
      *
-     * @param DeletePostValidationRequest $request
+     * @param CreatePostCommentValidationRequest $request
      */
-    public function postComment(DeletePostValidationRequest $request)
+    public function postComment(CreatePostCommentValidationRequest $request)
     {
         try {
-            $post = $this->postRepository->deletePost($request);
+            $comment = $this->postCommentRepository->postComment($request);
 
-            if (!empty($post)) {
+            if (!empty($comment)) {
+                $success = [
+                    $comment
+                ];
                 $message = trans('lang.add_post_comment');
 
-                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), '', $message);
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/post-comment",
+     *     tags={"Post Comment"},
+     *     summary="Post Comment",
+     *     operationId="post-comment",
+     *
+     *     @OA\Parameter(
+     *       name="post_id",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     * 
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+
+    /**
+     * Get Post Comment API
+     *
+     * @param DeleteUserPostValidationRequest $request
+     */
+    public function getComments(DeleteUserPostValidationRequest $request)
+    {
+        try {
+            $comments = $this->postCommentRepository->getComments($request);
+
+            if (!empty($comments)) {
+                $success = [
+                    $comments
+                ];
+                $message = trans('lang.get_post_comment');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
