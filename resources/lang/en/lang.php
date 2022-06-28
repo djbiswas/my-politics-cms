@@ -16,5 +16,6 @@ return [
     'delete_post' => 'Post is deleted successfully.!',
     'post_reaction' => 'Rection is stord successfully.!',
     'add_post_comment' => 'Post comment is stord successfully.!',
+    'get_post_comment' => 'Post comments are fetched successfully.!',
 ]
 ?>

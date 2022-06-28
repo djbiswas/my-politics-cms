@@ -15,7 +15,6 @@ use App\Http\Requests\UserPostReactionValidationRequest;
 use App\Http\Requests\CreatePostCommentValidationRequest;
 use Exception;
 
-
 class UserPostController extends Controller
 {
 
@@ -140,6 +139,7 @@ class UserPostController extends Controller
 
     /**
      * @OA\Patch(
+     *     security={{"bearerAuth":{}}},
      *     path="/v1/update-post",
      *     tags={"Update Post"},
      *     summary="Update Post",
@@ -238,6 +238,7 @@ class UserPostController extends Controller
 
     /**
      * @OA\Post(
+     *     security={{"bearerAuth":{}}},
      *     path="/v1/media-uplaod",
      *     tags={"Update Post"},
      *     summary="Update Post",
@@ -296,6 +297,7 @@ class UserPostController extends Controller
 
     /**
      * @OA\Delete(
+     *     security={{"bearerAuth":{}}},
      *     path="/v1/delete-post",
      *     tags={"Delete Post"},
      *     summary="Delete Post",
@@ -354,6 +356,7 @@ class UserPostController extends Controller
 
     /**
      * @OA\Post(
+     *     security={{"bearerAuth":{}}},
      *     path="/v1/post-reaction",
      *     tags={"Post Reaction"},
      *     summary="Post Reaction",
@@ -428,6 +431,7 @@ class UserPostController extends Controller
 
     /**
      * @OA\Post(
+     *     security={{"bearerAuth":{}}},
      *     path="/v1/post-comment",
      *     tags={"Post Comment"},
      *     summary="Post Comment",
@@ -503,6 +507,68 @@ class UserPostController extends Controller
                     $comment
                 ];
                 $message = trans('lang.add_post_comment');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/post-comment",
+     *     tags={"Post Comment"},
+     *     summary="Post Comment",
+     *     operationId="post-comment",
+     *
+     *     @OA\Parameter(
+     *       name="post_id",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     * 
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+
+    /**
+     * Get Post Comment API
+     *
+     * @param DeleteUserPostValidationRequest $request
+     */
+    public function getComments(DeleteUserPostValidationRequest $request)
+    {
+        try {
+            $comments = $this->postCommentRepository->getComments($request);
+
+            if (!empty($comments)) {
+                $success = [
+                    $comments
+                ];
+                $message = trans('lang.get_post_comment');
 
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
             }

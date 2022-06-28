@@ -49,6 +49,6 @@ Route::group(['namespace' => 'API\v1'], function() {
         Route::delete('delete-post', [UserPostController::class, 'deletePost'])->name('user.delete.post');
         Route::post('post-reaction', [UserPostController::class, 'postReaction'])->name('user.post.reaction');
         Route::post('post-comment', [UserPostController::class, 'postComment'])->name('user.post.comment');
-        Route::post('get-comments', [UserPostController::class, 'getComments'])->name('user.get.comment');
+        Route::get('get-comments', [UserPostController::class, 'getComments'])->name('user.get.comment');
     });
 });
