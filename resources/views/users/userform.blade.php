@@ -35,10 +35,10 @@
             <div class="row a-i-end">
                 <div class="form-group col-3">
                     <label for="penName">Pen Name</label>
-                    <input type="text" required class="form-control" name='meta[p_first_name]' id="p_firstName" placeholder="First Name" value="">
+                    <input type="text" required class="form-control" name='meta[p_first_name]' id="p_firstName" placeholder="First Name" value="{{ (!empty($metaData['p_first_name'])) ? $metaData['p_first_name'] : '' }}">
                 </div>
                 <div class="form-group col-3">
-                    <input type="text" required class="form-control" name='meta[p_last_name]' id="p_lastName" placeholder="Last Name" value="">
+                    <input type="text" required class="form-control" name='meta[p_last_name]' id="p_lastName" placeholder="Last Name" value="{{ (!empty($metaData['p_last_name'])) ? $metaData['p_last_name'] : '' }}">
                 </div>
             </div>
             <div class="row a-i-end">
@@ -59,13 +59,13 @@
             <div class="row">
                 <div class="form-group col-6">
                     <label for="address">Address</label>
-                    <input type="text" required class="form-control" name='meta[address]' id="address" placeholder="Address" value="">
+                    <input type="text" required class="form-control" name='meta[address]' id="address" placeholder="Address" value="{{ (!empty($metaData['address'])) ? $metaData['address'] : '' }}">
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-6">
                     <label for="zipcode">Zipcode</label>
-                    <input type="text" required class="form-control" name='meta[zipcode]' id="zipcode" placeholder="Zipcode" value="">
+                    <input type="text" required class="form-control" name='meta[zipcode]' id="zipcode" placeholder="Zipcode" value="{{ (!empty($metaData['zipcode'])) ? $metaData['zipcode'] : '' }}">
                 </div>
             </div>
             <div class="row">

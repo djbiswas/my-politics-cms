@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Datatables;
 use App\Models\User;
 use App\Repositories\RankRepository;
+use App\Http\Controllers\csrf;
 
 
 class UserController extends Controller
@@ -44,7 +45,12 @@ class UserController extends Controller
                 return Datatables::of($data)
                         ->addIndexColumn()
                         ->addColumn('action', function($row){
-                                $btn = '<a href="'.route('get.user',$row->id).'">Edit </a> | <a class="btn-delete" href="{{route("get.politician")}}/'.$row->id.'">Delete </a>';
+                                $btn = '<a href="'.route('get.user',$row->id).'">Edit </a> ';
+                                $btn .= '<form method="POST" action="'.route('users.delete', $row->id).'" style="float:right;">
+                                            <input type="hidden" name="_token" value="'.csrf_token().'">
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <a href="javascript:void(0)" onclick="return DeleteFunction($(this))"> | Delete</a>
+                                        </form>';
                                 return $btn;
                         })
                         ->rawColumns(['action'])
@@ -64,9 +70,14 @@ class UserController extends Controller
      * @param $id
      */
     public function getUser($id=null){
-        $data=User::find($id);
         $ranks = $this->rankRepository->fetchAllData([])->toArray();
-        return view('users.userform',['data'=>$data, 'ranks'=>$ranks]);
+        if($id){
+            $data=User::find($id);
+            $metaData = $data->getMeta()->toArray();
+            return view('users.userform',['data'=>$data, 'ranks'=>$ranks, 'metaData'=>$metaData]);
+        }
+        return view('users.userform',['data'=>[], 'ranks'=>$ranks, 'metaData'=>[]]);
+
     }
 
     /**
@@ -140,5 +151,15 @@ class UserController extends Controller
             \Log::info($e->getMessage());
             return response()->json(['code'=>300,'msg'=>"Error - ".$e->getMessage()]);
         }
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function delete($id){
+        User::find($id)->delete();
+        return back();
     }
 }

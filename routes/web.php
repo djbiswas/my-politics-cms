@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::post('post-user', [UserController::class, 'postUser'])->name('post.user');
     Route::post('check-user-email', [UserController::class, 'checkEmail'])->name('check.user.email');
     Route::post('check-user-phone', [UserController::class, 'checkPhone'])->name('check.user.phone');
+    Route::delete('users/{id}', [UserController::class, 'delete'])->name('users.delete');
 
     //Route for rank
     Route::get('ranks', [RankController::class, 'index'])->name('ranks.index');
