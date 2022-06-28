@@ -63,6 +63,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Post::class);
     }
 
+    public function votes()
+    {
+        return $this->hasMany(PoliticanVote::class);
+    }
+
     /**
      *
      * @param type $query

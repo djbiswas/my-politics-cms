@@ -42,7 +42,7 @@ class ReactionRepository
         $reaction = Reaction::updateOrCreate($condition, $reactionData);
 
         $data = Reaction::select(DB::raw('count(*) AS reactCount, SUM(CASE WHEN user_id = '.Auth::user()->id.' THEN 1 ELSE 0 END) as userCount'))
-            ->onlyActive()->where(['m_id'=>$request->mId, 'reaction'=>'like'])->get();
+            ->onlyActive()->where(['m_id' => $request->mId, 'reaction' => 'like'])->get();
 
         $reactionTextCount = $data[0]->reactCount;
         if($reactionTextCount == 0){

@@ -407,7 +407,7 @@ class UserController extends Controller
      *     security={{"bearerAuth":{}}},
      *     path="/v1/logout",
      *     tags={"Logout"},
-     *     description="Logout API for user",
+     *     summary="Logout API for user",
      *     operationId="logout",
      *
      *     @OA\Response(

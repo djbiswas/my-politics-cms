@@ -36,6 +36,12 @@ Route::group(['namespace' => 'API\v1'], function() {
     // Get Potician API 
     Route::get('get-politicians', [PoliticianController::class, 'getPoliticians'])->name('get.politicians');
 
+    // Get Potician Details API 
+    Route::get('get-politician-detail', [PoliticianController::class, 'getPoliticianDetail'])->name('get.politician.detail');
+
+    // Get Potician Votes API
+    Route::get('get-politician-votes', [PoliticianController::class, 'getPoliticianVotes'])->name('get.politician.votes');
+    
     Route::group(['middleware' => ['jwt.verify']], function () {
         // User API
         Route::post('update-profile', [UserController::class, 'updateProfile'])->name('user.update.profile');
