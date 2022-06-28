@@ -68,6 +68,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(PoliticanVote::class);
     }
 
+    public function ranks()
+    {
+        return $this->belongsTo(Rank::class, 'rank_id', 'id');
+    }
+
     /**
      *
      * @param type $query

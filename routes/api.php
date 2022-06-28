@@ -36,14 +36,8 @@ Route::group(['namespace' => 'API\v1'], function() {
     // Get Potician API 
     Route::get('get-politicians', [PoliticianController::class, 'getPoliticians'])->name('get.politicians');
 
-    // Get Potician Details API 
-    Route::get('get-politician-detail', [PoliticianController::class, 'getPoliticianDetail'])->name('get.politician.detail');
-
     // Get Potician Votes API
     Route::get('get-politician-votes', [PoliticianController::class, 'getPoliticianVotes'])->name('get.politician.votes'); 
-    
-    // Get Potician Votes API
-    Route::get('get-trust', [PoliticianController::class, 'getTrust'])->name('get.politician.votes');
     
     Route::group(['middleware' => ['jwt.verify']], function () {
         // User API
@@ -59,5 +53,11 @@ Route::group(['namespace' => 'API\v1'], function() {
         Route::post('post-reaction', [UserPostController::class, 'postReaction'])->name('user.post.reaction');
         Route::post('post-comment', [UserPostController::class, 'postComment'])->name('user.post.comment');
         Route::get('get-comments', [UserPostController::class, 'getComments'])->name('user.get.comment');
+       
+        // Get Trusts API 
+        Route::post('get-trust', [PoliticianController::class, 'getTrust'])->name('get.politician.trust');
+        // Get Potician Details API 
+        Route::post('get-politician-detail', [PoliticianController::class, 'getPoliticianDetail'])->name('get.politician.detail');
+
     });
 });

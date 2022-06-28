@@ -120,9 +120,9 @@ class PoliticianController extends Controller
     /**
      * Get Potician Details API
      *
-     * @param CreateUserPostValidationRequest $request
+     * @param Request $request
      */
-    public function getPoliticianDetail(CreateUserPostValidationRequest $request)
+    public function getPoliticianDetail(Request $request)
     {
         try {
             $politicianDetails = $this->politicianRepository->getPoliticianDetail($request);

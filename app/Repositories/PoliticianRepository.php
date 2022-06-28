@@ -5,6 +5,11 @@ namespace App\Repositories;
 use JWTAuth;
 use App\Models\Politician;
 use App\Models\PoliticanVote;
+use App\Models\PoliticianMeta;
+use App\Models\Rank;
+use App\Models\User;
+use App\Models\UserTrust;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -46,9 +51,36 @@ class PoliticianRepository
      */
     public function getPoliticianDetail($request)
     {
-        echo '<pre>'; print_r($request->all()); die;
+
+        $politician = Politician::select('id', 'name', 'title', 'name_alias', 'image')->firstOrFail($request->politicianId);
+
+        $politicanMeta = PoliticianMeta::select(\DB::raw('GROUP_CONCAT(meta_key) as meta_key, GROUP_CONCAT(meta_value) as meta_value'))
+        ->where('politician_id', $request->politicianId)->first();
+        
+        $meta_data = self::explode_meta_data_fn($politicanMeta['meta_key'], $politicanMeta['meta_value']);
+         
+        $voting_alerts = '';
+        if(!empty($meta_data['voting_alerts'])){
+            $voting_alerts = (is_array($meta_data['voting_alerts']) && in_array($user_id, $meta_data['voting_alerts'])) ? 'Yes' : 'no';
+		}
+
         return [
+            'politician' => $politician,
+            'voting_alerts' => $voting_alerts,
+            'meta_data' => $meta_data
         ];
+    }
+
+    public function explode_meta_data_fn($keys, $values) {
+        $meta_data = [];
+        $meta_keys = explode(',', $keys);
+        $meta_values = explode(',', $values);
+        if (!empty($meta_keys)) {
+            foreach ($meta_keys as $key => $value) {
+                $meta_data[$value] = $meta_values[$key];
+            }
+        }
+        return $meta_data;
     }
 
     /**
@@ -96,8 +128,32 @@ class PoliticianRepository
      */
     public function getTrust($request)
     {
-        echo '<pre>'; print_r($request->all()); die;
+       
+        $usertrust = UserTrust::select(DB::raw('COALESCE(SUM(trust = "up"), 0) AS up, COALESCE(SUM(trust = "down"), 0) AS down'))
+       ->where(['user_id' => Auth::id()])->get();
+
+        if ($usertrust) {
+            $up_count = $usertrust[0]->up;
+            $down_count = $usertrust[0]->down;
+            $percentage = $this->getScorePercentage($up_count, $down_count);
+        }
+
+        $userRank = User::with('ranks')->findOrFail(Auth::id());
+        if(!empty($userRank->ranks)){
+            $user_rank = $userRank->ranks->title;
+            $rank_image = $userRank->ranks->image;
+        }
+
+        $againstData = UserTrust::where(['user_id' => $request->respondedId, 'responded_id' => Auth::id()])->first();
+        if(!empty($againstData)){
+            $trust_response = $againstData->trust;
+        }
+
         return [
+            'trust_percentage' => $percentage ?? '', 
+            'user_rank' => $user_rank ?? '',
+            'rank_image' => $rank_image ?? '',
+            'trust_response' => $trust_response ?? ''
         ];
     }
 
