@@ -11,7 +11,7 @@ class Post extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id', 'politician_id', 'content', 'gif', 'status'
+        'user_id', 'politician_id', 'content', 'gif', 'status', 'images', 'videos', 'created_at'
     ];
 
     public function user()
@@ -32,6 +32,21 @@ class Post extends Model
     public function postVideos()
     {
         return $this->hasMany(PostVideo::class);
+    }
+
+    public function userTrust()
+    {
+        return $this->hasMany(UserTrust::class, 'responded_id', 'id');
+    }
+
+    public function reactions()
+    {
+        return $this->hasMany(Reaction::class, 'm_id', 'id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(PostComment::class, 'post_id', 'id');
     }
     
     /**

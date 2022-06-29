@@ -129,7 +129,28 @@ class PoliticianRepository
      */
     public function setPoliticianVote($request)
     {
-        return [];
+        $is_voted = self::isVoted(Auth::id(), $request->politician_id);
+
+        if (empty($is_voted)) {
+            
+            $voteData = [
+                'user_id' => Auth::user()->id,
+                'politician_id' => $request->politicianId,
+                'vote' => $request->vote,
+                'status' => config('constants.status.active')
+            ];    
+    
+            $vote = PoliticanVote::create($voteData);	
+           
+        } else {
+           
+            $vote = $is_voted->update(['vote' => $request->vote]);
+           
+        }
+       
+        return [
+            'vote' => $vote
+        ];
     }
 
     /**
@@ -227,6 +248,10 @@ class PoliticianRepository
             }
         }
         return $meta_data;
+    }
+
+    public function isVoted($id, $politician_id){
+        return PoliticanVote::where(['user_id' => $id, 'politician_id' => $politician_id])->first();
     }
 }
 

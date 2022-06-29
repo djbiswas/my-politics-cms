@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Response\CustomApiResponse;
 use App\Http\Requests\CreateUserPostValidationRequest;
+use App\Http\Requests\SetPoliticianVoteValidationRequest;
 use App\Repositories\PoliticianRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -211,9 +212,9 @@ class PoliticianController extends Controller
     /**
      * Create Potician Vote API
      *
-     * @param Request $request
+     * @param SetPoliticianVoteValidationRequest $request
      */
-    public function setPoliticianVote(Request $request)
+    public function setPoliticianVote(SetPoliticianVoteValidationRequest $request)
     {
         try {
             $politicianVote = $this->politicianRepository->setPoliticianVote($request);
