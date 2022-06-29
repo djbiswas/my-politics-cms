@@ -123,6 +123,16 @@ class PoliticianRepository
     }
 
     /**
+     * For Storing the record respective model in storage
+     *
+     * @param Request $request
+     */
+    public function setPoliticianVote($request)
+    {
+        return [];
+    }
+
+    /**
      * For fetching Trust
      *
      * @param Request $request

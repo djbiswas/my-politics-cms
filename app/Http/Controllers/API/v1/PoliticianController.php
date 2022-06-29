@@ -139,6 +139,97 @@ class PoliticianController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/set-politician-vote",
+     *     tags={"Set Politician Vote"},
+     *     summary="Set Politician Vote",
+     *     operationId="set-politician-vote",
+     *
+     *     @OA\Parameter(
+     *       name="politicianId",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="postContent",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *          type="string"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="postGif",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *           type="string"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="postImages",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *           type="string"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="postVideos",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *           type="string"
+     *       )
+     *     ), 
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Create Potician Vote API
+     *
+     * @param Request $request
+     */
+    public function setPoliticianVote(Request $request)
+    {
+        try {
+            $politicianVote = $this->politicianRepository->setPoliticianVote($request);
+
+            if (!empty($politicianVote)) {
+               
+                $message = trans('lang.set_politician_vote');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicianVote, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
      * @OA\Get(
      *     security={{"bearerAuth":{}}},
      *     path="/v1/get-politician-votes",
