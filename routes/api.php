@@ -42,8 +42,8 @@ Route::group(['namespace' => 'API\v1'], function() {
     // Get Potician Votes API
     Route::get('get-politician-votes', [PoliticianController::class, 'getPoliticianVotes'])->name('get.politician.votes'); 
     
-    // Get Trusts API 
-    Route::post('get-trust', [PoliticianController::class, 'getTrust'])->name('get.politician.trust');
+    // Get Trust API 
+    Route::get('get-trust', [PoliticianController::class, 'getTrust'])->name('get.politician.trust');
     
     Route::group(['middleware' => ['jwt.verify']], function () {
         // User API

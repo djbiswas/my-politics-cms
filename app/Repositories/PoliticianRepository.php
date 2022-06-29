@@ -117,7 +117,7 @@ class PoliticianRepository
             'down_count' => $downCount,
             'up_count' => $upCount,
             'percentage' => $percentage,
-            'users_vote' => $userVote,
+            'users_vote' => $userVote ?? NULL,
         ];
 
     }
@@ -133,27 +133,29 @@ class PoliticianRepository
        ->where(['user_id' => Auth::id()])->get();
 
         if ($usertrust) {
-            $up_count = $usertrust[0]->up;
-            $down_count = $usertrust[0]->down;
-            $percentage = $this->getScorePercentage($up_count, $down_count);
+            $upCount = $usertrust[0]->up;
+            $downCount = $usertrust[0]->down;
+            $percentage = $this->getScorePercentage($upCount, $downCount);
         }
 
         $userRank = User::with('ranks')->findOrFail(Auth::id());
-        if(!empty($userRank->ranks)){
-            $user_rank = $userRank->ranks->title;
-            $rank_image = $userRank->ranks->image;
+        if($userRank->ranks){
+            $userRank = $userRank->ranks->title;
+            $rankImage = $userRank->ranks->image;
         }
 
-        $againstData = UserTrust::where(['user_id' => $request->respondedId, 'responded_id' => Auth::id()])->first();
-        if(!empty($againstData)){
-            $trust_response = $againstData->trust;
+        if($request->respondedId) {
+            $againstData = UserTrust::where(['user_id' => $request->respondedId, 'responded_id' => Auth::id()])->get();
+            if(!empty($againstData)){
+                $trustResponse = $againstData[0]->trust;
+            }
         }
-
+        
         return [
-            'trust_percentage' => $percentage ?? '', 
-            'user_rank' => $user_rank ?? '',
-            'rank_image' => $rank_image ?? '',
-            'trust_response' => $trust_response ?? ''
+            'trust_percentage' => $percentage, 
+            'user_rank' => $userRank,
+            'rank_image' => $rankImage,
+            'trust_response' => $trustResponse ?? NULL
         ];
     }
 
