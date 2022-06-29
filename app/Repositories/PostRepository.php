@@ -14,7 +14,17 @@ use Illuminate\Support\Facades\Storage;
  * Class PostRepository.
  */
 class PostRepository
-{
+{   
+    /**
+     * For fetching posts records
+     *
+     * @param Request $request
+     */
+    public function getPosts($request)
+    {
+        return [];
+    }
+
     /**
      * For Storing the record respective model in storage
      *
@@ -67,6 +77,16 @@ class PostRepository
         return [
             'post' => $post
         ];
+    }
+
+    /**
+     * For Updating the record respective model in storage
+     *
+     * @param Request $request
+     */
+    public function updatePost(Request $request)
+    {
+        return [];
     }
 
     /**
