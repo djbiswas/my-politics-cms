@@ -11,12 +11,24 @@ use App\Models\User;
 use App\Models\UserTrust;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Http\Request;
 /**
  * Class PoliticianRepository.
  */
 class PoliticianRepository
 {
+    private $userDetails;
+
+    public function __construct(Request $request) {
+        $token = $request->header('Authorization');
+        if($token) {
+            $parseValue = JWTAuth::parseToken();
+            $this->userDetails = $parseValue->authenticate();
+        } else {
+            $this->userDetails = '';
+        }
+    }
+
     /**
      * For selecting the data
      *
@@ -51,36 +63,25 @@ class PoliticianRepository
      */
     public function getPoliticianDetail($request)
     {
+        $votingAlerts = '';
 
         $politician = Politician::select('id', 'name', 'title', 'name_alias', 'image')->firstOrFail($request->politicianId);
 
-        $politicanMeta = PoliticianMeta::select(\DB::raw('GROUP_CONCAT(meta_key) as meta_key, GROUP_CONCAT(meta_value) as meta_value'))
+        $politicanMeta = PoliticianMeta::select(\DB::raw('GROUP_CONCAT(key) as meta_key, GROUP_CONCAT(value) as meta_value'))
         ->where('politician_id', $request->politicianId)->first();
         
-        $meta_data = self::explode_meta_data_fn($politicanMeta['meta_key'], $politicanMeta['meta_value']);
+        $metaData = self::explode_meta_data_fn($politicanMeta['meta_key'], $politicanMeta['meta_value']);
          
-        $voting_alerts = '';
-        if(!empty($meta_data['voting_alerts'])){
-            $voting_alerts = (is_array($meta_data['voting_alerts']) && in_array($user_id, $meta_data['voting_alerts'])) ? 'Yes' : 'no';
+        
+        if(!empty($metaData['voting_alerts'])){
+            $votingAlerts = (is_array($metaData['voting_alerts']) && in_array($this->userDetails->id, $metaData['voting_alerts'])) ? 'Yes' : 'no';
 		}
 
         return [
             'politician' => $politician,
-            'voting_alerts' => $voting_alerts,
-            'meta_data' => $meta_data
+            'voting_alerts' => $votingAlerts,
+            'meta_data' => $metaData
         ];
-    }
-
-    public function explode_meta_data_fn($keys, $values) {
-        $meta_data = [];
-        $meta_keys = explode(',', $keys);
-        $meta_values = explode(',', $values);
-        if (!empty($meta_keys)) {
-            foreach ($meta_keys as $key => $value) {
-                $meta_data[$value] = $meta_values[$key];
-            }
-        }
-        return $meta_data;
     }
 
     /**
@@ -90,33 +91,33 @@ class PoliticianRepository
      */
     public function getPoliticianVotes($request)
     {
-        $user_vote = '';
+        $userVote = '';
 
-        $token = $request->header('Authorization');
+        // $token = $request->header('Authorization');
         
         $politicanVote = PoliticanVote::select(DB::raw('COALESCE(SUM(vote = "up"), 0) AS up, COALESCE(SUM(vote = "down"), 0) AS down'))
         ->onlyActive()->where(['politician_id' => $request->politicianId])->get();
 
         if ($politicanVote) {
-            $up_count = $politicanVote[0]->up;
-            $down_count = $politicanVote[0]->down;
-            $percentage = $this->getScorePercentage($up_count, $down_count);
+            $upCount = $politicanVote[0]->up;
+            $downCount = $politicanVote[0]->down;
+            $percentage = $this->getScorePercentage($upCount, $downCount);
         }
         
-        if($token) {
-            $parseValue = JWTAuth::parseToken();
-            $user = $parseValue->authenticate();
+        if(!empty($this->userDetails)) {
+            // $parseValue = JWTAuth::parseToken();
+            // $user = $parseValue->authenticate();
 
-            $userVote = PoliticanVote::select('vote')->onlyActive()->where(['politician_id' => $request->politicianId, 'user_id' => $user->id])->get();
+            $userVotes = PoliticanVote::select('vote')->onlyActive()->where(['politician_id' => $request->politicianId, 'user_id' => $this->userDetails->id])->get();
         
-            $user_vote = $userVote[0]->vote;
+            $userVote = $userVotes[0]->vote;
         }
 
         return [
-            'down_count' => $down_count,
-            'up_count' => $up_count,
+            'down_count' => $downCount,
+            'up_count' => $upCount,
             'percentage' => $percentage,
-            'users_vote' => $user_vote,
+            'users_vote' => $userVote,
         ];
 
     }
@@ -128,8 +129,7 @@ class PoliticianRepository
      */
     public function getTrust($request)
     {
-       
-        $usertrust = UserTrust::select(DB::raw('COALESCE(SUM(trust = "up"), 0) AS up, COALESCE(SUM(trust = "down"), 0) AS down'))
+       $usertrust = UserTrust::select(DB::raw('COALESCE(SUM(trust = "up"), 0) AS up, COALESCE(SUM(trust = "down"), 0) AS down'))
        ->where(['user_id' => Auth::id()])->get();
 
         if ($usertrust) {
@@ -203,6 +203,18 @@ class PoliticianRepository
             }
         }
         return $percentage;
+    }
+
+    public function explode_meta_data_fn($keys, $values) {
+        $meta_data = [];
+        $meta_keys = explode(',', $keys);
+        $meta_values = explode(',', $values);
+        if (!empty($meta_keys)) {
+            foreach ($meta_keys as $key => $value) {
+                $meta_data[$value] = $meta_values[$key];
+            }
+        }
+        return $meta_data;
     }
 }
 
