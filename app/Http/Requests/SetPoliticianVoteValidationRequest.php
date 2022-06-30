@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Traits\FormRequestValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SetPoliticianVoteValidationRequest extends FormRequest
 {
+    use FormRequestValidationTrait;
     /**
      * Determine if the user is authorized to make this request.
      *

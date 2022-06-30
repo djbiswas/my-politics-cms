@@ -44,11 +44,17 @@ class UserRepository
             'id' => Auth::id()
         ];
 
-        $userDetails = self::fetchUserDetails($user);
+        $userMetaDetails = User::with(['userMeta'  => function ($query) {
+            $query->select('id', 'user_id', \DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'));
+        }, 'ranks'])->withCount('posts')->where($user)->firstOrFail();
+
+        $meta_data = self::explode_meta_data_fn($userMetaDetails->userMeta[0]->meta_key, $userMetaDetails->userMeta[0]->meta_value);
+
+        $userMetaDetails['meta_data'] = $meta_data;
 
         return [
-            'token' => JWTAuth::fromUser($userDetails),
-            'user' => $userDetails
+            'token' => JWTAuth::fromUser($userMetaDetails),
+            'user' => $userMetaDetails
         ];
     }
 
@@ -171,7 +177,7 @@ class UserRepository
      */
     public function fetchUserDetails(array $condition)
     {
-        return User::with('userMeta')->where($condition)->firstOrFail();
+        return User::where($condition)->firstOrFail();
     }
 
     /**
@@ -489,7 +495,7 @@ class UserRepository
             'reg_status' => '{"step":2,"status":0}',
             'registered_date' => now(),
             'rank_id' => 0,
-            'role_id' => 1
+            'role_id' => config('constants.role.user')
         ];
 
         $user = User::create($fields);
@@ -571,8 +577,7 @@ class UserRepository
 
         $updateUser = self::updateUserData($condition, $fields);
 
-        $metaRequest = $request->except('userId','firstName', 'lastName', 'email', 'phone', 'profilePhoto', 'reg_status', 'registered_date', 'status', 'action', 'step', 'fieldType', 'fieldValue');
-
+        $metaRequest = $request->except('userId', 'validationCode', 'firstName', 'lastName', 'email', 'phone', 'profilePhoto', 'reg_status', 'registered_date', 'status', 'action', 'step', 'fieldType', 'fieldValue');
         foreach($metaRequest as $key=>$value){
 
             $metaCondition = [
@@ -580,17 +585,17 @@ class UserRepository
                 'meta_key' => $key
             ];
 
-            $metaFields = [
-                'user_id' =>  $userDetails->id,
-                'meta_key' => $key,
-                'meta_value' => $value
-            ];
-
             if($key == 'penName'){
                 $metaFields = [
                     'user_id' =>  $userDetails->id,
                     'meta_key' => $key,
                     'meta_value' => json_encode($value)
+                ];
+            }else{
+                $metaFields = [
+                    'user_id' =>  $userDetails->id,
+                    'meta_key' => $key,
+                    'meta_value' => $value
                 ];
             }
 
@@ -620,6 +625,18 @@ class UserRepository
             $userObj->save();
         }
         return $userObj;
+    }
+
+    public function explode_meta_data_fn($keys, $values) {
+        $meta_data = [];
+        $meta_keys = explode('-~-', $keys);
+        $meta_values = explode('-~-', $values);
+        if (!empty($meta_keys)) {
+            foreach ($meta_keys as $key => $value) {
+                $meta_data[$value] = $meta_values[$key] ?? null;
+            }
+        }
+        return $meta_data;
     }
 
 }
