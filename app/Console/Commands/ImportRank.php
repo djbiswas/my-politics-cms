@@ -32,7 +32,7 @@ class ImportRank extends Command
      *
      * @var string
      */
-    protected $description = 'Import the older rank data from older database';
+    protected $description = 'Import the older ranks data from older database';
 
     /**
      * Create a new command instance.

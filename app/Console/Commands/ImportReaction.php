@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Category;
+use App\Models\Reaction;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class ImportCategory extends Command
+class ImportReaction extends Command
 {
 
     /**
@@ -25,14 +25,14 @@ class ImportCategory extends Command
      *
      * @var string
      */
-    protected $signature = 'import:category';
+    protected $signature = 'import:reaction';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import the older categories data from older database';
+    protected $description = 'Import the older reaction data from older database';
 
     /**
      * Create a new command instance.
@@ -53,31 +53,30 @@ class ImportCategory extends Command
      */
     public function handle()
     {
-        $this->dumpCategory();
+        $this->dumpOtp();
     }
 
-    private function dumpCategory()
+    private function dumpOtp()
     {
-        $categories = $this->oldConnection->table('p_categories')->get();
-        foreach($categories as $category) {
-            $category = [
-                'name' => $category->cat_name,
-                'description' => $category->cat_description,
-                'icon' => $category->cat_icon,
-                'created_by' => config('constants.status.active'),
-                'updated_by' => config('constants.status.active'),
-                'status' => config('constants.status.active'),
+        $reactions = $this->oldConnection->table('reactions')->get();
+        foreach($reactions as $reaction) {
+            $reaction = [
+                'user_id' => $reaction->user_id,
+                'm_id' => $reaction->m_id,
+                'm_type' => $reaction->m_type,
+                'reaction' => $reaction->reaction,
+                'reacted_date' => $reaction->reacted_date,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ];
 
-            $data[] = $category;
+            $data[] = $reaction;
         }
 
         $this->newConnection->beginTransaction();
         try {
-            $this->newConnection->table('categories')->truncate();
-            Category::insert($data);
+            $this->newConnection->table('reactions')->truncate();
+            Reaction::insert($data);
             $this->newConnection->commit();
         } catch (\Exception $e) {
             $this->newConnection->rollback();

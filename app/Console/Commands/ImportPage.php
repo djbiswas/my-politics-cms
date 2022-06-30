@@ -32,7 +32,7 @@ class ImportPage extends Command
      *
      * @var string
      */
-    protected $description = 'Import the older page data from older database';
+    protected $description = 'Import the older pages data from older database';
 
     /**
      * Create a new command instance.

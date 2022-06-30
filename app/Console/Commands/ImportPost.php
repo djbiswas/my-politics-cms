@@ -2,12 +2,15 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Category;
+use App\Models\Post;
+use App\Models\PostComment;
+use App\Models\PostImage;
+use App\Models\PostVideo;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class ImportCategory extends Command
+class ImportPost extends Command
 {
 
     /**
@@ -25,14 +28,14 @@ class ImportCategory extends Command
      *
      * @var string
      */
-    protected $signature = 'import:category';
+    protected $signature = 'import:post';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import the older categories data from older database';
+    protected $description = 'Import the older posts data from older database';
 
     /**
      * Create a new command instance.
@@ -53,31 +56,29 @@ class ImportCategory extends Command
      */
     public function handle()
     {
-        $this->dumpCategory();
+        $this->dumpPosts();
     }
 
-    private function dumpCategory()
+    private function dumpPosts()
     {
-        $categories = $this->oldConnection->table('p_categories')->get();
-        foreach($categories as $category) {
-            $category = [
-                'name' => $category->cat_name,
-                'description' => $category->cat_description,
-                'icon' => $category->cat_icon,
-                'created_by' => config('constants.status.active'),
-                'updated_by' => config('constants.status.active'),
-                'status' => config('constants.status.active'),
+        $userTrusts = $this->oldConnection->table('posts')->get();
+        foreach($userTrusts as $userTrust) {
+            $userTrust = [
+                'user_id ' => $userTrust->user_id,
+                'responded_id' => $userTrust->responded_id,
+                'trust' => $userTrust->trust,
+                'responded_date' => $userTrust->responded_date,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ];
 
-            $data[] = $category;
+            $data[] = $userTrust;
         }
 
         $this->newConnection->beginTransaction();
         try {
-            $this->newConnection->table('categories')->truncate();
-            Category::insert($data);
+            $this->newConnection->table('user_trusts')->truncate();
+            Post::insert($data);
             $this->newConnection->commit();
         } catch (\Exception $e) {
             $this->newConnection->rollback();
