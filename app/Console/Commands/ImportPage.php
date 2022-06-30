@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Category;
+use App\Models\Page;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class ImportCategory extends Command
+class ImportPage extends Command
 {
 
     /**
@@ -25,14 +25,14 @@ class ImportCategory extends Command
      *
      * @var string
      */
-    protected $signature = 'import:category';
+    protected $signature = 'import:page';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import the older rank data from older database';
+    protected $description = 'Import the older page data from older database';
 
     /**
      * Create a new command instance.
@@ -53,31 +53,29 @@ class ImportCategory extends Command
      */
     public function handle()
     {
-        $this->dumpCategory();
+        $this->dumpPage();
     }
 
-    private function dumpCategory()
+    private function dumpPage()
     {
-        $categories = $this->oldConnection->table('p_categories')->get();
-        foreach($categories as $category) {
-            $category = [
-                'name' => $category->cat_name,
-                'description' => $category->cat_description,
-                'icon' => $category->cat_icon,
-                'created_by' => config('constants.status.active'),
-                'updated_by' => config('constants.status.active'),
-                'status' => config('constants.status.active'),
+        $pages = $this->oldConnection->table('pages')->get();
+        foreach($pages as $page) {
+            $page = [
+                'page_name' => $page->page_name,
+                'page_url' => $page->page_url,
+                'page_content' => $page->page_content,
+                'status' => $page->display_status,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ];
 
-            $data[] = $category;
+            $data[] = $page;
         }
 
         $this->newConnection->beginTransaction();
         try {
-            $this->newConnection->table('categories')->truncate();
-            Category::insert($data);
+            $this->newConnection->table('pages')->truncate();
+            Page::insert($data);
             $this->newConnection->commit();
         } catch (\Exception $e) {
             $this->newConnection->rollback();

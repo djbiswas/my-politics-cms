@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Category;
+use App\Models\OtpData;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class ImportCategory extends Command
+class ImportOtp extends Command
 {
 
     /**
@@ -25,14 +25,14 @@ class ImportCategory extends Command
      *
      * @var string
      */
-    protected $signature = 'import:category';
+    protected $signature = 'import:otp';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import the older rank data from older database';
+    protected $description = 'Import the older otp data from older database';
 
     /**
      * Create a new command instance.
@@ -53,31 +53,27 @@ class ImportCategory extends Command
      */
     public function handle()
     {
-        $this->dumpCategory();
+        $this->dumpOtp();
     }
 
-    private function dumpCategory()
+    private function dumpOtp()
     {
-        $categories = $this->oldConnection->table('p_categories')->get();
-        foreach($categories as $category) {
-            $category = [
-                'name' => $category->cat_name,
-                'description' => $category->cat_description,
-                'icon' => $category->cat_icon,
-                'created_by' => config('constants.status.active'),
-                'updated_by' => config('constants.status.active'),
-                'status' => config('constants.status.active'),
+        $otps = $this->oldConnection->table('otp_data')->get();
+        foreach($otps as $otp) {
+            $otp = [
+                'otp' => $otp->otp,
+                'expiry_date' => $otp->expiry_date,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ];
 
-            $data[] = $category;
+            $data[] = $otp;
         }
 
         $this->newConnection->beginTransaction();
         try {
-            $this->newConnection->table('categories')->truncate();
-            Category::insert($data);
+            $this->newConnection->table('otp_datas')->truncate();
+            OtpData::insert($data);
             $this->newConnection->commit();
         } catch (\Exception $e) {
             $this->newConnection->rollback();

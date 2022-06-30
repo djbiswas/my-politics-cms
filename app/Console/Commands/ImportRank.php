@@ -56,9 +56,6 @@ class ImportRank extends Command
         $this->dumpRank();
     }
 
-    /**
-     * rename google_event_id to external_id
-     */
     private function dumpRank()
     {
         $ranks = $this->oldConnection->table('user_ranks')->get();
