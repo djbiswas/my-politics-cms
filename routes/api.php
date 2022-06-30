@@ -45,7 +45,8 @@ Route::group(['namespace' => 'API\v1'], function() {
     // Get Trust API 
     Route::get('get-trust', [PoliticianController::class, 'getTrust'])->name('get.politician.trust');
 
-    
+    // Get Posts API 
+    Route::get('get-posts', [UserPostController::class, 'getPosts'])->name('get.politician.posts');
     
     Route::group(['middleware' => ['jwt.verify']], function () {
         // User API
@@ -62,9 +63,6 @@ Route::group(['namespace' => 'API\v1'], function() {
         Route::post('post-comment', [UserPostController::class, 'postComment'])->name('user.post.comment');
         Route::get('get-comments', [UserPostController::class, 'getComments'])->name('user.get.comment');
 
-        // Get Posts API 
-        Route::get('get-posts', [UserPostController::class, 'getPosts'])->name('get.politician.posts');
-        
         // Politican Vote API
         Route::post('set-politician-vote', [PoliticianController::class, 'setPoliticianVote'])->name('set.politician.vote');
     });

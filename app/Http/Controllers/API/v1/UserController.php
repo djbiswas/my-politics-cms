@@ -12,12 +12,11 @@ use App\Repositories\UserRepository;
 use Exception;
 use Illuminate\Http\Request;
 
-
 /**
- * @OA\Info(
- *     description="",
+ * @A\Info(
+ *     description="My Political CMS API",
  *     version="1.0.0",
- *     title="My Political API",
+ *     title="My Political CMS API",
  * )
  */
 
