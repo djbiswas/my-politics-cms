@@ -56,29 +56,31 @@ class ImportPost extends Command
      */
     public function handle()
     {
-        $this->dumpPosts();
+        $this->dumpPostComments();
     }
 
-    private function dumpPosts()
+    private function dumpPostComments()
     {
-        $userTrusts = $this->oldConnection->table('posts')->get();
-        foreach($userTrusts as $userTrust) {
-            $userTrust = [
-                'user_id ' => $userTrust->user_id,
-                'responded_id' => $userTrust->responded_id,
-                'trust' => $userTrust->trust,
-                'responded_date' => $userTrust->responded_date,
+        $postComments = $this->oldConnection->table('post_comments')->get();
+        foreach($postComments as $postComment) {
+            $postComment = [
+                'parent_comment_id' => $postComment->parent_comment_id,
+                'user_id' => $postComment->user_id,
+                'post_id' => $postComment->post_id,
+                'comment' => $postComment->comment,
+                'gif' => $postComment->postGif,
+                'image' => $postComment->postImages,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ];
 
-            $data[] = $userTrust;
+            $data[] = $postComment;
         }
 
         $this->newConnection->beginTransaction();
         try {
-            $this->newConnection->table('user_trusts')->truncate();
-            Post::insert($data);
+            $this->newConnection->table('post_comments')->truncate();
+            PostComment::insert($data);
             $this->newConnection->commit();
         } catch (\Exception $e) {
             $this->newConnection->rollback();

@@ -45,7 +45,7 @@ class ImportData extends Command
         $this->call('import:category');
         $this->call('import:otp');
         $this->call('import:page');
-       // $this->call('import:post');
+        $this->call('import:post');
         $this->call('import:politician');
         $this->call('import:rank');
         $this->call('import:reaction');
