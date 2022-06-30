@@ -56,7 +56,34 @@ class ImportPost extends Command
      */
     public function handle()
     {
+        $this->dumpPosts();
         $this->dumpPostComments();
+    }
+
+    private function dumpPosts()
+    {
+        $posts = $this->oldConnection->table('posts')->get();
+        foreach($posts as $post) {
+            $post = [
+                'user_id' => $post->user_id,
+                'politician_id' => $post->politician_id,
+                'content' => $post->post_content,
+                'gif' => $post->post_gif,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ];
+
+            $data[] = $post;
+        }
+
+        $this->newConnection->beginTransaction();
+        try {
+            $this->newConnection->table('post_comments')->truncate();
+            $posts = Post::insert($data);
+            $this->newConnection->commit();
+        } catch (\Exception $e) {
+            $this->newConnection->rollback();
+        }
     }
 
     private function dumpPostComments()
