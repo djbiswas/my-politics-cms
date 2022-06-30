@@ -67,14 +67,11 @@ class PoliticianRepository
     {
         $votingAlerts = '';
 
-        $politician = Politician::select('id', 'name', 'title', 'name_alias', 'image')->firstOrFail($request->politicianId);
-
-        $politicanMeta = PoliticianMeta::select(\DB::raw('GROUP_CONCAT(key) as meta_key, GROUP_CONCAT(value) as meta_value'))
-        ->where('politician_id', $request->politicianId)->first();
-        
-        $metaData = self::explode_meta_data_fn($politicanMeta['meta_key'], $politicanMeta['meta_value']);
-         
-        
+        $politician = Politician::with(['politicianMetas'  => function ($query) {
+            $query->select('id', 'politician_id', DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'));
+        }])->where('id',$request->politicianId)->firstOrFail();
+  
+        $metaData = self::explode_meta_data_fn($politician->politicianMetas[0]->meta_key, $politician->politicianMetas[0]->meta_value);
         if(!empty($metaData['voting_alerts'])){
             $votingAlerts = (is_array($metaData['voting_alerts']) && in_array($this->userDetails->id, $metaData['voting_alerts'])) ? 'Yes' : 'no';
 		}
@@ -105,14 +102,16 @@ class PoliticianRepository
             $downCount = $politicanVote[0]->down;
             $percentage = $this->getScorePercentage($upCount, $downCount);
         }
-        
+
         if(!empty($this->userDetails)) {
             // $parseValue = JWTAuth::parseToken();
             // $user = $parseValue->authenticate();
 
             $userVotes = PoliticanVote::select('vote')->onlyActive()->where(['politician_id' => $request->politicianId, 'user_id' => $this->userDetails->id])->get();
         
-            $userVote = $userVotes[0]->vote;
+            if(!empty($userVotes[0])){
+                $userVote = $userVotes[0]->vote;
+            }
         }
 
         return [
@@ -173,7 +172,7 @@ class PoliticianRepository
 
         $userRank = User::with('ranks')->findOrFail(Auth::id());
         if($userRank->ranks){
-            $userRank = $userRank->ranks->title;
+            $userRankTitle = $userRank->ranks->title;
             $rankImage = $userRank->ranks->image;
         }
 
@@ -186,7 +185,7 @@ class PoliticianRepository
         
         return [
             'trust_percentage' => $percentage, 
-            'user_rank' => $userRank,
+            'user_rank' => $userRankTitle,
             'rank_image' => $rankImage,
             'trust_response' => $trustResponse ?? NULL
         ];
@@ -242,8 +241,8 @@ class PoliticianRepository
 
     public function explode_meta_data_fn($keys, $values) {
         $meta_data = [];
-        $meta_keys = explode(',', $keys);
-        $meta_values = explode(',', $values);
+        $meta_keys = explode('-~-', $keys);
+        $meta_values = explode('-~-', $values);
         if (!empty($meta_keys)) {
             foreach ($meta_keys as $key => $value) {
                 $meta_data[$value] = $meta_values[$key];

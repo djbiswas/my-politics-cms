@@ -12,8 +12,8 @@ class UserMeta extends Model
 
     protected $fillable = [
         'user_id',
-        'type',
-        'key',
-        'value'
+        'meta_key',
+        'meta_value',
+        'status'
     ];
 }

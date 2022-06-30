@@ -8,16 +8,30 @@ use App\Models\Post;
 use App\Models\PostImage;
 use App\Models\PostVideo;
 use App\Models\User;
+use App\Models\UserMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Contracts\Providers\Auth as ProvidersAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class PostRepository.
  */
 class PostRepository
 {   
+
+    private $userDetails;
+
+    public function __construct(Request $request) {
+        $token = $request->header('Authorization');
+        if($token) {
+            $parseValue = JWTAuth::parseToken();
+            $this->userDetails = $parseValue->authenticate();
+        } else {
+            $this->userDetails = '';
+        }
+    }
     /**
      * For fetching posts records
      *
@@ -48,9 +62,12 @@ class PostRepository
             $data['post']['status'] = $post->status;
             $data['post']['created_at'] = $post->created_at;
 
-            $data['post']['reaction_status'] = $post->reactions->where('user_id', Auth::id())->first()->reaction;
-        
-            $meta_data = self::explode_meta_data_fn($post->user->userMeta[0]->meta_key, $post->user->userMeta[0]->meta_value);
+            $data['post']['reaction_status'] = $post->reactions->where('user_id', $this->userDetails->id)->first()->reaction ?? '';
+
+            $userMeta = UserMeta::select(\DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'))
+            ->where('user_id', $post->user->id)->first();
+           
+            $meta_data = self::explode_meta_data_fn($userMeta->meta_key, $userMeta->meta_value);
            
             $data['post']['user']['user_id'] = $post->user->id;
             $data['post']['user']['first_name'] = $post->user->first_name;
@@ -71,12 +88,12 @@ class PostRepository
 
             $result = self::getScorePercentage($up, $down);
             
-            $trust_response = $post->userTrust->where(['user_id' => $request->politicianId, 'responded_id' => Auth::id()])->first();
+            $trust_response = $post->userTrust->where(['user_id' => $request->politicianId, 'responded_id' => $this->userDetails->id])->first();
 
             $data['post']['trust_data']['trust_per'] = $result;
-            $data['post']['trust_data']['user_rank'] = $post->user->ranks->title;
-            $data['post']['trust_data']['rank_image'] = $post->user->ranks->image;
-            $data['post']['trust_data']['rank_description'] = $post->user->ranks->long_desc;
+            $data['post']['trust_data']['user_rank'] = $post->user->ranks->title ?? '';
+            $data['post']['trust_data']['rank_image'] = $post->user->ranks->image ?? '';
+            $data['post']['trust_data']['rank_description'] = $post->user->ranks->long_desc ?? '';
             $data['post']['trust_data']['trust_response'] = $trust_response->trust ?? '';
 
             $data['post']['comment_count'] = $post->comments->count();
@@ -91,12 +108,12 @@ class PostRepository
 
             $data['post']['reactionCount'] = $post->reactions->count();
 
-            $authLike = $post->reactions->where('user_id', Auth::id())->count();
+            $authLike = $post->reactions->where('user_id', $this->userDetails->id)->count();
 
             $reaction = self::getReactionValue($data['post']['reactionCount'], $authLike);
 
             $data['post']['reactionText'] = $reaction;
-
+            
         }
         
         return [
@@ -208,7 +225,7 @@ class PostRepository
     {
         $postData = [
             'user_id' => Auth::user()->id,
-            'post_id' => $request->post_id,
+            'id' => $request->postId,
         ];    
 
         $post = Post::where($postData)->delete();
