@@ -36,23 +36,28 @@
             <div class="main-panel">
                 @include('layouts.header-bar')
                 <div class="content">
+                    @if(session()->has('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session()->get('success') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
+                    @if(session()->has('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            Oops!! Something went wrong. Please try again.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
                     {{ $header }}
                     <div class="content-body">
                         {{ $slot }}
                     </div>
                 </div>
             </div>
-            <!-- Page Heading -->
-            <!-- <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header> -->
-
-            <!-- Page Content -->
-            <!-- <main>
-                {{ $slot }}
-            </main> -->
         </div>
         @include('layouts.footer')
         @stack('scripts')

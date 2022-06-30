@@ -601,6 +601,26 @@ class UserRepository
         return $userDetails;
 
     }
+    
+    /**
+     * For Create / Updating record into ranks table
+     */
+    public function saveData($condition = [], $fields, $metaData = [])
+    {
+        if($fields['password']){
+            $fields['password'] = \Hash::make($fields['password']);
+        }
+        if(!empty($condition)){
+            $userObj = User::updateOrCreate($condition, $fields);
+        }else{
+            $userObj = User::create($fields);
+        }
+        if(!empty($metaData)){
+            $userObj->setMeta($metaData);
+            $userObj->save();
+        }
+        return $userObj;
+    }
 
 }
 

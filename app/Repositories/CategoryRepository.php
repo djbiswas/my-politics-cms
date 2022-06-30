@@ -24,11 +24,7 @@ class CategoryRepository
      */
     public function saveData($condition = [], $fields)
     {
-        if(!empty($condition)){
-            return Category::updateOrCreate($condition, $fields);
-        }else{
-            return Category::create($fields);
-        }
+        return Category::updateOrCreate($condition, $fields);
     }
 }
 

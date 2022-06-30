@@ -15,12 +15,14 @@ class RankRepository
      * @param array $condition
      * @throws InvalidOtpException
      */
-    public function fetchAllData(array $condition = [], $limit = 8)
+    public function fetchAllData(array $condition = [], $limit = "")
     {
-        return Rank::where($condition)
-                ->orderBy('name')
-                ->take($limit)
-                ->get();
+        $data = Rank::where($condition)
+                ->orderBy('title');
+        if($limit){
+            $data->take($limit);
+        }
+        return $data->get();
     }
 
     /**
@@ -28,11 +30,7 @@ class RankRepository
      */
     public function saveData($condition = [], $fields)
     {
-        if(!empty($condition)){
-            return Rank::updateOrCreate($condition, $fields);
-        }else{
-            return Rank::create($fields);
-        }
+        return Rank::updateOrCreate($condition, $fields);
     }
 }
 

@@ -2,23 +2,6 @@
 use Illuminate\Support\Str;
 @endphp
 <div class="generic-form">
-    
-        @if(session()->has('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session()->get('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if(session()->has('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                Oops!! Something went wrong. Please try again.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
     <h4>{{$data?'Edit' : 'Add new'}} rank</h4>
     <form class="needs-validation-1" id="validRankForm" method="post" action="{{route('post.rank')}}" enctype="multipart/form-data" novalidate>
         <input type="hidden" name="_token" value="{{ csrf_token() }}">

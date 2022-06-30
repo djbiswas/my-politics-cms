@@ -3,23 +3,6 @@
         <h4>{{$data?'Edit' : 'Add'}}  Page</h4>
     </x-slot>
     <div class="generic-form" style="text-align: left;">
-    
-        @if(session()->has('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session()->get('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if(session()->has('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                Oops!! Something went wrong. Please try again.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
         <form class="needs-validation-1" id="validPageForm" method="post" action="{{route('post.page')}}" enctype="multipart/form-data" novalidate>
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
