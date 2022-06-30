@@ -11,10 +11,6 @@ class UserTrust extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id',
-        'responded_id',
-        'trust',
-        'responded_date',
-        'status'
+        'user_id', 'responded_id', 'trust', 'responded_date', 'status'
     ];
 }
