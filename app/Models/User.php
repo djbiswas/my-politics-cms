@@ -58,9 +58,24 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function userMeta()
+    {
+        return $this->hasMany(UserMeta::class, 'user_id', 'id');
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function votes()
+    {
+        return $this->hasMany(PoliticanVote::class);
+    }
+
+    public function ranks()
+    {
+        return $this->belongsTo(Rank::class, 'rank_id', 'id');
     }
 
     /**

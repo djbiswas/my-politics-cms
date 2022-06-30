@@ -47,6 +47,65 @@ class UserPostController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/get-posts",
+     *     tags={"Get Posts"},
+     *     summary="Get Posts",
+     *     operationId="get-posts",
+     * 
+     *     @OA\Parameter(
+     *       name="politicianId",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Get Posts API
+     *
+     * @param CreateUserPostValidationRequest $request
+     */
+    public function getPosts(CreateUserPostValidationRequest $request)
+    {
+        try {
+            $posts = $this->postRepository->getPosts($request);
+
+            if (!empty($posts)) {
+               
+                $message = trans('lang.get_posts');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $posts, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
      * @OA\Post(
      *     security={{"bearerAuth":{}}},
      *     path="/v1/create-post",
@@ -223,7 +282,7 @@ class UserPostController extends Controller
     public function updatePost(UpdateUserPostValidationRequest $request)
     {
         try {
-            $politicians = $this->postRepository->createUserPost($request);
+            $politicians = $this->postRepository->updatePost($request);
 
             if (!empty($politicians)) {
                

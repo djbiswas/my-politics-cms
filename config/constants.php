@@ -29,4 +29,6 @@ return [
         'post_video' => 'post_video',
         'post_comment_image' => 'post_comment_image',
     ],
+
+    'recordsPerPage' => 10,
 ];

@@ -13,7 +13,6 @@ class CategoryRepository
     /**
      * For selecting the data
      *
-     * 
      */
     public function getPoliticianCategories()
     {
