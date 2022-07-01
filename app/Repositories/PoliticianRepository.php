@@ -72,9 +72,11 @@ class PoliticianRepository
         }])->where('id',$request->politicianId)->firstOrFail();
   
         $metaData = self::explode_meta_data_fn($politician->politicianMetas[0]->meta_key, $politician->politicianMetas[0]->meta_value);
-        if(!empty($metaData['voting_alerts'])){
+        if(!empty($metaData['voting_alerts']) && !empty($this->userDetails)){
+
             $votingAlerts = (is_array($metaData['voting_alerts']) && in_array($this->userDetails->id, $metaData['voting_alerts'])) ? 'Yes' : 'no';
-		}
+		
+        }
 
         return [
             'politician' => $politician,
@@ -103,7 +105,7 @@ class PoliticianRepository
             $percentage = $this->getScorePercentage($upCount, $downCount);
         }
 
-        if(!empty($this->userDetails)) {
+       if(!empty($this->userDetails)) {
             // $parseValue = JWTAuth::parseToken();
             // $user = $parseValue->authenticate();
 
@@ -112,7 +114,7 @@ class PoliticianRepository
             if(!empty($userVotes[0])){
                 $userVote = $userVotes[0]->vote;
             }
-        }
+       }
 
         return [
             'down_count' => $downCount,

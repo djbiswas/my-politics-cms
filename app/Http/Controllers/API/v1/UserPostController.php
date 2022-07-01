@@ -574,45 +574,7 @@ class UserPostController extends Controller
         }
     }
 
-    /**
-     * @OA\Post(
-     *     security={{"bearerAuth":{}}},
-     *     path="/v1/post-comment",
-     *     tags={"Post Comment"},
-     *     summary="Post Comment",
-     *     operationId="post-comment",
-     *
-     *     @OA\Parameter(
-     *       name="post_id",
-     *       in="query",
-     *       required=true,
-     *       @OA\Schema(
-     *          type="integer"
-     *       )
-     *     ),
-     * 
-     *     @OA\Response(
-     *         response=200,
-     *         description="Success",
-     *         @OA\MediaType(
-     *             mediaType="application/json",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Unauthorized"
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Invalid request"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="not found"
-     *     ),
-     * )
-     */
-
+    
     /**
      * Get Post Comment API
      *

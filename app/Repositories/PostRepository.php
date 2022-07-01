@@ -62,8 +62,11 @@ class PostRepository
             $data['post']['status'] = $post->status;
             $data['post']['created_at'] = $post->created_at;
 
-            $data['post']['reaction_status'] = $post->reactions->where('user_id', $this->userDetails->id)->first()->reaction ?? '';
+            if(!empty($this->userDetails)){
 
+                $data['post']['reaction_status'] = $post->reactions->where('user_id', $this->userDetails->id)->first()->reaction ?? '';
+
+            }
             $userMeta = UserMeta::select(\DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'))
             ->where('user_id', $post->user->id)->first();
            
@@ -87,9 +90,12 @@ class PostRepository
             $down = $post->userTrust->where('trust', 'Down')->count();
 
             $result = self::getScorePercentage($up, $down);
-            
-            $trust_response = $post->userTrust->where(['user_id' => $request->politicianId, 'responded_id' => $this->userDetails->id])->first();
 
+            if(!empty($this->userDetails)){
+            
+                $trust_response = $post->userTrust->where(['user_id' => $request->politicianId, 'responded_id' => $this->userDetails->id])->first();
+
+            }
             $data['post']['trust_data']['trust_per'] = $result;
             $data['post']['trust_data']['user_rank'] = $post->user->ranks->title ?? '';
             $data['post']['trust_data']['rank_image'] = $post->user->ranks->image ?? '';
@@ -108,7 +114,11 @@ class PostRepository
 
             $data['post']['reactionCount'] = $post->reactions->count();
 
-            $authLike = $post->reactions->where('user_id', $this->userDetails->id)->count();
+            if(!empty($this->userDetails)){
+            
+                $authLike = $post->reactions->where('user_id', $this->userDetails->id)->count();
+
+            }
 
             $reaction = self::getReactionValue($data['post']['reactionCount'], $authLike);
 

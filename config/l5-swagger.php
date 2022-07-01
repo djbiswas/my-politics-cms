@@ -39,7 +39,7 @@ return [
                  * Absolute paths to directory containing the swagger annotations are stored.
                 */
                 'annotations' => [
-                    base_path('app'),
+                    base_path('app') . '/Http/Controllers/Api/V1',
                 ],
 
             ],
@@ -281,7 +281,7 @@ return [
          * Constants which can be used in annotations
          */
         'constants' => [
-            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
+            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://api.my-politics-cms.local/'),
         ],
     ],
 ];

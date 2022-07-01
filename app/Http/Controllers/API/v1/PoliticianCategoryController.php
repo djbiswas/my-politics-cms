@@ -8,7 +8,13 @@ use App\Repositories\CategoryRepository;
 use Exception;
 use Illuminate\Http\Request;
 
-
+/**
+ * @OA\Info(
+ *  title="My Political CMS API",
+ *  version="1.0.0",
+ *  description="My Political CMS API"
+ * )
+ */
 class PoliticianCategoryController extends Controller
 {
 
