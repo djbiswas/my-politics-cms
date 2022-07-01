@@ -60,7 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::get('get-page', [PageController::class, 'getPage'])->name('add.page');
     Route::post('post-page', [PageController::class, 'postPage'])->name('post.page');
     Route::post('check-page-name', [PageController::class, 'checkName'])->name('check.page.name');
-    Route::post('delete-page', [PageController::class, 'getDelete'])->name('delete.page');
+    Route::delete('pages/{id}', [PageController::class, 'delete'])->name('pages.delete');
     
 });
 require __DIR__.'/auth.php';
