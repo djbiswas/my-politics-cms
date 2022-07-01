@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\CustomApiResponse;
-use App\Repositories\CategoryRepository;
+use App\Http\Requests\CreateUserPostValidationRequest;
+use App\Http\Requests\SetPoliticianVoteValidationRequest;
+use App\Repositories\PoliticianRepository;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -13,9 +15,9 @@ class PoliticianController extends Controller
 {
 
     /**
-     * @var CategoryRepository
+     * @var PoliticianRepository
      */
-    private $categoryRepository;
+    private $politicianRepository;
 
 
     /**
@@ -23,18 +25,18 @@ class PoliticianController extends Controller
      */
     private $apiResponse;
 
-    public function __construct(CustomApiResponse $customApiResponse, CategoryRepository $categoryRepository) {
+    public function __construct(CustomApiResponse $customApiResponse, PoliticianRepository $politicianRepository) {
         $this->apiResponse = $customApiResponse;
-        $this->categoryRepository = $categoryRepository;
+        $this->politicianRepository = $politicianRepository;
     }
 
     /**
      * @OA\Get(
      *     security={{"bearerAuth":{}}},
-     *     path="/v1/get-politician-categories",
-     *     tags={"get-politician-categories"},
-     *     description="Get Politician Categories",
-     *     operationId="get-politician-categories",
+     *     path="/v1/get-politicians",
+     *     tags={"Get Politicians"},
+     *     summary="Get Politicians",
+     *     operationId="get-politicians",
      *
      *     @OA\Response(
      *         response=200,
@@ -58,20 +60,288 @@ class PoliticianController extends Controller
      * )
      */
     /**
-     * Get Potician Category API
+     * Get Poticians API
      *
-     * 
+     * @param Request $request
      */
-    public function getPoliticians()
+    public function getPoliticians(Request $request)
     {
         try {
-            $politicians = $this->categoryRepository->getPoliticians();
+            $politicians = $this->politicianRepository->getPoliticians($request);
 
             if (!empty($politicians)) {
                
                 $message = trans('lang.get_politicians');
 
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicians, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/get-politician-detail",
+     *     tags={"Get Politician Detail"},
+     *     summary="Get Politician Detail",
+     *     operationId="get-politician-detail",
+     * 
+     *     @OA\Parameter(
+     *       name="politicanId",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Get Potician Details API
+     *
+     * @param Request $request
+     */
+    public function getPoliticianDetail(Request $request)
+    {
+        try {
+            $politicianDetails = $this->politicianRepository->getPoliticianDetail($request);
+
+            if (!empty($politicianDetails)) {
+               
+                $message = trans('lang.politician_detail');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicianDetails, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/set-politician-vote",
+     *     tags={"Set Politician Vote"},
+     *     summary="Set Politician Vote",
+     *     operationId="set-politician-vote",
+     *
+     *     @OA\Parameter(
+     *       name="politicianId",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="postContent",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *          type="string"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="postGif",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *           type="string"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="postImages",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *           type="string"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="postVideos",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *           type="string"
+     *       )
+     *     ), 
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Create Potician Vote API
+     *
+     * @param SetPoliticianVoteValidationRequest $request
+     */
+    public function setPoliticianVote(SetPoliticianVoteValidationRequest $request)
+    {
+        try {
+            $politicianVote = $this->politicianRepository->setPoliticianVote($request);
+
+            if (!empty($politicianVote)) {
+               
+                $message = trans('lang.set_politician_vote');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicianVote, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/get-politician-votes",
+     *     tags={"Get Politician Vote"},
+     *     summary="Get Politician Vote",
+     *     operationId="get-politician-votes",
+     * 
+     *     @OA\Parameter(
+     *       name="politicanId",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Get Potician Details API
+     *
+     * @param CreateUserPostValidationRequest $request
+     */
+    public function getPoliticianVotes(CreateUserPostValidationRequest $request)
+    {
+        try {
+            $politicianDetails = $this->politicianRepository->getPoliticianVotes($request);
+
+            if (!empty($politicianDetails)) {
+               
+                $message = trans('lang.politician_vote');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicianDetails, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/get-trust",
+     *     tags={"Get Trust"},
+     *     summary="Get Trust",
+     *     operationId="get-trust",
+     * 
+     *     @OA\Parameter(
+     *       name="respondedId",
+     *       in="query",
+     *       required=false,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Get Trust API
+     *
+     * @param Request $request
+     */
+    public function getTrust(Request $request)
+    {
+        try {
+            $politicianDetails = $this->politicianRepository->getTrust($request);
+
+            if (!empty($politicianDetails)) {
+               
+                $message = trans('lang.politician_vote');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicianDetails, $message);
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);

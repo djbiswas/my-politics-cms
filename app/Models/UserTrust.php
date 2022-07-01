@@ -6,14 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserMeta extends Model
+class UserTrust extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id',
-        'meta_key',
-        'meta_value',
-        'status'
+        'user_id', 'responded_id', 'trust', 'responded_date', 'status'
     ];
 }

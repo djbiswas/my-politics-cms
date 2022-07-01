@@ -12,12 +12,14 @@ use Mail;
 use App\Mail\SendForgotPasswordOtpMail;
 use App\Models\OtpData;
 use App\Models\UserMeta;
+use App\Http\CommonTraits\UploadMedia;
 
 /**
  * Class UserRepository.
  */
 class UserRepository
 {
+    use UploadMedia;
     /**
      * For Updating the record respective model in storage
      *
@@ -28,7 +30,7 @@ class UserRepository
         $loginCondition = [
             $request->fieldType => $request->fieldValue,
             'password' => $request->password,
-            //'role_id' => config('constants.role.user')
+            'role_id' => config('constants.role.user')
         ];
 
         $userLogin = Auth::guard()->attempt($loginCondition);
@@ -42,11 +44,17 @@ class UserRepository
             'id' => Auth::id()
         ];
 
-        $userDetails = self::fetchUserDetails($user);
+        $userMetaDetails = User::with(['userMeta'  => function ($query) {
+            $query->select('id', 'user_id', \DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'));
+        }, 'ranks'])->withCount('posts')->where($user)->firstOrFail();
+
+        $meta_data = self::explode_meta_data_fn($userMetaDetails->userMeta[0]->meta_key, $userMetaDetails->userMeta[0]->meta_value);
+
+        $userMetaDetails['meta_data'] = $meta_data;
 
         return [
-            'token' => JWTAuth::fromUser($userDetails),
-            'user' => $userDetails
+            'token' => JWTAuth::fromUser($userMetaDetails),
+            'user' => $userMetaDetails
         ];
     }
 
@@ -67,7 +75,8 @@ class UserRepository
 
                 return [
                    'action' => 'phoneExistence',
-                   'user' => $userDetails
+                   'user' => $userDetails,
+                   'status' => 'success'
                 ];
 
             case('email'):
@@ -81,11 +90,12 @@ class UserRepository
 
                 $storeOtp = self::storeOTP($otp);
 
-                Mail::to($request->fieldValue)->send(new SendForgotPasswordOtpMail($otp));
+                // Mail::to($request->fieldValue)->send(new SendForgotPasswordOtpMail($otp));
 
                 return [
                     'action' => 'email',
-                    'user' => $userDetails
+                    'user' => $userDetails,
+                    'status' => 'success'
                 ];
 
             default:
@@ -114,6 +124,7 @@ class UserRepository
 
         if($updateUser) {
             return [
+                'status' => 'success',
                 'user' => self::fetchUserDetails($condition)
             ];
         }
@@ -224,29 +235,43 @@ class UserRepository
             'id' =>  Auth::user()->id
         ];
 
+        if($request->has('profilePhoto')){
+            $image = Self::imageUpload($request);
+        }
+
         $fields = [
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+
+            'first_name' => $request->firstName,
+            'last_name' => $request->lastName,
+            'image' => $image ?? null
         ];
 
         $userDetails = self::fetchUserDetails($condition);
 
         $updateUser = self::updateUserData($condition, $fields);
 
-        $metaRequest = $request->except('first_name', 'last_name');
+        $metaRequest = $request->except('userId','firstName', 'lastName', 'email', 'phone', 'profilePhoto', 'reg_status', 'registered_date', 'status', 'action', 'step', 'fieldType', 'fieldValue');
 
         foreach($metaRequest as $key=>$value){
 
             $metaCondition = [
-                'user_id' =>  Auth::user()->id,
+                'user_id' =>  $userDetails->id,
                 'meta_key' => $key
             ];
 
             $metaFields = [
-                'user_id' =>  Auth::user()->id,
+                'user_id' =>  $userDetails->id,
                 'meta_key' => $key,
                 'meta_value' => $value
             ];
+
+            if($key == 'penName'){
+                $metaFields = [
+                    'user_id' =>  $userDetails->id,
+                    'meta_key' => $key,
+                    'meta_value' => json_encode($value)
+                ];
+            }
 
             $updateUserMeta = self::updateUserMetaData($metaCondition, $metaFields);
 
@@ -254,7 +279,8 @@ class UserRepository
 
         if($updateUser) {
             return [
-                'user' => self::fetchUserDetails($condition)
+                'user' => self::fetchUserDetails($condition),
+                'status' => 'success'
             ];
         }
     }
@@ -314,7 +340,7 @@ class UserRepository
 
                     $storeOtp = self::storeOTP($otp);
 
-                    Mail::to($request->fieldValue)->send(new SendForgotPasswordOtpMail($otp));
+                    //  Mail::to($request->fieldValue)->send(new SendForgotPasswordOtpMail($otp));
 
                     return [
                         'action' => 'emailOTPsend',
@@ -322,6 +348,11 @@ class UserRepository
                     ];
 
                 }
+
+                return [
+                    'action' => 'step_three',
+                    'status' => 'success'
+                ];
 
                 break;
 
@@ -400,7 +431,11 @@ class UserRepository
 
         }
 
-        return $result;
+        return [
+            'action' => 'step_two',
+            'status' => 'error'
+        ];
+
     }
 
     public function registerUserSetpTwo($request) {
@@ -455,12 +490,12 @@ class UserRepository
     public function registerUser($request) {
 
         $fields = [
-            'email' => $request->email,
+            'email' => $request->fieldValue,
             'password' => bcrypt($request->password),
-            'reg_status' => 2,
+            'reg_status' => '{"step":2,"status":0}',
             'registered_date' => now(),
             'rank_id' => 0,
-            'role_id' => 1
+            'role_id' => config('constants.role.user')
         ];
 
         $user = User::create($fields);
@@ -524,20 +559,25 @@ class UserRepository
             'email' => $request->email
         ];
 
+        if($request->has('profilePhoto')){
+            $image = Self::imageUpload($request);
+        }
+
         $fields = [
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+
+            'first_name' => $request->firstName,
+            'last_name' => $request->lastName,
             'email' => $request->email,
             'phone' => $request->phone,
-            'reg_status' => 3
+            'reg_status' => '{"step":3,"status":1}',
+            'image' => $image ?? null
         ];
 
         $userDetails = self::fetchUserDetails($condition);
 
         $updateUser = self::updateUserData($condition, $fields);
 
-        $metaRequest = $request->except('first_name', 'last_name', 'email', 'phone', 'reg_status', 'registered_date');
-
+        $metaRequest = $request->except('userId', 'validationCode', 'firstName', 'lastName', 'email', 'phone', 'profilePhoto', 'reg_status', 'registered_date', 'status', 'action', 'step', 'fieldType', 'fieldValue');
         foreach($metaRequest as $key=>$value){
 
             $metaCondition = [
@@ -545,19 +585,28 @@ class UserRepository
                 'meta_key' => $key
             ];
 
-            $metaFields = [
-                'user_id' =>  $userDetails->id,
-                'meta_key' => $key,
-                'meta_value' => $value
-            ];
+            if($key == 'penName'){
+                $metaFields = [
+                    'user_id' =>  $userDetails->id,
+                    'meta_key' => $key,
+                    'meta_value' => json_encode($value)
+                ];
+            }else{
+                $metaFields = [
+                    'user_id' =>  $userDetails->id,
+                    'meta_key' => $key,
+                    'meta_value' => $value
+                ];
+            }
 
             $updateUserMeta = self::updateUserMetaData($metaCondition, $metaFields);
 
-            return $userDetails;
         }
 
-    }
+        return $userDetails;
 
+    }
+    
     /**
      * For Create / Updating record into ranks table
      */
@@ -577,6 +626,19 @@ class UserRepository
         }
         return $userObj;
     }
+
+    public function explode_meta_data_fn($keys, $values) {
+        $meta_data = [];
+        $meta_keys = explode('-~-', $keys);
+        $meta_values = explode('-~-', $values);
+        if (!empty($meta_keys)) {
+            foreach ($meta_keys as $key => $value) {
+                $meta_data[$value] = $meta_values[$key] ?? null;
+            }
+        }
+        return $meta_data;
+    }
+
 }
 
 

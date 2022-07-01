@@ -22,6 +22,16 @@ class Politician extends Model
         return $this->hasMany(Post::class);
     }
 
+    public function votes()
+    {
+        return $this->hasMany(PoliticanVote::class);
+    }
+
+    public function politicianMetas()
+    {
+        return $this->hasMany(PoliticianMeta::class, 'politician_id', 'id');
+    }
+
     /**
      *
      * @param type $query

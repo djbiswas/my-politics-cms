@@ -12,6 +12,8 @@ class PoliticianMeta extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'politican_metas';
+
     protected $fillable = [
         'politician_id',
         'type',
@@ -22,6 +24,11 @@ class PoliticianMeta extends Model
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function politicians()
+    {
+        return $this->belongsTo(Politician::class);
     }
 
     /**

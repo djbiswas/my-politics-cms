@@ -5,10 +5,9 @@ namespace App\Http\Requests;
 use App\Traits\FormRequestValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserChangePasswordValidationRequest extends FormRequest
+class SetPoliticianVoteValidationRequest extends FormRequest
 {
     use FormRequestValidationTrait;
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -27,14 +26,16 @@ class UserChangePasswordValidationRequest extends FormRequest
     public function rules()
     {
         return [
-            'password'  => 'required'
+            'politicianId'  => 'required',  
+            'vote' => 'required'
         ];
     }
 
     public function messages()
     {
         return [
-            'password.required' => 'Password is required.!'
+            'politicianId.required' => 'politician id is required.!',
+            'vote.required' => 'vote is required.!'
         ];
     }
 }
