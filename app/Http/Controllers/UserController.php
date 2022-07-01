@@ -45,11 +45,11 @@ class UserController extends Controller
                 return Datatables::of($data)
                         ->addIndexColumn()
                         ->addColumn('action', function($row){
-                                $btn = '<a href="'.route('get.user',$row->id).'">Edit </a> ';
+                                $btn = '<a href="'.route('get.user',$row->id).'">Edit </a> |';
                                 $btn .= '<form method="POST" action="'.route('users.delete', $row->id).'" style="float:right;">
                                             <input type="hidden" name="_token" value="'.csrf_token().'">
                                             <input name="_method" type="hidden" value="DELETE">
-                                            <a href="javascript:void(0)" onclick="return DeleteFunction($(this))"> | Delete</a>
+                                            <a href="javascript:void(0)" class="btn-delete" onclick="return DeleteFunction($(this))"> Delete</a>
                                         </form>';
                                 return $btn;
                         })
