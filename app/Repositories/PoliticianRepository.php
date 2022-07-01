@@ -254,6 +254,19 @@ class PoliticianRepository
     public function isVoted($id, $politician_id){
         return PoliticanVote::where(['user_id' => $id, 'politician_id' => $politician_id])->first();
     }
+
+    /**
+     * For Create / Updating record into ranks table
+     */
+    public function saveData($condition = [], $fields, $metaData = [])
+    {
+        $modelObj = Politician::updateOrCreate($condition, $fields);
+        if(!empty($metaData)){
+            $modelObj->setMeta($metaData);
+            $modelObj->save();
+        }
+        return $modelObj;
+    }
 }
 
 ?>

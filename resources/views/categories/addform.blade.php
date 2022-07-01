@@ -20,21 +20,7 @@
         </div>
         <div class="form-group-two">
             <label for="formFile" class="form-label">Icon</label>
-                @if($data && $data->icon)
-                    <div class="p-image-sec">
-                        <div class="p-image-container">
-                            <img class="p-image" src="{{asset($data->icon)}}"/>
-                            <button type="button" class="close btn-img-clear" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <input type="hidden" class="existing_image" name="image_existing" value="1" />
-                        <input class="form-control form-file" type="file" id="formFile" name='icon'>
-                        <input value="{{asset($data->icon)}}" type="hidden" name='ex_img_path'>
-                    </div>
-                @else
-                    <input class="form-control" type="file" id="formFile" name='icon'>
-                @endif
+            <x-display-image :data="$data?$data : ''" :fileName="'icon'"></x-display-image>
         </div>
         <input type="submit" name='Save' class="btn btn-primary" />
     </form>

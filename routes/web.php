@@ -31,12 +31,13 @@ Route::middleware('auth')->group(function () {
     //Route for politician
     Route::get('politicians', [PoliticianController::class, 'index'])->name('politicians.index');
     Route::get('get-politician/{id}', [PoliticianController::class, 'getPolitician'])->name('get.politician');
+    Route::get('add-politician', [PoliticianController::class, 'getPolitician'])->name('add.politician');
     Route::post('post-politician', [PoliticianController::class, 'postPolitician'])->name('post.politician');
 
     //Route for user
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('get-user/{id}', [UserController::class, 'getUser'])->name('get.user');
-    Route::get('add-page', [UserController::class, 'getUser'])->name('add.user');
+    Route::get('add-user', [UserController::class, 'getUser'])->name('add.user');
     Route::post('post-user', [UserController::class, 'postUser'])->name('post.user');
     Route::post('check-user-email', [UserController::class, 'checkEmail'])->name('check.user.email');
     Route::post('check-user-phone', [UserController::class, 'checkPhone'])->name('check.user.phone');
@@ -54,7 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::post('post-category', [CategoryController::class, 'postCategory'])->name('post.category');
     Route::post('check-category-name', [CategoryController::class, 'checkName'])->name('check.category.name');
 
-    //Route for rank
+    //Route for page
     Route::get('pages', [PageController::class, 'index'])->name('pages.index');
     Route::get('get-page/{id}', [PageController::class, 'getPage'])->name('get.page');
     Route::get('get-page', [PageController::class, 'getPage'])->name('add.page');

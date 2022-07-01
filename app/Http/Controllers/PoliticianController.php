@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Datatables;
 Use App\Services\CommonService;
+use App\Repositories\CategoryRepository;
 
 class PoliticianController extends Controller
 {
@@ -17,13 +18,19 @@ class PoliticianController extends Controller
     private $politicianRepository;
 
     /**
+     * @var categoryRepository
+     */
+    private $categoryRepository;
+
+    /**
      * @var commonService
      */
     private $commonService;
 
-    public function __construct(PoliticianRepository $politicianRepository, CommonService $commonService) {
+    public function __construct(PoliticianRepository $politicianRepository, CommonService $commonService, CategoryRepository $categoryRepository) {
         $this->politicianRepository = $politicianRepository;
         $this->commonService = $commonService;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -83,17 +90,50 @@ class PoliticianController extends Controller
      * @param $id
      */
     public function getPolitician($id=null){
-        $politician=Politician::select('*')->where(['id' => $id]);
-        return view('politician.add-form',['data'=>$politician]);
+        $categories = $this->categoryRepository->fetchAllData([])->toArray();
+        if($id){
+            $data=Politician::find($id);
+            //$metaData = $data->getMeta()->toArray();
+            return view('users.politicianForm',['data'=>$data, 'categories'=>$categories, 'metaData'=>[]]);
+        }
+        return view('politician.politicianForm',['data'=>[], 'categories'=>$categories, 'metaData'=>[]]);
     }
 
     /**
      * Method to post politician data
      * 
      */
-    public function postPolitician(){
-        $politician=Politician::select('*');
-        return view('politician.add-form',['data'=>$politician]);
+    public function postPolitician(Request $request){
+
+        $data=$request->all();
+        try{
+            echo "<pre>";
+            print_r($data);
+            exit;
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->commonService->storeImage($request->file('image'), config('constants.image.politician'));
+            }
+            if ($request->hasFile('affiliation_icon')) {
+                $data['affiliation_icon'] = $this->commonService->storeImage($request->file('affiliation_icon'), config('constants.image.politician'));
+            }
+            $condition = [];
+            if($data['id']){
+                $condition = ['id' => $data['id']];
+            }
+            if($data['p_pos']){
+                $pPos = json_encode($data['p_pos']);
+            }
+            $metaData = ($data['meta'])? $data['meta'] : [];
+            unset($data['meta']);
+            unset($data['p_pos']);
+            $this->politicianRepository->saveData($condition, $data, $metaData);
+            \Session::flash('success',trans('message.success'));
+            return redirect()->route('politicians.index');
+        }catch (\Exception $e){
+            \Log::info($e->getMessage());
+            \Session::flash('error',$e->getMessage());
+            return redirect()->route('politicians.index');
+        }
     }
 
     /**

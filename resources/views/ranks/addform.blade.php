@@ -1,6 +1,3 @@
-@php
-use Illuminate\Support\Str;
-@endphp
 <div class="generic-form">
     <h4>{{$data?'Edit' : 'Add new'}} rank</h4>
     <form class="needs-validation-1" id="validRankForm" method="post" action="{{route('post.rank')}}" enctype="multipart/form-data" novalidate>
@@ -16,21 +13,7 @@ use Illuminate\Support\Str;
         </div>
         <div class="form-group-two">
             <label for="formFile" class="form-label">Image</label>
-                @if($data && !Str::contains($data->image, 'text=Default'))
-                    <div class="p-image-sec">
-                        <div class="p-image-container">
-                            <img class="p-image" src="{{asset($data->image)}}"/>
-                            <button type="button" class="close btn-img-clear" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <input type="hidden" class="existing_image" name="image_existing" value="1" />
-                        <input class="form-control form-file" type="file" id="formFile" name='image'>
-                        <input value="{{asset($data->image)}}" type="hidden" name='ex_img_path'>
-                    </div>
-                @else
-                    <input class="form-control" type="file" id="formFile" name='image'>
-                @endif
+            <x-display-image :data="$data?$data : ''" ></x-display-image>
         </div>
         <div class="form-group">
             <label for="inputPostcount">Number of Post Count(to qualify this Rank)</label>

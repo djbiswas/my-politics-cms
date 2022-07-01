@@ -2,22 +2,6 @@
     <x-slot name="header">
         <h4>{{$data?'Edit' : 'Add'}}  User</h4>
     </x-slot>
-    @if(session()->has('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session()->get('success') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    @endif
-    @if(session()->has('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            Oops!! Something went wrong. Please try again.
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
     <div class="generic-form" style="text-align: left;">
         <form class="needs-validation-1" action="{{route('post.user')}}" method="post" id="validUserForm" name="form_01" enctype="multipart/form-data" novalidate>
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
