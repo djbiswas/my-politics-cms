@@ -6,6 +6,10 @@
         <form class="needs-validation-1 has-quill-field" id="validPoliticianForm" method="post" action="{{route('post.politician')}}" enctype="multipart/form-data" novalidate>
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
+            @if(!$data) 
+                <input type="hidden" name="created_by" value="{{ auth()->user()->id }}"> 
+            @endif
+            <input type="hidden" name="updated_by" value="{{ auth()->user()->id }}">
             <div class="form-group">
                 <label for="inputName">Name</label>
                 <input type="text" class="form-control" name='name' id="inputName" placeholder="Name" value="{{ (!empty($data)) ? $data->name : '' }}" required>
@@ -18,11 +22,11 @@
                 <div class="form-group col-6">
                     <label for="selectCategory">Category</label>
                     <select class="form-control" name='meta[p_cat]' id="selectCategory" required>
-                        <option>--Select--</option>
+                        <option value="">--Select--</option>
                         @if(!empty($categories))
                             @foreach ($categories as $item)
                                 <?php
-                                    $p_cat_sel = (!empty($meta_data) && $meta_data['p_cat'] == $item['id']) ? 'selected' : '';
+                                    $p_cat_sel = (!empty($metaData) && $metaData['p_cat'] == $item['id']) ? 'selected' : '';
                                 ?>
                                 <option {{$p_cat_sel}} value="{{$item['id']}}">{{$item['name']}}</option>;
                             @endforeach
@@ -81,42 +85,18 @@
 
                     <!-- Repeater Content -->
                     
-                    @if(!empty($meta_data) && isset($meta_data['p_pos']))
-                        @foreach ($meta_data['p_pos'] as $item)
+                    @if(!empty($metaData) && isset($metaData['p_pos']))
+                        @php
+                         $pPos = array_values(json_decode($metaData['p_pos'], true));
+                        @endphp
+                        @foreach ($pPos as $item)
                             @include('politician.position-div')
                         @endforeach
+                    @else
+                        @include('politician.position-div')
                     @endif
-                    <div class="items" data-group="p_pos">
-                        <div class="item-content">
-                            <div class="row">
-                                <div class="col-3">
-                                    <input type="text" class="form-control" id="inputName" placeholder="Name" data-name="name">
-                                </div>
-                                <div class="col-2">
-                                    <select class="form-control" data-name="res">
-                                        <option>--Choose--</option>
-                                        <option>Supports</option>
-                                        <option>Rejects</option>
-                                    </select>
-                                </div>
-                                <div class="col-5">
-                                    <textarea class="form-control" id="inputPpDescription" placeholder="Description" data-name="ppdescription"></textarea>
-                                </div>
-                                <div class="pull-right repeater-remove-btn col-2">
-                                    <button id="remove-btn" class="btn btn-danger" onclick="$(this).parents('.items').remove()">
-                                        Remove
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Repeater Remove Btn -->
-
-                        <div class="clearfix"></div>
-                    </div>
+                    
                 </div>
-
-
-
             </div>
             <input type="submit" name='Save' class="btn btn-primary" value="save">
         </form>

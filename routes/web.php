@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('get-politician/{id}', [PoliticianController::class, 'getPolitician'])->name('get.politician');
     Route::get('add-politician', [PoliticianController::class, 'getPolitician'])->name('add.politician');
     Route::post('post-politician', [PoliticianController::class, 'postPolitician'])->name('post.politician');
+    Route::delete('politicians/{id}', [PoliticianController::class, 'delete'])->name('politicians.delete');
 
     //Route for user
     Route::get('users', [UserController::class, 'index'])->name('users.index');

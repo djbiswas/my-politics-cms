@@ -70,7 +70,12 @@ class PoliticianController extends Controller
                             return date('Y-m-d H:i',strtotime($row->updated_at));
                         })
                         ->addColumn('action', function($row){
-                                $btn = '<a href="{{route("get.politician")}}/'.$row->id.'">Edit </a> | <a class="btn-delete" href="{{route("get.politician")}}/'.$row->id.'">Delete </a>';
+                            $btn = '<a href="'.route('get.politician',$row->id).'">Edit </a> |';
+                            $btn .= '<form method="POST" action="'.route('politicians.delete', $row->id).'" style="float:right;">
+                                        <input type="hidden" name="_token" value="'.csrf_token().'">
+                                        <input name="_method" type="hidden" value="DELETE">
+                                        <a href="javascript:void(0)" class="btn-delete" onclick="return DeleteFunction($(this))"> Delete</a>
+                                    </form>';
                                 return $btn;
                         })
                         ->rawColumns(['action'])
@@ -93,8 +98,8 @@ class PoliticianController extends Controller
         $categories = $this->categoryRepository->fetchAllData([])->toArray();
         if($id){
             $data=Politician::find($id);
-            //$metaData = $data->getMeta()->toArray();
-            return view('users.politicianForm',['data'=>$data, 'categories'=>$categories, 'metaData'=>[]]);
+            $metaData = $data->getMeta()->toArray();
+            return view('politician.politicianForm',['data'=>$data, 'categories'=>$categories, 'metaData'=>$metaData]);
         }
         return view('politician.politicianForm',['data'=>[], 'categories'=>$categories, 'metaData'=>[]]);
     }
@@ -107,9 +112,6 @@ class PoliticianController extends Controller
 
         $data=$request->all();
         try{
-            echo "<pre>";
-            print_r($data);
-            exit;
             if ($request->hasFile('image')) {
                 $data['image'] = $this->commonService->storeImage($request->file('image'), config('constants.image.politician'));
             }
@@ -120,12 +122,19 @@ class PoliticianController extends Controller
             if($data['id']){
                 $condition = ['id' => $data['id']];
             }
-            if($data['p_pos']){
+            if(!empty($data['p_pos'])){
+                // echo "<pre>";
+                // print_r($data['p_pos']);
+                // echo "<pre>";
+                // print_r(array_values($data['p_pos']));
+                // exit;
+                //$dataPosVal = array_values($data['p_pos']);
                 $pPos = json_encode($data['p_pos']);
+                $data['meta']['p_pos'] = $pPos;
+                unset($data['p_pos']);
             }
             $metaData = ($data['meta'])? $data['meta'] : [];
             unset($data['meta']);
-            unset($data['p_pos']);
             $this->politicianRepository->saveData($condition, $data, $metaData);
             \Session::flash('success',trans('message.success'));
             return redirect()->route('politicians.index');

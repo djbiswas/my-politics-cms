@@ -615,6 +615,8 @@ class UserRepository
         if($fields['password']){
             $fields['password'] = \Hash::make($fields['password']);
         }
+
+        // Just note : below updateOrCreate function not working proper for poltician and user model so set condition here, plz do'not remove it.
         if(!empty($condition)){
             $userObj = User::updateOrCreate($condition, $fields);
         }else{
