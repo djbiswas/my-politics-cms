@@ -44,11 +44,14 @@ class UserRepository
             'id' => Auth::id()
         ];
 
+        /* $userMetaDetails = User::with(['ranks'])->withCount('posts')->where($user)->get();
+        $metaData = $userMetaDetails->toArray(); */
+        
         $userMetaDetails = User::with(['userMeta'  => function ($query) {
             $query->select('id', 'user_id', \DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'));
         }, 'ranks'])->withCount('posts')->where($user)->firstOrFail();
 
-        $meta_data = self::explode_meta_data_fn($userMetaDetails->userMeta[0]->meta_key, $userMetaDetails->userMeta[0]->meta_value);
+        $meta_data = explodeMetaData($userMetaDetails->userMeta[0]->meta_key, $userMetaDetails->userMeta[0]->meta_value);
 
         $userMetaDetails['meta_data'] = $meta_data;
 
@@ -628,19 +631,6 @@ class UserRepository
         }
         return $userObj;
     }
-
-    public function explode_meta_data_fn($keys, $values) {
-        $meta_data = [];
-        $meta_keys = explode('-~-', $keys);
-        $meta_values = explode('-~-', $values);
-        if (!empty($meta_keys)) {
-            foreach ($meta_keys as $key => $value) {
-                $meta_data[$value] = $meta_values[$key] ?? null;
-            }
-        }
-        return $meta_data;
-    }
-
 }
 
 
