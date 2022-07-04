@@ -7,10 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Kodeine\Metable\Metable;
 
 class Politician extends Model
 {
     use HasFactory, SoftDeletes;
+
+    use Metable;
+
+    protected $metaTable = 'user_metas'; 
+
+    protected $metaKeyName = 'user_id';
+    
+    protected $disableFluentMeta = true;
 
     protected $fillable = [
         'name', 'title', 'name_alias', 'affiliation', 'affiliation_icon', 'position', 'politician_description', 
