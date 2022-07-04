@@ -72,8 +72,7 @@ class UserRepository
 
                 return [
                    'action' => 'phoneExistence',
-                   'user' => $userDetails,
-                   'status' => 'success'
+                   'user' => $userDetails
                 ];
 
             case('email'):
@@ -91,8 +90,7 @@ class UserRepository
 
                 return [
                     'action' => 'email',
-                    'user' => $userDetails,
-                    'status' => 'success'
+                    'user' => $userDetails
                 ];
 
             default:
@@ -121,7 +119,6 @@ class UserRepository
 
         if($updateUser) {
             return [
-                'status' => 'success',
                 'user' => self::fetchUserDetails($condition)
             ];
         }
@@ -225,7 +222,7 @@ class UserRepository
         ];
 
         if($request->has('profilePhoto')){
-            $image = Self::imageUpload($request);
+            $image = uploadFile('/users', $request->profilePhoto);
         }
 
         $fields = [
@@ -247,8 +244,7 @@ class UserRepository
 
         if($updateUser) {
             return [
-                'user' => self::fetchUserDetails($condition),
-                'status' => 'success'
+                'user' => self::fetchUserDetails($condition)
             ];
         }
     }
@@ -517,8 +513,6 @@ class UserRepository
             }
         }
 
-        return $result;
-
     }
 
     public function registerUserStepThree($request){
@@ -528,7 +522,7 @@ class UserRepository
         ];
 
         if($request->has('profilePhoto')){
-            $image = Self::imageUpload($request);
+            $image = uploadFile('/users', $request->profilePhoto);
         }
 
         $fields = [
