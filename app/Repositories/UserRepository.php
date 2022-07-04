@@ -43,17 +43,11 @@ class UserRepository
         $user = [
             'id' => Auth::id()
         ];
-
-        /* $userMetaDetails = User::with(['ranks'])->withCount('posts')->where($user)->get();
-        $metaData = $userMetaDetails->toArray(); */
         
-        $userMetaDetails = User::with(['userMeta'  => function ($query) {
-            $query->select('id', 'user_id', \DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'));
-        }, 'ranks'])->withCount('posts')->where($user)->firstOrFail();
-
-        $meta_data = explodeMetaData($userMetaDetails->userMeta[0]->meta_key, $userMetaDetails->userMeta[0]->meta_value);
-
-        $userMetaDetails['meta_data'] = $meta_data;
+        $userMetaDetails = User::with(['ranks'])->withCount('posts')->where($user)->firstOrFail();
+        $userMeta =  $userMetaDetails->getMeta()->toArray();
+        
+        $userMetaDetails['meta_data'] = $userMeta;
 
         return [
             'token' => JWTAuth::fromUser($userMetaDetails),
@@ -78,8 +72,7 @@ class UserRepository
 
                 return [
                    'action' => 'phoneExistence',
-                   'user' => $userDetails,
-                   'status' => 'success'
+                   'user' => $userDetails
                 ];
 
             case('email'):
@@ -97,8 +90,7 @@ class UserRepository
 
                 return [
                     'action' => 'email',
-                    'user' => $userDetails,
-                    'status' => 'success'
+                    'user' => $userDetails
                 ];
 
             default:
@@ -127,7 +119,6 @@ class UserRepository
 
         if($updateUser) {
             return [
-                'status' => 'success',
                 'user' => self::fetchUserDetails($condition)
             ];
         }
@@ -224,14 +215,6 @@ class UserRepository
         return User::where($condition)->update($fields);
     }
 
-    /**
-     * For Updating record into user_meta table
-     */
-    public function updateUserMetaData($condition, $fields)
-    {
-        return UserMeta::updateOrCreate($condition, $fields);
-    }
-
     public function updateProfile(Request $request)
     {
         $condition = [
@@ -239,7 +222,7 @@ class UserRepository
         ];
 
         if($request->has('profilePhoto')){
-            $image = Self::imageUpload($request);
+            $image = uploadFile('/users', $request->profilePhoto);
         }
 
         $fields = [
@@ -255,35 +238,13 @@ class UserRepository
 
         $metaRequest = $request->except('userId','firstName', 'lastName', 'email', 'phone', 'profilePhoto', 'reg_status', 'registered_date', 'status', 'action', 'step', 'fieldType', 'fieldValue');
 
-        foreach($metaRequest as $key=>$value){
+        $userDetails->setMeta($metaRequest);
 
-            $metaCondition = [
-                'user_id' =>  $userDetails->id,
-                'meta_key' => $key
-            ];
-
-            $metaFields = [
-                'user_id' =>  $userDetails->id,
-                'meta_key' => $key,
-                'meta_value' => $value
-            ];
-
-            if($key == 'penName'){
-                $metaFields = [
-                    'user_id' =>  $userDetails->id,
-                    'meta_key' => $key,
-                    'meta_value' => json_encode($value)
-                ];
-            }
-
-            $updateUserMeta = self::updateUserMetaData($metaCondition, $metaFields);
-
-        }
+        $userDetails->save();
 
         if($updateUser) {
             return [
-                'user' => self::fetchUserDetails($condition),
-                'status' => 'success'
+                'user' => self::fetchUserDetails($condition)
             ];
         }
     }
@@ -552,8 +513,6 @@ class UserRepository
             }
         }
 
-        return $result;
-
     }
 
     public function registerUserStepThree($request){
@@ -563,7 +522,7 @@ class UserRepository
         ];
 
         if($request->has('profilePhoto')){
-            $image = Self::imageUpload($request);
+            $image = uploadFile('/users', $request->profilePhoto);
         }
 
         $fields = [
@@ -581,30 +540,9 @@ class UserRepository
         $updateUser = self::updateUserData($condition, $fields);
 
         $metaRequest = $request->except('userId', 'validationCode', 'firstName', 'lastName', 'email', 'phone', 'profilePhoto', 'reg_status', 'registered_date', 'status', 'action', 'step', 'fieldType', 'fieldValue');
-        foreach($metaRequest as $key=>$value){
-
-            $metaCondition = [
-                'user_id' =>  $userDetails->id,
-                'meta_key' => $key
-            ];
-
-            if($key == 'penName'){
-                $metaFields = [
-                    'user_id' =>  $userDetails->id,
-                    'meta_key' => $key,
-                    'meta_value' => json_encode($value)
-                ];
-            }else{
-                $metaFields = [
-                    'user_id' =>  $userDetails->id,
-                    'meta_key' => $key,
-                    'meta_value' => $value
-                ];
-            }
-
-            $updateUserMeta = self::updateUserMetaData($metaCondition, $metaFields);
-
-        }
+        
+        $userDetails->setMeta($metaRequest);
+        $userDetails->save();
 
         return $userDetails;
 

@@ -39,10 +39,8 @@ class PostRepository
      */
     public function getPosts($request)
     {
-        $posts = Post::with(['userTrust', 'reactions', 'comments', 'user', 'user.userMeta'  => function ($query) {
-            $query->select('id', 'user_id', \DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'));
-        }, 'user.ranks'])->where('politician_id', $request->politicianId)->get();
-
+        $posts = Post::with(['userTrust', 'reactions', 'comments', 'user', 'user.ranks'])->where('politician_id', $request->politicianId)->get();
+       
         $users = User::with('posts')->get();
 
         $postCount = [];
@@ -50,40 +48,39 @@ class PostRepository
             $postCount[$user->id] = $user->posts->count();
         }
 
+        $id = 0;
         foreach($posts as $post){
 
-            $data['post']['id'] = $post->id;
-            $data['post']['user_id'] = $post->user_id;
-            $data['post']['politician_id'] = $post->politician_id;
-            $data['post']['content'] = $post->content;
-            $data['post']['gif'] = $post->gif;
-            $data['post']['images'] = $post->images;
-            $data['post']['videos'] = $post->videos;
-            $data['post']['status'] = $post->status;
-            $data['post']['created_at'] = $post->created_at;
+            $data[$id]['post']['id'] = $post->id;
+            $data[$id]['post']['user_id'] = $post->user_id;
+            $data[$id]['post']['politician_id'] = $post->politician_id;
+            $data[$id]['post']['content'] = $post->content;
+            $data[$id]['post']['gif'] = $post->gif;
+            $data[$id]['post']['images'] = $post->images;
+            $data[$id]['post']['videos'] = $post->videos;
+            $data[$id]['post']['status'] = $post->status;
+            $data[$id]['post']['created_at'] = $post->created_at;
 
             if(!empty($this->userDetails)){
 
-                $data['post']['reaction_status'] = $post->reactions->where('user_id', $this->userDetails->id)->first()->reaction ?? '';
+                $data[$id]['post']['reaction_status'] = $post->reactions->where('user_id', $this->userDetails->id)->first()->reaction ?? '';
 
             }
-            $userMeta = UserMeta::select(\DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'))
-            ->where('user_id', $post->user->id)->first();
+            
+            $userMeta = $post->user->getMeta()->toArray();
            
-            $meta_data = explodeMetaData($userMeta->meta_key, $userMeta->meta_value);
-           
-            $data['post']['user']['user_id'] = $post->user->id;
-            $data['post']['user']['first_name'] = $post->user->first_name;
-            $data['post']['user']['last_name'] = $post->user->last_name;
-            $data['post']['user']['image'] = $post->user->image;
+            $data[$id]['post']['user']['user_id'] = $post->user->id;
+            $data[$id]['post']['user']['first_name'] = $post->user->first_name;
+            $data[$id]['post']['user']['last_name'] = $post->user->last_name;
+            $data[$id]['post']['user']['image'] = $post->user->image;
 
             $post_count = Post::where('user_id', $post->user->id)->count();
 
-            $data['post']['user']['post_count'] = $post_count;
+            $data[$id]['post']['user']['post_count'] = $post_count;
 
-            $data['post']['user']['meta_data'] = $meta_data; 
+            $data[$id]['post']['user']['meta_data'] = $userMeta; 
            
-            $data['post']['timeago_date'] = $post->created_at->diffForHumans();
+            $data[$id]['post']['timeago_date'] = $post->created_at->diffForHumans();
 
             $up = $post->userTrust->where('trust', 'Up')->count();
 
@@ -96,33 +93,34 @@ class PostRepository
                 $trust_response = $post->userTrust->where(['user_id' => $request->politicianId, 'responded_id' => $this->userDetails->id])->first();
 
             }
-            $data['post']['trust_data']['trust_per'] = $result;
-            $data['post']['trust_data']['user_rank'] = $post->user->ranks->title ?? '';
-            $data['post']['trust_data']['rank_image'] = $post->user->ranks->image ?? '';
-            $data['post']['trust_data']['rank_description'] = $post->user->ranks->long_desc ?? '';
-            $data['post']['trust_data']['trust_response'] = $trust_response->trust ?? '';
+            $data[$id]['post']['trust_data']['trust_per'] = $result;
+            $data[$id]['post']['trust_data']['user_rank'] = $post->user->ranks->title ?? '';
+            $data[$id]['post']['trust_data']['rank_image'] = $post->user->ranks->image ?? '';
+            $data[$id]['post']['trust_data']['rank_description'] = $post->user->ranks->long_desc ?? '';
+            $data[$id]['post']['trust_data']['trust_response'] = $trust_response->trust ?? '';
 
-            $data['post']['comment_count'] = $post->comments->count();
+            $data[$id]['post']['comment_count'] = $post->comments->count();
 
             foreach($post->comments as $comment){
 
-                $data['post']['comment'] = $comment;
+                $data[$id]['post']['comment'] = $comment;
 
-                $data['post']['comment']['timeago_date'] = $comment->created_at->diffForHumans();
+                $data[$id]['post']['comment']['timeago_date'] = $comment->created_at->diffForHumans();
 
             }
 
-            $data['post']['reactionCount'] = $post->reactions->count();
+            $data[$id]['post']['reactionCount'] = $post->reactions->count();
 
             if(!empty($this->userDetails)){
             
                 $authLike = $post->reactions->where('user_id', $this->userDetails->id)->count();
 
+                $reaction = self::getReactionValue($data[$id]['post']['reactionCount'], $authLike);
+
+                $data[$id]['post']['reactionText'] = $reaction;
             }
 
-            $reaction = self::getReactionValue($data['post']['reactionCount'], $authLike);
-
-            $data['post']['reactionText'] = $reaction;
+            $id++;
             
         }
         

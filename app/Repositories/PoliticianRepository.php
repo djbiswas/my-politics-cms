@@ -67,11 +67,10 @@ class PoliticianRepository
     {
         $votingAlerts = '';
 
-        $politician = Politician::with(['politicianMetas'  => function ($query) {
-            $query->select('id', 'politician_id', DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'));
-        }])->where('id',$request->politicianId)->firstOrFail();
-  
-        $metaData = explodeMetaData($politician->politicianMetas[0]->meta_key, $politician->politicianMetas[0]->meta_value);
+        $politician = Politician::where('id',$request->politicianId)->firstOrFail();
+
+        $politicianMeta = $politician->getMeta()->toArray();
+       
         if(!empty($metaData['voting_alerts']) && !empty($this->userDetails)){
 
             $votingAlerts = (is_array($metaData['voting_alerts']) && in_array($this->userDetails->id, $metaData['voting_alerts'])) ? 'Yes' : 'no';
@@ -80,8 +79,7 @@ class PoliticianRepository
 
         return [
             'politician' => $politician,
-            'voting_alerts' => $votingAlerts,
-            'meta_data' => $metaData
+            'voting_alerts' => $votingAlerts
         ];
     }
 

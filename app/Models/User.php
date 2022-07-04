@@ -15,7 +15,11 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, SoftDeletes, Metable;
 
+    use Metable;
+
     protected $metaTable = 'user_metas'; 
+
+    protected $metaKeyName = 'user_id';
     
     protected $disableFluentMeta = true;
 
