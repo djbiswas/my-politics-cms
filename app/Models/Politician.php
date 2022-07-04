@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Kodeine\Metable\Metable;
 
 class Politician extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Metable;
+
+    protected $metaTable = 'politician_metas'; 
+
+    protected $disableFluentMeta = true;
 
     protected $fillable = [
         'name', 'title', 'name_alias', 'affiliation', 'affiliation_icon', 'position', 'politician_description', 
@@ -44,7 +49,7 @@ class Politician extends Model
     
     public function getAffiliationIconAttribute()
     {
-        if (Str::of($this->attributes['affiliation_icon'], 'uploads')) {
+        if (Str::contains($this->attributes['affiliation_icon'], 'uploads')) {
             $image = Str::of($this->attributes['affiliation_icon'])->explode('/');
             $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
         } else {
@@ -63,11 +68,11 @@ class Politician extends Model
 
     public function getImageAttribute()
     {
-        if (Str::of($this->attributes['image'], 'uploads')) {
+        if (Str::contains($this->attributes['image'], 'uploads')) {
             $image = Str::of($this->attributes['image'])->explode('/');
             $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
         } else {
-            $imagePath = config('constants.image.politican') . DIRECTORY_SEPARATOR . $this->attributes['image'];
+            $imagePath = config('constants.image.politician') . DIRECTORY_SEPARATOR . $this->attributes['image'];
         }
         
         $disk = Storage::disk(config('constants.image.driver'));
