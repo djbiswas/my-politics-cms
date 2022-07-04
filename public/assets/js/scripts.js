@@ -34,7 +34,10 @@ jQuery.fn.extend({
                     }
                 }
                 if (fresh == true) {
-                    $(el).attr('value', '')
+                    $(el).attr('value', '');
+                    if ($(el).prop('nodeName') == 'TEXTAREA') {
+                        $(el).html('');
+                    }
                     if ($(el).prop('nodeName') == 'SELECT') {
                         $(el).find('option').removeAttr("selected");
                     }
@@ -75,10 +78,10 @@ jQuery.fn.extend({
                 addItem($(item), key, false);
                 key++;
             } else {
-                if (items.length > 1) {
+                //if (items.length > 1) {
                     addItem($(item), key, false);
                     key++;
-                }
+                //}
             }
         });
 
@@ -200,6 +203,6 @@ $(function ()
 })();
 
 /* Delete Politician */
-$('.politicians-list').on('click', '.btn-delete', function (e) {
+$('.politicians-list').on('click', '.btn-delete-old', function (e) {
     return confirm('Do you really want to delete?');
 })
