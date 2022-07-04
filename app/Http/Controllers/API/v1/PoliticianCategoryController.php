@@ -8,7 +8,13 @@ use App\Repositories\CategoryRepository;
 use Exception;
 use Illuminate\Http\Request;
 
-
+/**
+ * @OA\Info(
+ *  title="My Political CMS API",
+ *  version="1.0.0",
+ *  description="My Political CMS API"
+ * )
+ */
 class PoliticianCategoryController extends Controller
 {
 
@@ -30,7 +36,6 @@ class PoliticianCategoryController extends Controller
 
     /**
      * @OA\Get(
-     *     security={{"bearerAuth":{}}},
      *     path="/v1/get-politician-categories",
      *     tags={"Get Politician Categories"},
      *     summary="Get Politician Categories",
