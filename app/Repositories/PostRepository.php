@@ -70,7 +70,7 @@ class PostRepository
             $userMeta = UserMeta::select(\DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'))
             ->where('user_id', $post->user->id)->first();
            
-            $meta_data = self::explode_meta_data_fn($userMeta->meta_key, $userMeta->meta_value);
+            $meta_data = explodeMetaData($userMeta->meta_key, $userMeta->meta_value);
            
             $data['post']['user']['user_id'] = $post->user->id;
             $data['post']['user']['first_name'] = $post->user->first_name;
@@ -258,18 +258,6 @@ class PostRepository
         $fileName = uploadFile('post_comment_image', $request->file);
         
         return $fileName;
-    }
-
-    public function explode_meta_data_fn($keys, $values) {
-        $meta_data = [];
-        $meta_keys = explode('-~-', $keys);
-        $meta_values = explode('-~-', $values);
-        if (!empty($meta_keys)) {
-            foreach ($meta_keys as $key => $value) {
-                $meta_data[$value] = $meta_values[$key] ?? null;
-            }
-        }
-        return $meta_data;
     }
 
     public function getScorePercentage($up, $down) {

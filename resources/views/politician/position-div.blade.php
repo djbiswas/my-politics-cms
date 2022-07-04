@@ -2,13 +2,13 @@
     <div class="item-content">
         <div class="row">
             <div class="col-3">
-                <input type="text" class="form-control fieldtest" id="inputName" placeholder="Name" data-name="name" value="{{ (!empty($item['name'])) ? $item['name'] : '' }}">
+                <input type="text" class="form-control fieldtest" id="inputName" placeholder="Name" data-name="name" value="{{ (!empty($item['name'])) ? $item['name'] : '' }}" required>
             </div>
             <div class="col-2">
-                <select class="form-control" data-name="res">
-                    <option>--Choose--</option>
-                    <option <?php echo ($item['res'] == 'Supports') ? 'selected' : ''; ?>>Supports</option>
-                    <option <?php echo ($item['res'] == 'Rejects') ? 'selected' : ''; ?>>Rejects</option>
+                <select class="form-control" data-name="res" required>
+                    <option value="">--Choose--</option>
+                    <option {{ (!empty($item["res"]) && $item['res'] == 'Supports') ? 'selected' : ''}} >Supports</option>
+                    <option {{ (!empty($item['res']) &&  $item['res'] == 'Rejects') ? 'selected' : '' }} >Rejects</option>
                 </select>
             </div>
             <div class="col-5">

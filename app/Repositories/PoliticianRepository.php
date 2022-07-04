@@ -53,7 +53,7 @@ class PoliticianRepository
     public function getPoliticians($request)
     {
         return [
-            'count' => $this->countPoliticans($request),
+            //'count' => $this->countPoliticans($request),
             'records' => $this->fetchPoliticans($request),
         ];
     }
@@ -71,7 +71,7 @@ class PoliticianRepository
             $query->select('id', 'politician_id', DB::raw('GROUP_CONCAT(meta_key SEPARATOR "-~-") as meta_key, GROUP_CONCAT(meta_value SEPARATOR "-~-") as meta_value'));
         }])->where('id',$request->politicianId)->firstOrFail();
   
-        $metaData = self::explode_meta_data_fn($politician->politicianMetas[0]->meta_key, $politician->politicianMetas[0]->meta_value);
+        $metaData = explodeMetaData($politician->politicianMetas[0]->meta_key, $politician->politicianMetas[0]->meta_value);
         if(!empty($metaData['voting_alerts']) && !empty($this->userDetails)){
 
             $votingAlerts = (is_array($metaData['voting_alerts']) && in_array($this->userDetails->id, $metaData['voting_alerts'])) ? 'Yes' : 'no';
@@ -208,20 +208,6 @@ class PoliticianRepository
     }
 
     /**
-     * For counting the Politicans records
-     *
-     * @param Request $request
-     */
-    public function countPoliticans($request)
-    {
-        if($request->category) {
-            echo '<pre>'; print_r('Here'); die;
-        } else {
-            return Politician::select('*')->onlyActive()->count();    
-        }
-    }
-
-    /**
      * For calculating the percentage
      *
      * @param int $up
@@ -239,18 +225,6 @@ class PoliticianRepository
             }
         }
         return $percentage;
-    }
-
-    public function explode_meta_data_fn($keys, $values) {
-        $meta_data = [];
-        $meta_keys = explode('-~-', $keys);
-        $meta_values = explode('-~-', $values);
-        if (!empty($meta_keys)) {
-            foreach ($meta_keys as $key => $value) {
-                $meta_data[$value] = $meta_values[$key];
-            }
-        }
-        return $meta_data;
     }
 
     public function isVoted($id, $politician_id){
