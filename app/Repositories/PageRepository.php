@@ -28,7 +28,7 @@ class PageRepository
      */
     public function saveData($condition = [], $fields)
     {
-        return Page::updateOrCreate($condition, $fields);
+        return (!empty($condition)) ? Page::updateOrCreate($condition, $fields) : Page::updateOrCreate($fields);
     }
 }
 

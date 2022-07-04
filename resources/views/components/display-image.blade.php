@@ -8,7 +8,7 @@ $required = ($required ?? false)
             ? 'required'
             : '';
 @endphp
-@if($data && !Str::contains($data->image, 'text=Default'))
+@if($data && !Str::contains($data->$imgFileName, 'text=Default'))
     <div class="p-image-sec">
         <div class="p-image-container">
             <img class="p-image" src="{{asset($data->$imgFileName)}}"/>

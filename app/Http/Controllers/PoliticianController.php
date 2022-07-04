@@ -116,19 +116,13 @@ class PoliticianController extends Controller
                 $data['image'] = $this->commonService->storeImage($request->file('image'), config('constants.image.politician'));
             }
             if ($request->hasFile('affiliation_icon')) {
-                $data['affiliation_icon'] = $this->commonService->storeImage($request->file('affiliation_icon'), config('constants.image.politician'));
+                $data['affiliation_icon'] = $this->commonService->storeImage($request->file('affiliation_icon'), config('constants.image.politician'), 'affiliation_icon');
             }
             $condition = [];
             if($data['id']){
                 $condition = ['id' => $data['id']];
             }
             if(!empty($data['p_pos'])){
-                // echo "<pre>";
-                // print_r($data['p_pos']);
-                // echo "<pre>";
-                // print_r(array_values($data['p_pos']));
-                // exit;
-                //$dataPosVal = array_values($data['p_pos']);
                 $pPos = json_encode($data['p_pos']);
                 $data['meta']['p_pos'] = $pPos;
                 unset($data['p_pos']);
