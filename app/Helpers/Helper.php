@@ -32,27 +32,6 @@ if (!function_exists('uploadFile')) {
     }
 }
 
-if (!function_exists('explodeMetaData')) {
-
-    /**
-     * Explode Meta Data
-     *
-     * @param String $folderName
-     * @param String $fileName
-     *
-     */
-    function explodeMetaData($keys, $values) {
-        $meta_data = [];
-        $meta_keys = explode('-~-', $keys);
-        $meta_values = explode('-~-', $values);
-        if (!empty($meta_keys)) {
-            foreach ($meta_keys as $key => $value) {
-                $meta_data[$value] = $meta_values[$key] ?? null;
-            }
-        }
-        return $meta_data;
-    }
-}
 
 
 

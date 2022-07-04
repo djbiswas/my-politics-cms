@@ -11,17 +11,13 @@ use Kodeine\Metable\Metable;
 
 class Politician extends Model
 {
-    use HasFactory, SoftDeletes, Metable;
-
-    protected $metaTable = 'politician_metas'; 
-
-    protected $disableFluentMeta = true;
+    use HasFactory, SoftDeletes;
 
     use Metable;
 
-    protected $metaTable = 'user_metas'; 
+    protected $metaTable = 'Politician_metas'; 
 
-    protected $metaKeyName = 'user_id';
+    protected $metaKeyName = 'politician_id';
     
     protected $disableFluentMeta = true;
 
@@ -57,7 +53,7 @@ class Politician extends Model
     
     public function getAffiliationIconAttribute()
     {
-        if (Str::contains($this->attributes['affiliation_icon'], 'uploads')) {
+        if (Str::of($this->attributes['affiliation_icon'], 'uploads')) {
             $image = Str::of($this->attributes['affiliation_icon'])->explode('/');
             $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
         } else {
@@ -76,16 +72,16 @@ class Politician extends Model
 
     public function getImageAttribute()
     {
-        if (Str::contains($this->attributes['image'], 'uploads')) {
+        if (Str::of($this->attributes['image'], 'uploads')) {
             $image = Str::of($this->attributes['image'])->explode('/');
             $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
         } else {
-            $imagePath = config('constants.image.politician') . DIRECTORY_SEPARATOR . $this->attributes['image'];
+            $imagePath = config('constants.image.politican') . DIRECTORY_SEPARATOR . $this->attributes['image'];
         }
         
         $disk = Storage::disk(config('constants.image.driver'));
         if (!empty($this->attributes['image']) && $disk->exists($imagePath)) {
-            $fetchImage = config('app.url').Storage::url($imagePath);
+            $fetchImage = Storage::url($imagePath);
         } else {
             $fetchImage = config('constants.image.defaultImage');
         }
