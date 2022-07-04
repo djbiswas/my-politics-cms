@@ -43,7 +43,12 @@ class PageController extends Controller
                             return "InActive";
                         })
                         ->addColumn('action', function($row){
-                                $btn = '<a href="'.route('get.page',$row->id).'">Edit </a> | <a class="btn-delete" href="'.route('delete.page',$row->id).'">Delete </a>';
+                                $btn = '<a href="'.route('get.page',$row->id).'">Edit </a> | ';
+                                $btn .= '<form method="POST" action="'.route('pages.delete', $row->id).'" style="float:right;">
+                                            <input type="hidden" name="_token" value="'.csrf_token().'">
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <a href="javascript:void(0)" class="btn-delete" onclick="return DeleteFunction($(this))"> Delete</a>
+                                        </form>';
                                 return $btn;
                         })
                         ->rawColumns(['action'])
@@ -112,13 +117,13 @@ class PageController extends Controller
     }
 
     /**
-     * Method to delete Politician Data through id
-     * 
-     * @param $id
+     * Write code on Method
+     *
+     * @return response()
      */
-    public function delete($id=null){
-        $data = Politician::find($id)->delete();
+    public function delete($id){
+        Page::find($id)->delete();
         \Session::flash('success',trans('message.success'));
-        return redirect()->route('politicians.index');
+        return back();
     }
 }

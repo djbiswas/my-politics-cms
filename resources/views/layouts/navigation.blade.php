@@ -20,7 +20,7 @@ $current_page = '';
                     <p>Dashboard</p>
                 </x-nav-link>
             </x-nav-li>
-            <x-nav-li :active="request()->routeIs('politicians.index', 'categories.index', 'get.category')" class="v-dropdown">
+            <x-nav-li :active="request()->routeIs('politicians.index', 'categories.index', 'get.category', 'add.politician', 'get.politician')" class="v-dropdown">
                 <x-nav-link :href="route('politicians.index')">
                     <i class="nc-icon nc-umbrella-13"></i>
                     <p>Politicians</p>
@@ -30,7 +30,9 @@ $current_page = '';
                     <x-nav-link :href="route('politicians.index')" :active="request()->routeIs('politicians.index')" >
                         All Politicians
                     </x-nav-link>
-                    <a href="add-politician.php" class="">Add New</a>
+                    <x-nav-link :href="route('add.politician')" :active="request()->routeIs('add.politician')" >
+                        Add New
+                    </x-nav-link>
                     <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.index', 'category.rank')" >
                         Categories
                     </x-nav-link>

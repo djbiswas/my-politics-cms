@@ -35,6 +35,26 @@
   <script src="{{ asset('assets/js/scripts.js')}}"></script>
   <script src="{{ asset('assets/js/common.js')}}"></script>
   
+  <script>
+    function DeleteFunction(thisVal){
+        var form =  $(thisVal).closest("form");
+        var name = $(thisVal).data("name");
+        event.preventDefault();
+        swal({
+            title: `Are you sure you want to delete this record?`,
+            text: "If you delete this, it will be gone forever.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+            form.submit();
+            }
+        });
+    }
+</script>
+
   
 
 

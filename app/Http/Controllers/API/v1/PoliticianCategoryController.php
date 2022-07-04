@@ -36,7 +36,6 @@ class PoliticianCategoryController extends Controller
 
     /**
      * @OA\Get(
-     *     security={{"bearerAuth":{}}},
      *     path="/v1/get-politician-categories",
      *     tags={"Get Politician Categories"},
      *     summary="Get Politician Categories",
