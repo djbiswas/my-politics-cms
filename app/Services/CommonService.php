@@ -12,12 +12,12 @@ class CommonService
         return $text;
     }
 
-    public function storeImage($reqImg, $imgPath=''){
+    public function storeImage($reqImg, $imgPath='', $dbColName = 'image'){
         if(empty($imgPath)){
             $imgPath= config('constants.image.upload');
         }
         $image      = $reqImg;
-        $fileName   = time() . '.' . $image->getClientOriginalExtension();
+        $fileName   = $dbColName.'-'.time() . '.' . $image->getClientOriginalExtension();
         $img = \Image::make($image->getRealPath());
         $img->stream();
         \Storage::disk(config('constants.disk.driver'))->put('public/'.$imgPath.'/'.$fileName, $img);

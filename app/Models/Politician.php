@@ -53,7 +53,7 @@ class Politician extends Model
             $image = Str::of($this->attributes['affiliation_icon'])->explode('/');
             $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
         } else {
-            $imagePath = config('constants.image.affiliation_icon') . DIRECTORY_SEPARATOR . $this->attributes['affiliation_icon'];
+            $imagePath = config('constants.image.politician') . DIRECTORY_SEPARATOR . $this->attributes['affiliation_icon'];
         }
         
         $disk = Storage::disk(config('constants.image.driver'));
