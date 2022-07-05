@@ -12,7 +12,7 @@ class PoliticianMeta extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'politican_metas';
+    protected $table = 'politician_metas';
 
     protected $fillable = [
         'politician_id',

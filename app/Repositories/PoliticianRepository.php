@@ -198,8 +198,10 @@ class PoliticianRepository
      */
     public function fetchPoliticans($request)
     {
-        if($request->category) {
-            echo '<pre>'; print_r('There'); die;
+        if($request->category_id) {
+            $politicianMeta = PoliticianMeta::where('key', 'p_cat')->where('value', $request->category_id)->pluck('politician_id')->toArray();
+            
+            return Politician::select('id', 'name', 'title', 'name_alias', 'image')->whereIn('id', $politicianMeta)->onlyActive()->paginate(config('constants.recordsPerPage'));
         } else {
             return Politician::select('id', 'name', 'title', 'name_alias', 'image')->onlyActive()->paginate(config('constants.recordsPerPage'));
         }
