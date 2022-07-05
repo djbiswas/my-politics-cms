@@ -53,34 +53,19 @@ class Politician extends Model
     
     public function getAffiliationIconAttribute()
     {
-        if (Str::of($this->attributes['affiliation_icon'], 'uploads')) {
-            $image = Str::of($this->attributes['affiliation_icon'])->explode('/');
-            $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
-        } else {
-            $imagePath = config('constants.image.politician') . DIRECTORY_SEPARATOR . $this->attributes['affiliation_icon'];
-        }
-        
-        $disk = Storage::disk(config('constants.image.driver'));
         if (!empty($this->attributes['affiliation_icon'])) {
+            $imagePath = config('constants.image.politician') . DIRECTORY_SEPARATOR . $this->attributes['affiliation_icon'];
             $fetchIcon = config('app.url').Storage::url($imagePath);
         } else {
             $fetchIcon = config('constants.image.defaultImage');
         }
-
         return $fetchIcon;
     }
 
     public function getImageAttribute()
     {
-        if (Str::of($this->attributes['image'], 'uploads')) {
-            $image = Str::of($this->attributes['image'])->explode('/');
-            $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
-        } else {
-            $imagePath = config('constants.image.politican') . DIRECTORY_SEPARATOR . $this->attributes['image'];
-        }
-        
-        $disk = Storage::disk(config('constants.image.driver'));
         if (!empty($this->attributes['image'])) {
+            $imagePath = config('constants.image.politician') . DIRECTORY_SEPARATOR . $this->attributes['image'];
             $fetchImage = config('app.url').Storage::url($imagePath);
         } else {
             $fetchImage = config('constants.image.defaultImage');

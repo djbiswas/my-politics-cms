@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Repositories\CategoryRepository;
 use Datatables;
 use App\Models\Category;
+Use App\Services\CommonService;
 
 class CategoryController extends Controller
 {
@@ -68,20 +69,11 @@ class CategoryController extends Controller
         $data=$request->all();
         try{
             if ($request->hasFile('icon')) {
-                $image      = $request->file('icon');
-                $fileName   = time() . '.' . $image->getClientOriginalExtension();
-                $img = \Image::make($image->getRealPath());
-                $img->stream();
-                \Storage::disk(config('constants.disk.driver'))->put('public/'.config('constants.image.category').'/'.$fileName, $img);
-                $data['icon'] = $fileName;
+                $commonService = new CommonService();
+                $data['icon'] = $commonService->storeImage($request->file('icon'), config('constants.image.category'), 'icon');
             }
-            unset($data['Save']);
-            unset($data['_token']);
-            $condition = [];
-            if($data['id']){
-                $condition = ['id' => $data['id']];
-            }
-            $rank = $this->categoryRepository->saveData($condition, $data);
+            $condition = ['id' => $data['id']];
+            $this->categoryRepository->saveData($condition, $data);
             \Session::flash('success',trans('message.success'));
             return redirect()->route('categories.index');
         }catch (\Exception $e){

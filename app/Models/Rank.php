@@ -28,15 +28,7 @@ class Rank extends Model
     
     public function getImageAttribute()
     {
-        if (!empty($this->attributes['image'])) {
-            if (Str::contains($this->attributes['image'], 'uploads')) {
-                $image = Str::of($this->attributes['image'])->explode('/');
-                $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
-            } else {
-                $imagePath = config('constants.image.rank') . DIRECTORY_SEPARATOR . $this->attributes['image'];
-            }
-        }
-
+        $imagePath = config('constants.image.rank') . DIRECTORY_SEPARATOR . $this->attributes['image'];
         $disk = Storage::disk(config('constants.image.driver'));
         if (!empty($this->attributes['image']) && $disk->exists($imagePath)) {
             $fetchImage = config('app.url').Storage::url($imagePath);

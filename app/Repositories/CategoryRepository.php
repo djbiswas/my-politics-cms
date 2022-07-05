@@ -24,7 +24,7 @@ class CategoryRepository
      */
     public function saveData($condition = [], $fields)
     {
-        return (!empty($condition)) ? Category::updateOrCreate($condition, $fields) : Category::updateOrCreate($fields);
+        return  Category::updateOrCreate($condition, $fields);
     }
 
     /**
@@ -41,6 +41,23 @@ class CategoryRepository
             $data->take($limit);
         }
         return $data->get();
+    }
+
+    /**
+     * For Uploading the file into storage
+     *
+     * @param Request $request
+     */
+    public function mediaUpload(Request $request)
+    {
+        $path = public_path('post_comment_image/');
+        if(!Storage::exists($path)){
+            Storage::makeDirectory($path, 0777, true, true);
+        }
+
+        $fileName = uploadFile('post_comment_image', $request->file);
+        
+        return $fileName;
     }
 }
 

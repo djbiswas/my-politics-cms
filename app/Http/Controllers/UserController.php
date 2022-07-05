@@ -87,12 +87,9 @@ class UserController extends Controller
     public function postUser(Request $request){
         $data=$request->all();
         try{
-            $condition = [];
-            if($data['id']){
-                $condition = ['id' => $data['id']];
-            }
+            $condition = ['id' => $data['id']];
             $metaData = ($data['meta'])? $data['meta'] : [];
-            unset($data['meta']);
+            $data['role_id'] = config('constants.role.user'); 
             $this->userRepository->saveData($condition, $data, $metaData);
             \Session::flash('success',trans('message.success'));
             return redirect()->route('users.index');

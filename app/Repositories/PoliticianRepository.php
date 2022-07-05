@@ -234,12 +234,7 @@ class PoliticianRepository
      */
     public function saveData($condition = [], $fields, $metaData = [])
     {
-        // Just note below updateOrCreate function not working proper for poltician and user model so I have set condition here not remove it.
-        if(!empty($condition)){
-            $modelObj = Politician::updateOrCreate($condition, $fields);
-        }else{
-            $modelObj = Politician::create($fields);
-        }
+        $modelObj = Politician::updateOrCreate($condition, $fields);
         if(!empty($metaData)){
             $modelObj->setMeta($metaData);
             $modelObj->save();
