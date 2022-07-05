@@ -118,17 +118,13 @@ class PoliticianController extends Controller
             if ($request->hasFile('affiliation_icon')) {
                 $data['affiliation_icon'] = $this->commonService->storeImage($request->file('affiliation_icon'), config('constants.image.politician'), 'affiliation_icon');
             }
-            $condition = [];
-            if($data['id']){
-                $condition = ['id' => $data['id']];
-            }
+            $condition = ['id' => $data['id']];
             if(!empty($data['p_pos'])){
                 $pPos = json_encode($data['p_pos']);
                 $data['meta']['p_pos'] = $pPos;
                 unset($data['p_pos']);
             }
             $metaData = ($data['meta'])? $data['meta'] : [];
-            unset($data['meta']);
             $this->politicianRepository->saveData($condition, $data, $metaData);
             \Session::flash('success',trans('message.success'));
             return redirect()->route('politicians.index');

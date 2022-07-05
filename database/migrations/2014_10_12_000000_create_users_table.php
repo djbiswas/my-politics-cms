@@ -33,8 +33,7 @@ class CreateUsersTable extends Migration
             $table->timestamps();
             $table->softDeletes();        
            
-            $table->foreign('rank_id')->references('id')->on('ranks');
-            $table->foreign('role_id')->references('id')->on('roles');
+            
         });
     }
 

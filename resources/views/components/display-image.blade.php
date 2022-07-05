@@ -11,14 +11,14 @@ $required = ($required ?? false)
 @if($data && !Str::contains($data->$imgFileName, 'text=Default'))
     <div class="p-image-sec">
         <div class="p-image-container">
-            <img class="p-image" src="{{asset($data->$imgFileName)}}"/>
+            <img class="p-image" src="{{$data->$imgFileName}}"/>
             <button type="button" class="close btn-img-clear" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <input type="hidden" class="existing_image" name="image_existing" value="1" />
         <input class="form-control form-file" type="file" id="formFile" name='{{$imgFileName}}'>
-        <input value="{{asset($data->$imgFileName)}}" type="hidden" name='ex_img_path'>
+        <input value="{{$data->$imgFileName}}" type="hidden" name='ex_img_path'>
     </div>
 @else
     <input class="form-control" type="file" id="formFile" name="{{$imgFileName}}" {{$required}}>

@@ -7,6 +7,7 @@ use App\Repositories\RankRepository;
 use Datatables;
 use App\Models\Rank;
 use Illuminate\Support\Str;
+Use App\Services\CommonService;
 
 
 class RankController extends Controller
@@ -74,18 +75,11 @@ class RankController extends Controller
         $data=$request->all();
         try{
             if ($request->hasFile('image')) {
-                $image      = $request->file('image');
-                $fileName   = time() . '.' . $image->getClientOriginalExtension();
-                $img = \Image::make($image->getRealPath());
-                $img->stream();
-                \Storage::disk(config('constants.disk.driver'))->put('public/'.config('constants.image.rank').'/'.$fileName, $img);
-                $data['image'] = $fileName;
+                $commonService = new CommonService();
+                $data['image'] = $commonService->storeImage($request->file('image'), config('constants.image.rank'));
             }
-            $condition = [];
-            if($data['id']){
-                $condition = ['id' => $data['id']];
-            }
-            $rank = $this->rankRepository->saveData($condition, $data);
+            $condition = ['id' => $data['id']];
+            $this->rankRepository->saveData($condition, $data);
             \Session::flash('success',trans('message.success'));
             return redirect()->route('ranks.index');
         }catch (\Exception $e){

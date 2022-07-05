@@ -16,9 +16,8 @@ class CommonService
         if(empty($imgPath)){
             $imgPath= config('constants.image.upload');
         }
-        $image      = $reqImg;
-        $fileName   = $dbColName.'-'.time() . '.' . $image->getClientOriginalExtension();
-        $img = \Image::make($image->getRealPath());
+        $fileName   = $dbColName.'-'.time() . '.' . $reqImg->getClientOriginalExtension();
+        $img = \Image::make($reqImg->getRealPath());
         $img->stream();
         \Storage::disk(config('constants.disk.driver'))->put('public/'.$imgPath.'/'.$fileName, $img);
         return $fileName;
