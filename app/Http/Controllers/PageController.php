@@ -77,17 +77,14 @@ class PageController extends Controller
     public function postPage(Request $request){
         $data=$request->all();
         try{
-            $condition = [];
-            if($data['id']){
-                $condition = ['id' => $data['id']];
-            }
+            $condition = ['id' => $data['id']];
             $this->pageRepository->saveData($condition, $data);
             \Session::flash('success',trans('message.success'));
             return redirect()->route('pages.index');
         }catch (\Exception $e){
             \Log::info($e->getMessage());
             \Session::flash('error',$e->getMessage());
-            return redirect()->route('pages.pageform');
+            return redirect()->route('pages.index');
         }
     }
 
