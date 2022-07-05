@@ -43,7 +43,7 @@ class PostImage extends Model
         
         $disk = Storage::disk(config('constants.image.driver'));
         if (!empty($this->attributes['name']) && $disk->exists($videoPath)) {
-            $fetchVideo = Storage::url($videoPath);
+            $fetchVideo = config('app.url').Storage::url($videoPath);
         } else {
             $fetchVideo = config('constants.image.defaultImage');
         }

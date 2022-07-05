@@ -39,7 +39,7 @@ class Rank extends Model
 
         $disk = Storage::disk(config('constants.image.driver'));
         if (!empty($this->attributes['image']) && $disk->exists($imagePath)) {
-            $fetchImage = Storage::url($imagePath);
+            $fetchImage = config('app.url').Storage::url($imagePath);
         } else {
             $fetchImage = config('constants.image.defaultImage');
         }

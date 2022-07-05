@@ -61,8 +61,8 @@ class Politician extends Model
         }
         
         $disk = Storage::disk(config('constants.image.driver'));
-        if (!empty($this->attributes['affiliation_icon']) && $disk->exists($imagePath)) {
-            $fetchIcon = Storage::url($imagePath);
+        if (!empty($this->attributes['affiliation_icon'])) {
+            $fetchIcon = config('app.url').Storage::url($imagePath);
         } else {
             $fetchIcon = config('constants.image.defaultImage');
         }
@@ -80,8 +80,8 @@ class Politician extends Model
         }
         
         $disk = Storage::disk(config('constants.image.driver'));
-        if (!empty($this->attributes['image']) && $disk->exists($imagePath)) {
-            $fetchImage = Storage::url($imagePath);
+        if (!empty($this->attributes['image'])) {
+            $fetchImage = config('app.url').Storage::url($imagePath);
         } else {
             $fetchImage = config('constants.image.defaultImage');
         }
