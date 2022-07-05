@@ -13,7 +13,7 @@ use Kodeine\Metable\Metable;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable, SoftDeletes, Metable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     use Metable;
 

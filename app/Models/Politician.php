@@ -15,7 +15,7 @@ class Politician extends Model
 
     use Metable;
 
-    protected $metaTable = 'Politician_metas'; 
+    protected $metaTable = 'politician_metas'; 
 
     protected $metaKeyName = 'politician_id';
     
