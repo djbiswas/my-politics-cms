@@ -62,6 +62,30 @@ class UserRepository
      */
     public function forgotPassword(Request $request)
     {
+
+        switch ($request->step) {
+
+            case (1):
+
+                $result = self::sendForgotPasswordCode($request);
+
+                return $result;
+
+                break;
+
+            case (2):
+
+                $result = self::verifyForgotPassword($request);
+
+                return $result;
+
+                break;
+        }
+
+    }
+
+    public function sendForgotPasswordCode(Request $request){
+
         switch($request->fieldType){
             case('phone'):
                 $user = [
@@ -95,6 +119,35 @@ class UserRepository
 
             default:
                 return [];
+        }
+    }
+
+    public function verifyForgotPassword($request) {
+
+        switch ($request->fieldType) {
+
+            case ('email'):
+
+                $otp = $request->validationCode;
+
+                $data = self::verifyOtp($otp);
+
+                if (!empty($data)) {
+
+                    self::deleteOtp($otp);
+
+                    return [
+                        'action' => 'verify'
+                    ];
+
+                }
+
+                break;
+
+            case ('phone'):
+
+                break;
+
         }
     }
 
@@ -562,6 +615,22 @@ class UserRepository
             $userObj->save();
         }
         return $userObj;
+    }
+
+    public function uploadImage($request){
+
+        if($request->has('profilePhoto')){
+            $image = self::imageUpload($request);
+           
+            $condition = [
+                'id' => \Auth::id()
+            ];
+
+            $updateUser = self::updateUserData($condition, ['image' => $image]);
+
+            return $image;
+        }
+
     }
 }
 

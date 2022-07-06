@@ -51,6 +51,7 @@ Route::group(['namespace' => 'API\v1'], function() {
     Route::group(['middleware' => ['jwt.verify']], function () {
         // User API
         Route::post('update-profile', [UserController::class, 'updateProfile'])->name('user.update.profile');
+        Route::post('upload-image', [UserController::class, 'uploadImage'])->name('user.upload.image');
         Route::patch('change-password', [UserController::class, 'changePassword'])->name('user.change.password');
         Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
 

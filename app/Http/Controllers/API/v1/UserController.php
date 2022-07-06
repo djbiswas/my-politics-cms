@@ -333,6 +333,29 @@ class UserController extends Controller
     }
 
     /**
+     * upload-image API
+     *
+     * @param Request $request
+     */
+    public function uploadImage(Request $request)
+    {
+        try {
+            $uploadImage = $this->userRepository->uploadImage($request);
+
+            if (!empty($uploadImage)) {
+                $success = [
+                    $uploadImage
+                ];
+                $message = trans('lang.profile_update');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $success, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
      * @OA\Patch(
      *     security={{"bearerAuth":{}}},
      *     path="/v1/change-password",
