@@ -32,7 +32,7 @@
                         {data: 'last_name', name: 'last_name'},
                         {data: 'email', name: 'email'},
                         {data: 'phone', name: 'phone'},
-                        {data: 'title', name: 'r.title'},
+                        {data: 'ranks.title', name: 'ranks.title'},
                         {data: 'action', name: 'action', orderable: false, searchable: false},
                     ]
                 });

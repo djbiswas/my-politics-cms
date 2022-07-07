@@ -38,10 +38,12 @@ class UserController extends Controller
         try {
             $ranks = $this->rankRepository->fetchAllData([])->toArray();
             if ($request->ajax()) {
-                $data = User::leftJoin('ranks as r', 'users.rank_id','=','r.id')
-                        ->select('users.*', 'r.title')
-                        ->where('users.role_id','>',1);
-                       
+                $data = User::with(['ranks' => function($q){
+                    $q->select('id','title');
+                }])
+                ->select('users.id','rank_id', 'users.first_name', 'users.last_name', 'users.email', 'users.phone')
+                ->where('users.role_id','>',1);
+                        
                 return Datatables::of($data)
                         ->addIndexColumn()
                         ->addColumn('action', function($row){
