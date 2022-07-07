@@ -39,18 +39,18 @@ class PostRepository
      */
     public function getPosts($request)
     {
+        $data = [];
         $posts = Post::with(['userTrust', 'reactions', 'comments', 'user', 'user.ranks'])->where('politician_id', $request->politicianId)->get();
        
         $users = User::with('posts')->get();
 
         $postCount = [];
-        foreach($users as $user){
+        foreach($users as $user) {
             $postCount[$user->id] = $user->posts->count();
         }
 
         $id = 0;
-        foreach($posts as $post){
-
+        foreach($posts as $post) {
             $data[$id]['post']['id'] = $post->id;
             $data[$id]['post']['user_id'] = $post->user_id;
             $data[$id]['post']['politician_id'] = $post->politician_id;
@@ -61,10 +61,8 @@ class PostRepository
             $data[$id]['post']['status'] = $post->status;
             $data[$id]['post']['created_at'] = $post->created_at;
 
-            if(!empty($this->userDetails)){
-
+            if(!empty($this->userDetails)) {
                 $data[$id]['post']['reaction_status'] = $post->reactions->where('user_id', $this->userDetails->id)->first()->reaction ?? '';
-
             }
             
             $userMeta = $post->user->getMeta()->toArray();
@@ -88,10 +86,8 @@ class PostRepository
 
             $result = self::getScorePercentage($up, $down);
 
-            if(!empty($this->userDetails)){
-            
+            if(!empty($this->userDetails)) {
                 $trust_response = $post->userTrust->where(['user_id' => $request->politicianId, 'responded_id' => $this->userDetails->id])->first();
-
             }
             $data[$id]['post']['trust_data']['trust_per'] = $result;
             $data[$id]['post']['trust_data']['user_rank'] = $post->user->ranks->title ?? '';
@@ -101,27 +97,19 @@ class PostRepository
 
             $data[$id]['post']['comment_count'] = $post->comments->count();
 
-            foreach($post->comments as $comment){
-
+            foreach($post->comments as $comment) {
                 $data[$id]['post']['comment'] = $comment;
-
                 $data[$id]['post']['comment']['timeago_date'] = $comment->created_at->diffForHumans();
-
             }
 
             $data[$id]['post']['reactionCount'] = $post->reactions->count();
 
-            if(!empty($this->userDetails)){
-            
+            if(!empty($this->userDetails)) {
                 $authLike = $post->reactions->where('user_id', $this->userDetails->id)->count();
-
                 $reaction = self::getReactionValue($data[$id]['post']['reactionCount'], $authLike);
-
                 $data[$id]['post']['reactionText'] = $reaction;
             }
-
             $id++;
-            
         }
         
         return [

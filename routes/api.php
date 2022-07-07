@@ -37,16 +37,16 @@ Route::group(['namespace' => 'API\v1'], function() {
     Route::post('get-politicians', [PoliticianController::class, 'getPoliticians'])->name('get.politicians');
 
     // Get Potician Details API 
-    Route::get('get-politician-detail', [PoliticianController::class, 'getPoliticianDetail'])->name('get.politician.detail');
+    Route::post('get-politician-detail', [PoliticianController::class, 'getPoliticianDetail'])->name('get.politician.detail');
 
     // Get Potician Votes API
-    Route::get('get-politician-votes', [PoliticianController::class, 'getPoliticianVotes'])->name('get.politician.votes'); 
+    Route::post('get-politician-votes', [PoliticianController::class, 'getPoliticianVotes'])->name('get.politician.votes'); 
     
     // Get Trust API 
-    Route::get('get-trust', [PoliticianController::class, 'getTrust'])->name('get.politician.trust');
+    Route::post('get-trust', [PoliticianController::class, 'getTrust'])->name('get.politician.trust');
 
     // Get Posts API 
-    Route::get('get-posts', [UserPostController::class, 'getPosts'])->name('get.politician.posts');
+    Route::post('get-posts', [UserPostController::class, 'getPosts'])->name('get.politician.posts');
     
     Route::group(['middleware' => ['jwt.verify']], function () {
         // User API

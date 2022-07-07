@@ -72,14 +72,12 @@ class PoliticianRepository
         $politicianMeta = $politician->getMeta()->toArray();
        
         if(!empty($metaData['voting_alerts']) && !empty($this->userDetails)){
-
             $votingAlerts = (is_array($metaData['voting_alerts']) && in_array($this->userDetails->id, $metaData['voting_alerts'])) ? 'Yes' : 'no';
-		
-        }
+		}
 
         return [
-            'politician' => $politician,
-            'voting_alerts' => $votingAlerts
+          'politician' => $politician,
+          'voting_alerts' => $votingAlerts
         ];
     }
 
