@@ -139,7 +139,7 @@ class PostRepository
             'user_id' => Auth::user()->id,
             'politician_id' => $request->politicianId,
             'content' => $request->postContent,
-            'gif' => $request->postGif,
+            'gif' => $request->postGif ?? '',
             'status' => config('constants.status.active'),
         ];    
 

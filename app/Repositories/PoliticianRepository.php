@@ -131,7 +131,18 @@ class PoliticianRepository
      */
     public function setPoliticianVotingAlert($request)
     {
-        echo '<pre>'; print_r($request->all()); die;
+        $politician = Politician::where('id', $request->politicianId)->first();
+        $politicianMeta = $politician->getMeta()->toArray();
+
+        $metaData = [
+            'voating_alerts' => $request->alert
+        ];
+
+        if(!empty($metaData)){
+            $politician->setMeta($metaData);
+            $politician->save();
+        }
+        return $politician;
     }
 
     /**
