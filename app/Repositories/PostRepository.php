@@ -73,7 +73,7 @@ class PostRepository
             $data[$id]['videos'] = $video;
 
             if(!empty($this->userDetails)) {
-                $data[$id]['reaction_status'] = $post->reactions->where('user_id', $this->userDetails->id)->first()->reaction ?? '';
+                $data[$id]['reaction_status'] = $post->reactions->where('user_id', $this->userDetails->id)->first()->reaction ?? [];
             }
             
             $userMeta = $post->user->getMeta()->toArray();
@@ -115,11 +115,14 @@ class PostRepository
 
             $data[$id]['reactionCount'] = $post->reactions->count();
 
+            $authLike = 0;
+            
             if(!empty($this->userDetails)) {
-                $authLike = $post->reactions->where('user_id', $this->userDetails->id)->count();
-                $reaction = self::getReactionValue($data[$id]['reactionCount'], $authLike);
-                $data[$id]['reactionText'] = $reaction;
+                $authLike = $post->reactions->where('user_id', $this->userDetails->id)->count();     
             }
+
+            $reaction = self::getReactionValue($data[$id]['reactionCount'], $authLike);
+            $data[$id]['reactionText'] = $reaction;
             $id++;
         }
         

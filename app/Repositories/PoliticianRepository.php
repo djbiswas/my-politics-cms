@@ -135,7 +135,7 @@ class PoliticianRepository
         $politicianMeta = $politician->getMeta()->toArray();
 
         $metaData = [
-            'voating_alerts' => $request->alert
+            'voting_alerts' => $request->alert
         ];
 
         if(!empty($metaData)){
