@@ -236,12 +236,12 @@ class PostRepository
      */
     public function mediaUpload(Request $request)
     {
-        $path = public_path('post_comment_image/');
+        $path = public_path('post');
         if(!Storage::exists($path)){
             Storage::makeDirectory($path, 0777, true, true);
         }
 
-        $fileName = uploadFile('post_comment_image', $request->file);
+        $fileName = uploadFile('post', $request->file);
         
         return $fileName;
     }

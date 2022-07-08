@@ -26,8 +26,7 @@ return [
         'uploads' => 'uploads',
         'rank' => 'rank',
         'affiliation_icon' => 'affiliation_icon',
-        'post_image' => 'post_image',
-        'post_video' => 'post_video',
+        'post' => 'post',
         'post_comment_image' => 'post_comment_image',
     ],
 

@@ -6,12 +6,14 @@ use JWTAuth;
 use App\Models\Politician;
 use App\Models\PoliticanVote;
 use App\Models\PoliticianMeta;
-use App\Models\Rank;
+// use App\Models\Rank;
 use App\Models\User;
 use App\Models\UserTrust;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+
 /**
  * Class PoliticianRepository.
  */
@@ -90,8 +92,6 @@ class PoliticianRepository
     {
         $userVote = '';
 
-        // $token = $request->header('Authorization');
-        
         $politicanVote = PoliticanVote::select(DB::raw('COALESCE(SUM(vote = "up"), 0) AS up, COALESCE(SUM(vote = "down"), 0) AS down'))
         ->onlyActive()->where(['politician_id' => $request->politicianId])->get();
 
@@ -101,16 +101,13 @@ class PoliticianRepository
             $percentage = $this->getScorePercentage($upCount, $downCount);
         }
 
-       if(!empty($this->userDetails)) {
-            // $parseValue = JWTAuth::parseToken();
-            // $user = $parseValue->authenticate();
-
+        if(!empty($this->userDetails)) {
             $userVotes = PoliticanVote::select('vote')->onlyActive()->where(['politician_id' => $request->politicianId, 'user_id' => $this->userDetails->id])->get();
         
             if(!empty($userVotes[0])){
                 $userVote = $userVotes[0]->vote;
             }
-       }
+        }
 
         return [
             'down_count' => $downCount,
@@ -118,7 +115,39 @@ class PoliticianRepository
             'percentage' => $percentage,
             'users_vote' => $userVote ?? NULL,
         ];
+    }
 
+    /**
+     * For Storing the record respective model in storage
+     *
+     * @param Request $request
+     */
+    public function setPoliticianVotingAlert($request)
+    {
+        echo '<pre>'; print_r($request->all()); die;
+    }
+
+    /**
+     * For Storing the record respective model in storage
+     *
+     * @param Request $request
+     */
+    public function setTrust($request)
+    {
+        $condition = [
+            'user_id' => Auth::id(),
+            'responded_id' => $request->respondedId
+        ];
+
+        $fields = [
+            'user_id' => Auth::id(),
+            'responded_id' => $request->respondedId,
+            'trust' => $request->trust,
+            'responded_date' => Carbon::now()->format('Y-m-d H:i:s'),
+            'status' => config('constants.status.active')
+        ];
+
+        return UserTrust::updateOrCreate($condition, $fields);
     }
 
     /**
@@ -131,20 +160,15 @@ class PoliticianRepository
         $is_voted = self::isVoted(Auth::id(), $request->politician_id);
 
         if (empty($is_voted)) {
-            
             $voteData = [
                 'user_id' => Auth::user()->id,
                 'politician_id' => $request->politicianId,
                 'vote' => $request->vote,
                 'status' => config('constants.status.active')
             ];    
-    
             $vote = PoliticanVote::create($voteData);	
-           
         } else {
-           
-            $vote = $is_voted->update(['vote' => $request->vote]);
-           
+           $vote = $is_voted->update(['vote' => $request->vote]);
         }
        
         return [

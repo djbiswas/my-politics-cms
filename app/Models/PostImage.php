@@ -38,7 +38,7 @@ class PostImage extends Model
             $video = Str::of($this->attributes['name'])->explode('/');
             $videoPath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $video['1'];
         } else {
-            $videoPath = config('constants.image.post_image') . DIRECTORY_SEPARATOR . $this->attributes['name'];
+            $videoPath = config('constants.image.post') . DIRECTORY_SEPARATOR . $this->attributes['name'];
         }
         
         $disk = Storage::disk(config('constants.image.driver'));

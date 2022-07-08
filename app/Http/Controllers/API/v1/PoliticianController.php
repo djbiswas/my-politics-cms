@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Response\CustomApiResponse;
 use App\Http\Requests\CreateUserPostValidationRequest;
 use App\Http\Requests\SetPoliticianVoteValidationRequest;
+use App\Http\Requests\SetPoliticianVotingAlertValidationRequest;
+use App\Http\Requests\SetPoliticianTrustValidationRequest;
 use App\Repositories\PoliticianRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -31,7 +33,7 @@ class PoliticianController extends Controller
     }
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     security={{"bearerAuth":{}}},
      *     path="/v1/get-politicians",
      *     tags={"Get Politicians"},
@@ -81,7 +83,7 @@ class PoliticianController extends Controller
     }
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     security={{"bearerAuth":{}}},
      *     path="/v1/get-politician-detail",
      *     tags={"Get Politician Detail"},
@@ -133,6 +135,73 @@ class PoliticianController extends Controller
                 $message = trans('lang.politician_detail');
 
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicianDetails, $message);
+            }
+        } catch (Exception $e) {
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/politician-voting-alerts",
+     *     tags={"Politician Voting Alert"},
+     *     summary="Politician Voting Alert",
+     *     operationId="politician-voting-alerts",
+     *
+     *     @OA\Parameter(
+     *       name="politicianId",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     *     @OA\Parameter(
+     *       name="alert",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="string"
+     *       )
+     *     ),
+     *    
+     *      @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Create Potician Voting Alert API
+     *
+     * @param SetPoliticianVotingAlertValidationRequest $request
+     */
+    public function setPoliticianVotingAlert(SetPoliticianVotingAlertValidationRequest $request)
+    {
+        try {
+            $politicianVotingAlert = $this->politicianRepository->setPoliticianVotingAlert($request);
+
+            if (!empty($politicianVotingAlert)) {
+               
+                $message = trans('lang.set_politician_voting_alert');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $politicianVotingAlert, $message);
             }
         } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
@@ -231,7 +300,7 @@ class PoliticianController extends Controller
     }
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     security={{"bearerAuth":{}}},
      *     path="/v1/get-politician-votes",
      *     tags={"Get Politician Vote"},
@@ -290,7 +359,7 @@ class PoliticianController extends Controller
     }
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     security={{"bearerAuth":{}}},
      *     path="/v1/get-trust",
      *     tags={"Get Trust"},
@@ -300,7 +369,76 @@ class PoliticianController extends Controller
      *     @OA\Parameter(
      *       name="respondedId",
      *       in="query",
-     *       required=false,
+     *       required=true,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     * 
+     *     @OA\Parameter(
+     *       name="trust",
+     *       in="query",
+     *       required=true,
+     *       @OA\Schema(
+     *          type="integer"
+     *       )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="not found"
+     *     ),
+     * )
+     */
+    /**
+     * Set Trust API
+     *
+     * @param SetPoliticianTrustValidationRequest $request
+     */
+    public function setTrust(SetPoliticianTrustValidationRequest $request)
+    {
+        try {
+            $trust = $this->politicianRepository->setTrust($request);
+
+            if (!empty($trust)) {
+               
+                $message = trans('lang.set_trust');
+
+                return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $trust, $message);
+            }
+        } catch (Exception $e) {
+            echo '<pre>'; print_r($e->getMessage()); die;
+            return $this->apiResponse->handleAndResponseException($e);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     security={{"bearerAuth":{}}},
+     *     path="/v1/get-trust",
+     *     tags={"Get Trust"},
+     *     summary="Get Trust",
+     *     operationId="get-trust",
+     * 
+     *     @OA\Parameter(
+     *       name="respondedId",
+     *       in="query",
+     *       required=true,
      *       @OA\Schema(
      *          type="integer"
      *       )

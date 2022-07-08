@@ -65,6 +65,10 @@ Route::group(['namespace' => 'API\v1'], function() {
         Route::get('get-comments', [UserPostController::class, 'getComments'])->name('user.get.comment');
 
         // Politican Vote API
-        Route::post('set-politician-vote', [PoliticianController::class, 'setPoliticianVote'])->name('set.politician.vote');
+        Route::post('politician-vote', [PoliticianController::class, 'setPoliticianVote'])->name('set.politician.vote');
+        Route::post('politician-voting-alerts', [PoliticianController::class, 'setPoliticianVotingAlert'])->name('set.politician.voting.alert');
+
+        // Set Trust
+        Route::post('set-trust', [PoliticianController::class, 'setTrust'])->name('set.trust');
     });
 });
