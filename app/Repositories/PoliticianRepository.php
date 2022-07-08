@@ -67,19 +67,26 @@ class PoliticianRepository
      */
     public function getPoliticianDetail($request)
     {
-        $votingAlerts = '';
+        $votingAlerts = [];
 
         $politician = Politician::where('id',$request->politicianId)->firstOrFail();
 
         $politicianMeta = $politician->getMeta()->toArray();
-       
-        if(!empty($metaData['voting_alerts']) && !empty($this->userDetails)){
-            $votingAlerts = (is_array($metaData['voting_alerts']) && in_array($this->userDetails->id, $metaData['voting_alerts'])) ? 'Yes' : 'no';
+
+        if(!empty($politicianMeta['voting_alerts']) && !empty($this->userDetails)){
+            $politicianMeta['voting_alerts'] = (is_array($politicianMeta['voting_alerts']) && in_array($this->userDetails->id, $metaData['voting_alerts'])) ? 'Yes' : 'no';
 		}
 
+        if(!empty($politicianMeta['p_pos'])){
+            $politicianMeta['p_poss'] = json_decode($politicianMeta['p_pos'], true);
+        }
+
+        $result = [];
+        $result = $politician;
+        $result['meta_datas'] = $politicianMeta;
+        
         return [
-          'politician' => $politician,
-          'voting_alerts' => $votingAlerts
+          'politician' => $result
         ];
     }
 
@@ -200,15 +207,15 @@ class PoliticianRepository
 
         if($request->respondedId) {
             $againstData = UserTrust::where(['user_id' => $request->respondedId, 'responded_id' => Auth::id()])->get();
-            if(!empty($againstData)){
+            if(!$againstData->empty()){
                 $trustResponse = $againstData[0]->trust;
             }
         }
         
         return [
-            'trust_percentage' => $percentage, 
-            'user_rank' => $userRankTitle,
-            'rank_image' => $rankImage,
+            'trust_percentage' => $percentage ?? 0, 
+            'user_rank' => $userRankTitle ?? '',
+            'rank_image' => $rankImage ?? '',
             'trust_response' => $trustResponse ?? NULL
         ];
     }

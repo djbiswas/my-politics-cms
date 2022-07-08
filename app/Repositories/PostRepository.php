@@ -40,7 +40,7 @@ class PostRepository
     public function getPosts($request)
     {
         $data = [];
-        $posts = Post::with(['userTrust', 'reactions', 'comments', 'user', 'user.ranks'])->where('politician_id', $request->politicianId)->get();
+        $posts = Post::with(['userTrust', 'reactions', 'comments', 'user', 'user.ranks', 'postImages', 'postVideos'])->where('politician_id', $request->politicianId)->get();
        
         $users = User::with('posts')->get();
 
@@ -51,34 +51,45 @@ class PostRepository
 
         $id = 0;
         foreach($posts as $post) {
-            $data[$id]['post']['id'] = $post->id;
-            $data[$id]['post']['user_id'] = $post->user_id;
-            $data[$id]['post']['politician_id'] = $post->politician_id;
-            $data[$id]['post']['content'] = $post->content;
-            $data[$id]['post']['gif'] = $post->gif;
-            $data[$id]['post']['images'] = $post->images;
-            $data[$id]['post']['videos'] = $post->videos;
-            $data[$id]['post']['status'] = $post->status;
-            $data[$id]['post']['created_at'] = $post->created_at;
+            $data[$id]['id'] = $post->id;
+            $data[$id]['user_id'] = $post->user_id;
+            $data[$id]['politician_id'] = $post->politician_id;
+            $data[$id]['content'] = $post->content;
+            $data[$id]['gif'] = $post->gif;
+            $data[$id]['status'] = $post->status;
+            $data[$id]['created_at'] = $post->created_at;
+
+            $image = '';
+            foreach($post->postImages as $images){
+                $image .= $images->name . ',';
+            }
+
+            $video = '';
+            foreach($post->postVideos as $videos){
+                $video .= $videos->name . ',';
+            }
+
+            $data[$id]['images'] = $image;
+            $data[$id]['videos'] = $video;
 
             if(!empty($this->userDetails)) {
-                $data[$id]['post']['reaction_status'] = $post->reactions->where('user_id', $this->userDetails->id)->first()->reaction ?? '';
+                $data[$id]['reaction_status'] = $post->reactions->where('user_id', $this->userDetails->id)->first()->reaction ?? '';
             }
             
             $userMeta = $post->user->getMeta()->toArray();
            
-            $data[$id]['post']['user']['user_id'] = $post->user->id;
-            $data[$id]['post']['user']['first_name'] = $post->user->first_name;
-            $data[$id]['post']['user']['last_name'] = $post->user->last_name;
-            $data[$id]['post']['user']['image'] = $post->user->image;
+            $data[$id]['user']['user_id'] = $post->user->id;
+            $data[$id]['user']['first_name'] = $post->user->first_name;
+            $data[$id]['user']['last_name'] = $post->user->last_name;
+            $data[$id]['user']['image'] = $post->user->image;
 
             $post_count = Post::where('user_id', $post->user->id)->count();
 
-            $data[$id]['post']['user']['post_count'] = $post_count;
+            $data[$id]['user']['post_count'] = $post_count;
 
-            $data[$id]['post']['user']['meta_data'] = $userMeta; 
+            $data[$id]['user']['meta_data'] = $userMeta; 
            
-            $data[$id]['post']['timeago_date'] = $post->created_at->diffForHumans();
+            $data[$id]['timeago_date'] = $post->created_at->diffForHumans();
 
             $up = $post->userTrust->where('trust', 'Up')->count();
 
@@ -89,31 +100,31 @@ class PostRepository
             if(!empty($this->userDetails)) {
                 $trust_response = $post->userTrust->where(['user_id' => $request->politicianId, 'responded_id' => $this->userDetails->id])->first();
             }
-            $data[$id]['post']['trust_data']['trust_per'] = $result;
-            $data[$id]['post']['trust_data']['user_rank'] = $post->user->ranks->title ?? '';
-            $data[$id]['post']['trust_data']['rank_image'] = $post->user->ranks->image ?? '';
-            $data[$id]['post']['trust_data']['rank_description'] = $post->user->ranks->long_desc ?? '';
-            $data[$id]['post']['trust_data']['trust_response'] = $trust_response->trust ?? '';
+            $data[$id]['trust_data']['trust_per'] = $result;
+            $data[$id]['trust_data']['user_rank'] = $post->user->ranks->title ?? '';
+            $data[$id]['trust_data']['rank_image'] = $post->user->ranks->image ?? '';
+            $data[$id]['trust_data']['rank_description'] = $post->user->ranks->long_desc ?? '';
+            $data[$id]['trust_data']['trust_response'] = $trust_response->trust ?? '';
 
-            $data[$id]['post']['comment_count'] = $post->comments->count();
+            $data[$id]['comment_count'] = $post->comments->count();
 
             foreach($post->comments as $comment) {
-                $data[$id]['post']['comment'] = $comment;
-                $data[$id]['post']['comment']['timeago_date'] = $comment->created_at->diffForHumans();
+                $data[$id]['comment'] = $comment;
+                $data[$id]['comment']['timeago_date'] = $comment->created_at->diffForHumans();
             }
 
-            $data[$id]['post']['reactionCount'] = $post->reactions->count();
+            $data[$id]['reactionCount'] = $post->reactions->count();
 
             if(!empty($this->userDetails)) {
                 $authLike = $post->reactions->where('user_id', $this->userDetails->id)->count();
-                $reaction = self::getReactionValue($data[$id]['post']['reactionCount'], $authLike);
-                $data[$id]['post']['reactionText'] = $reaction;
+                $reaction = self::getReactionValue($data[$id]['reactionCount'], $authLike);
+                $data[$id]['reactionText'] = $reaction;
             }
             $id++;
         }
         
         return [
-            'data' => $data,
+            'post' => $data,
         ];
     }
 
