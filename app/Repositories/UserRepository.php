@@ -511,7 +511,6 @@ class UserRepository
             'password' => bcrypt($request->password),
             'reg_status' => '{"step":2,"status":0}',
             'registered_date' => now(),
-            'rank_id' => 0,
             'role_id' => config('constants.role.user')
         ];
 
