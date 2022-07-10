@@ -57,7 +57,7 @@ Route::group(['namespace' => 'API\v1'], function() {
 
         //Post API
         Route::post('create-post', [UserPostController::class, 'createUserPost'])->name('user.create.post');
-        Route::post('media-uplaod', [UserPostController::class, 'mediaUpload'])->name('user.media.uplaod');
+        Route::post('media-upload', [UserPostController::class, 'mediaUpload'])->name('user.media.uplaod');
         Route::patch('update-post', [UserPostController::class, 'updatePost'])->name('user.update.post');
         Route::delete('delete-post', [UserPostController::class, 'deletePost'])->name('user.delete.post');
         Route::post('post-reaction', [UserPostController::class, 'postReaction'])->name('user.post.reaction');
