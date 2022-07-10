@@ -12,11 +12,14 @@ trait UploadMedia
         $image_type_aux = explode("image/", $image_parts[0]);
         $image_type = $image_type_aux[1];
         $allowed_extensions = array("png", "jpg", "jpeg", "gif", "svg", "svg+xml");
-        $folder_path = public_path();
+        $path = public_path('user');
+        if(!Storage::exists($path)){
+            Storage::makeDirectory($path, 0777, true, true);
+        }
         if (in_array($image_type, $allowed_extensions)) {
             $image_base64 = base64_decode($image_parts[1]);
             $file_name = uniqid() . '.' . $image_type;
-            $file = $folder_path . $file_name;
+            $file = $path. $file_name;
             if (file_put_contents($file, $image_base64)) {
                 $return = $file_name;
             } else {

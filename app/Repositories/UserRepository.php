@@ -92,12 +92,19 @@ class UserRepository
                     'phone' => $request->fieldValue
                 ];
 
-                $userDetails = self::fetchUserDetails($user);
+                $userDetails = self::getUserDetails($user);
 
-                return [
-                   'action' => 'phoneExistence',
-                   'user' => $userDetails
-                ];
+                if(!empty($userDetails)){
+                    return [
+                        'action' => 'phoneExistence',
+                        'user' => $userDetails
+                    ];
+                }
+                else{
+                    return [
+                        'action' => 'sendOtp'   
+                    ];
+                }
 
             case('email'):
                 $user = [
@@ -367,8 +374,8 @@ class UserRepository
                 }
 
                 return [
-                    'action' => 'step_three',
-                    'status' => 'success'
+                    'action' => 'userExist',
+                    'status' => 'error'
                 ];
 
                 break;
@@ -506,13 +513,26 @@ class UserRepository
 
     public function registerUser($request) {
 
-        $fields = [
-            'email' => $request->fieldValue,
-            'password' => bcrypt($request->password),
-            'reg_status' => '{"step":2,"status":0}',
-            'registered_date' => now(),
-            'role_id' => config('constants.role.user')
-        ];
+        if ($request->fieldType == 'phone') { 
+            $fields = [
+                'phone' => $request->fieldValue,
+                'password' => bcrypt($request->password),
+                'status' => config('constants.status.active'),
+                'reg_status' => '{"step":2,"status":0}',
+                'registered_date' => now(),
+                'role_id' => config('constants.role.user')
+            ];
+        }
+        else{
+            $fields = [
+                'email' => $request->fieldValue,
+                'password' => bcrypt($request->password),
+                'status' => config('constants.status.active'),
+                'reg_status' => '{"step":2,"status":0}',
+                'registered_date' => now(),
+                'role_id' => config('constants.role.user')
+            ];
+    }
 
         $user = User::create($fields);
 
@@ -530,24 +550,20 @@ class UserRepository
             $user = [
                     'email' => $request->fieldValue
                 ];
-
-                $userDetails = self::getUserDetails($user);
-
-            if (empty($userDetails)) {
-
+                
                 $status = self::registerUserStepThree($request);
-                if ($status == 1) {
+                if (!empty($status)) {
                     return [
                         'action' => 'step_three',
                         'status' => 'success'
                     ];
                 }
-            } else {
-                return [
-                    'action' => 'step_three',
-                    'status' => 'error'
-                ];
-            }
+                else {
+                    return [
+                        'action' => 'step_three',
+                        'status' => 'error'
+                    ];
+                }
         } else {
 
             $registeredUser = self::registerUserStepThree($request);
@@ -574,7 +590,7 @@ class UserRepository
         ];
 
         if($request->has('profilePhoto')){
-            $image = uploadFile('/users', $request->profilePhoto);
+            $image = self::imageUpload($request);
         }
 
         $fields = [
@@ -616,21 +632,30 @@ class UserRepository
         return $userObj;
     }
 
-    public function uploadImage($request){
+     /**
+     * For Uploading the file into storage
+     *
+     * @param Request $request
+     */
+    public function uploadImage(Request $request)
+    {
+        $image = self::imageUpload($request);
 
-        if($request->has('profilePhoto')){
-            $image = self::imageUpload($request);
-           
-            $condition = [
-                'id' => \Auth::id()
-            ];
+        $condition = [
+            'id' => Auth::id()
+        ];
 
-            $updateUser = self::updateUserData($condition, ['image' => $image]);
+        $fields = [
+            'image' => $image ?? null
+        ];
 
-            return $image;
-        }
+        $updateUser = self::updateUserData($condition, $fields);
 
+        $userDetails = self::fetchUserDetails($condition);
+
+        return $userDetails;
     }
+
 }
 
 
