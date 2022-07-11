@@ -100,7 +100,7 @@ class UserPostController extends Controller
 
                 return $this->apiResponse->getResponseStructure(config('constants.api_success_fail.true'), $posts, $message);
             }
-        } catch (Exception $e) {dd($e);
+        } catch (Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
         }
     }

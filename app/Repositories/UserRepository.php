@@ -117,7 +117,7 @@ class UserRepository
 
                 $storeOtp = self::storeOTP($otp);
 
-                // Mail::to($request->fieldValue)->send(new SendForgotPasswordOtpMail($otp));
+                Mail::to($request->fieldValue)->send(new SendForgotPasswordOtpMail($otp));
 
                 return [
                     'action' => 'email',
