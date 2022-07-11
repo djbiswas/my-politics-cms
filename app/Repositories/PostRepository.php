@@ -150,13 +150,12 @@ class PostRepository
 
         if($post && !empty($request->postImages)) {
             foreach ($request->postImages as $images) {
-
                 $imgArray = [
                     'post_id' => $post->id,
-                    'name' => $images['name'],
+                    'image' => $images,
                     'status' => config('constants.status.active'),
-                    'created_at' => Carbon::now(),
-                    'updated_at	' => Carbon::now(),
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 ];
 
                 $postImages[] = $imgArray;
@@ -166,13 +165,12 @@ class PostRepository
 
         if($post && !empty($request->postVideos)) {
             foreach ($request->postVideos as $videos) {
-
                 $videoArray = [
                     'post_id' => $post->id,
-                    'name' => $videos['name'],
+                    'image' => $videos,
                     'status' => config('constants.status.active'),
-                    'created_at' => Carbon::now(),
-                    'updated_at	' => Carbon::now(),
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                    'updated_at	' => Carbon::now()->format('Y-m-d H:i:s'),
                 ];
 
                 $postVideos[] = $videoArray;

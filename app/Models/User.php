@@ -92,25 +92,6 @@ class User extends Authenticatable implements JWTSubject
         return $query->where('status', config('constants.status.active'));
     }
 
-    /* public function getImageAttribute()
-    {
-        if (Str::contains($this->attributes['image'], 'uploads')) {
-            $image = Str::of($this->attributes['image'])->explode('/');
-            $imagePath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $image['1'];
-        } else {
-            $imagePath = config('constants.image.user') . DIRECTORY_SEPARATOR . $this->attributes['image'];
-        }
-        $imagePath = 'user'.$this->attributes['image'];
-        $disk = Storage::disk(config('constants.image.driver'));
-        // if ($disk->exists($imagePath)) {
-            $fetchImage = config('app.url').$imagePath;
-        // } else {
-        //     $fetchImage = config('constants.image.defaultImage');
-        // }
-
-        return $fetchImage;
-    }*/
-    
     public function getImageAttribute()
     {
         $imagePath = config('constants.image.user') . DIRECTORY_SEPARATOR . $this->attributes['image'];

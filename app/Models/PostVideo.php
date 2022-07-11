@@ -13,7 +13,7 @@ class PostVideo extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'post_id', 'name', 'status'
+        'post_id', 'image', 'status'
     ];
 
     public function post()
@@ -31,15 +31,9 @@ class PostVideo extends Model
         return $query->where('status', config('constants.status.active'));
     }
     
-    public function getNameAttribute()
+    public function getImageAttribute()
     {
-        if (Str::contains($this->attributes['name'], 'uploads')) {
-            $video = Str::of($this->attributes['name'])->explode('/');
-            $videoPath = config('constants.image.uploads') . DIRECTORY_SEPARATOR . $video['1'];
-        } else {
-            $videoPath = config('constants.image.post') . DIRECTORY_SEPARATOR . $this->attributes['name'];
-        }
-        
+        $videoPath = config('constants.image.post') . DIRECTORY_SEPARATOR . $this->attributes['image'];
         $disk = Storage::disk(config('constants.image.driver'));
         if (!empty($this->attributes['name']) && $disk->exists($videoPath)) {
             $fetchVideo = config('app.url').Storage::url($videoPath);
