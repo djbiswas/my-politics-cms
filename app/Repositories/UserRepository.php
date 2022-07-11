@@ -415,9 +415,7 @@ class UserRepository
     public function userRegistrationStepTwo(object $request) {
 
         switch ($request->fieldType) {
-
             case ('email'):
-
                 $user = [
                     'email' => $request->fieldValue
                 ];
@@ -425,41 +423,31 @@ class UserRepository
                 $userDetails = self::getUserDetails($user);
 
                 break;
-
             case ('phone'):
-
                 $user = [
                     'phone' => $request->fieldValue
                 ];
-
                 $userDetails = self::getUserDetails($user);
-
         }
         if (empty($userDetails)) {
-
             $data = self::registerUserSetpTwo($request);
-
             if (!empty($data)) {
                 return [
                     'action' => 'step_two',
-                    'status' => 'success'
+                    'status' => 'success',
+                    'user_id' => $data->id
                 ];
             }
-
         } else {
-
-           return [
+            return [
                 'action' => 'step_two',
                 'status' => 'error'
             ];
-
         }
-
         return [
             'action' => 'step_two',
             'status' => 'error'
         ];
-
     }
 
     public function registerUserSetpTwo($request) {
@@ -539,17 +527,15 @@ class UserRepository
         return $user;
     }
 
-    public function userRegistrationStepThree($request){
-
+    public function userRegistrationStepThree($request) {
         $email = $request->email;
 
         $fieldType = $request->fieldType;
 
         if ($fieldType == 'phone') {
-
-            $user = [
+                /* $user = [
                     'email' => $request->fieldValue
-                ];
+                ];*/
                 
                 $status = self::registerUserStepThree($request);
                 if (!empty($status)) {
@@ -565,9 +551,7 @@ class UserRepository
                     ];
                 }
         } else {
-
             $registeredUser = self::registerUserStepThree($request);
-
             if (!empty($registeredUser)) {
                 return [
                     'action' => 'step_three',
@@ -580,28 +564,50 @@ class UserRepository
                 ];
             }
         }
-
     }
 
-    public function registerUserStepThree($request){
-
+    public function registerUserStepThree($request) {
         $condition = [
-            'email' => $request->email
+            'id' => $request->userId
         ];
 
         if($request->has('profilePhoto')){
             $image = self::imageUpload($request);
         }
 
-        $fields = [
-
-            'first_name' => $request->firstName,
-            'last_name' => $request->lastName,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'reg_status' => '{"step":3,"status":1}',
-            'image' => $image ?? null
-        ];
+        if ($request->phone != '' && $request->email != '') {
+            $fields = [
+                'first_name' => $request->firstName,
+                'last_name' => $request->lastName,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'reg_status' => '{"step":3,"status":1}',
+                'image' => $image ?? null
+            ];
+        } else if ($request->phone != '' && $request->email == '') {
+            $fields = [
+                'first_name' => $request->firstName,
+                'last_name' => $request->lastName,
+                'phone' => $request->phone,
+                'reg_status' => '{"step":3,"status":1}',
+                'image' => $image ?? null
+            ];
+        } else if ($request->phone == '' && $request->email != '') {
+            $fields = [
+                'first_name' => $request->firstName,
+                'last_name' => $request->lastName,
+                'email' => $request->email,
+                'reg_status' => '{"step":3,"status":1}',
+                'image' => $image ?? null
+            ];
+        } else {
+            $fields = [
+                'first_name' => $request->firstName,
+                'last_name' => $request->lastName,
+                'reg_status' => '{"step":3,"status":1}',
+                'image' => $image ?? null
+            ];
+        }
 
         $userDetails = self::fetchUserDetails($condition);
 
