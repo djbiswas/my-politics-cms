@@ -507,7 +507,7 @@ class UserRepository
                 'password' => bcrypt($request->password),
                 'status' => config('constants.status.active'),
                 'reg_status' => '{"step":2,"status":0}',
-                'registered_date' => now(),
+                'registered_date' => Carbon::now()->format('Y-m-d H:i:s'),
                 'role_id' => config('constants.role.user')
             ];
         }
@@ -517,7 +517,7 @@ class UserRepository
                 'password' => bcrypt($request->password),
                 'status' => config('constants.status.active'),
                 'reg_status' => '{"step":2,"status":0}',
-                'registered_date' => now(),
+                'registered_date' => Carbon::now()->format('Y-m-d H:i:s'),
                 'role_id' => config('constants.role.user')
             ];
     }
