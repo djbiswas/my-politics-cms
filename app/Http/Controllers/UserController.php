@@ -46,6 +46,12 @@ class UserController extends Controller
                         
                 return Datatables::of($data)
                         ->addIndexColumn()
+                        ->editColumn('ranks.title',function($row){
+                            if(!empty($row->ranks)){
+                                return $row->ranks->title;
+                            }
+                            return "";
+                        })
                         ->addColumn('action', function($row){
                                 $btn = '<a href="'.route('get.user',$row->id).'">Edit </a> |';
                                 $btn .= '<form method="POST" action="'.route('users.delete', $row->id).'" style="float:right;">
