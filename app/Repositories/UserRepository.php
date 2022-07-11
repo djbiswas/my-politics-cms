@@ -528,23 +528,29 @@ class UserRepository
     }
 
     public function userRegistrationStepThree($request) {
-        $email = $request->email;
-
         $fieldType = $request->fieldType;
 
         if ($fieldType == 'phone') {
-                /* $user = [
-                    'email' => $request->fieldValue
-                ];*/
+                $user = [
+                    'email' => $request->email
+                ];
                 
+                $userDetails = self::getUserDetails($user);
+                
+                if(!empty($userDetails)) {
+                    return [
+                        'action' => 'userExist',
+                        'status' => 'error'
+                    ];     
+                }
+
                 $status = self::registerUserStepThree($request);
                 if (!empty($status)) {
                     return [
                         'action' => 'step_three',
                         'status' => 'success'
                     ];
-                }
-                else {
+                } else {
                     return [
                         'action' => 'step_three',
                         'status' => 'error'
@@ -609,7 +615,7 @@ class UserRepository
             ];
         }
         $updateUser = self::updateUserData($condition, $fields);
-        
+
         $userDetails = self::fetchUserDetails($condition);
         
         $metaRequest = $request->except('userId', 'validationCode', 'firstName', 'lastName', 'email', 'phone', 'profilePhoto', 'reg_status', 'registered_date', 'status', 'action', 'step', 'fieldType', 'fieldValue');
