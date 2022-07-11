@@ -59,14 +59,25 @@ class PostRepository
             $data[$id]['status'] = $post->status;
             $data[$id]['created_at'] = $post->created_at;
 
+            $imageCount = $post->postImages->count();
             $image = '';
-            foreach($post->postImages as $images){
-                $image .= $images->image . ',';
+         
+            foreach($post->postImages as $images) {
+                if($imageCount > 1) {
+                    $image .= $images->image . ',';
+                } else {
+                    $image .= $images->image;
+                }
             }
 
+            $videoCount = $post->postImages->count();    
             $video = '';
-            foreach($post->postVideos as $videos){
-                $video .= $videos->image . ',';
+            foreach($post->postVideos as $videos) {
+                if($videoCount > 1) {
+                    $video .= $videos->image . ',';
+                } else {
+                    $video .= $videos->image;
+                }
             }
 
             $data[$id]['images'] = $image;
