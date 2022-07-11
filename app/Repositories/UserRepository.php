@@ -577,7 +577,7 @@ class UserRepository
             'id' => $request->userId
         ];
 
-        if($request->profilePhoto != '') {
+        if($request->has('profilePhoto') ) {
             $image = self::imageUpload($request);
         }
 
