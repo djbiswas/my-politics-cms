@@ -36,7 +36,7 @@ class PostImage extends Model
     {
         $imagePath = config('constants.image.post') . DIRECTORY_SEPARATOR . $this->attributes['image'];
         $disk = Storage::disk(config('constants.image.driver'));
-        if (!empty($this->attributes['name']) && $disk->exists($imagePath)) {
+        if (!empty($this->attributes['image']) && $disk->exists($imagePath)) {
             $fetchImage = config('app.url').Storage::url($imagePath);
         } else {
             $fetchImage = config('constants.image.defaultImage');

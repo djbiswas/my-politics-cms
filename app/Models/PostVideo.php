@@ -35,7 +35,7 @@ class PostVideo extends Model
     {
         $videoPath = config('constants.image.post') . DIRECTORY_SEPARATOR . $this->attributes['image'];
         $disk = Storage::disk(config('constants.image.driver'));
-        if (!empty($this->attributes['name']) && $disk->exists($videoPath)) {
+        if (!empty($this->attributes['image']) && $disk->exists($videoPath)) {
             $fetchVideo = config('app.url').Storage::url($videoPath);
         } else {
             $fetchVideo = config('constants.image.defaultImage');

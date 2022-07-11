@@ -61,12 +61,12 @@ class PostRepository
 
             $image = '';
             foreach($post->postImages as $images){
-                $image .= $images->name . ',';
+                $image .= $images->image . ',';
             }
 
             $video = '';
             foreach($post->postVideos as $videos){
-                $video .= $videos->name . ',';
+                $video .= $videos->image . ',';
             }
 
             $data[$id]['images'] = $image;
