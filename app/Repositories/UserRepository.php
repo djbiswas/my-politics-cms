@@ -571,7 +571,7 @@ class UserRepository
             'id' => $request->userId
         ];
 
-        if($request->has('profilePhoto')){
+        if($request->profilePhoto != '') {
             $image = self::imageUpload($request);
         }
 
@@ -608,11 +608,10 @@ class UserRepository
                 'image' => $image ?? null
             ];
         }
-
-        $userDetails = self::fetchUserDetails($condition);
-
         $updateUser = self::updateUserData($condition, $fields);
-
+        
+        $userDetails = self::fetchUserDetails($condition);
+        
         $metaRequest = $request->except('userId', 'validationCode', 'firstName', 'lastName', 'email', 'phone', 'profilePhoto', 'reg_status', 'registered_date', 'status', 'action', 'step', 'fieldType', 'fieldValue');
         
         $userDetails->setMeta($metaRequest);

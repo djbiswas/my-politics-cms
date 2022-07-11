@@ -48,6 +48,9 @@ Route::group(['namespace' => 'API\v1'], function() {
     // Get Posts API 
     Route::post('get-posts', [UserPostController::class, 'getPosts'])->name('get.politician.posts');
     
+    // Media Upload
+    Route::post('media-upload', [UserPostController::class, 'mediaUpload'])->name('user.media.uplaod');
+
     Route::group(['middleware' => ['jwt.verify']], function () {
         // User API
         Route::post('update-profile', [UserController::class, 'updateProfile'])->name('user.update.profile');
@@ -57,7 +60,6 @@ Route::group(['namespace' => 'API\v1'], function() {
 
         //Post API
         Route::post('create-post', [UserPostController::class, 'createUserPost'])->name('user.create.post');
-        Route::post('media-upload', [UserPostController::class, 'mediaUpload'])->name('user.media.uplaod');
         Route::patch('update-post', [UserPostController::class, 'updatePost'])->name('user.update.post');
         Route::delete('delete-post', [UserPostController::class, 'deletePost'])->name('user.delete.post');
         Route::post('post-reaction', [UserPostController::class, 'postReaction'])->name('user.post.reaction');
