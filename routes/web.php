@@ -8,7 +8,8 @@ use App\Http\Controllers\PageController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-
+use App\Http\Controllers\CourseCategoryController;
+use App\Models\CourseCategory;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,13 @@ Route::middleware('auth')->group(function () {
     Route::post('post-category', [CategoryController::class, 'postCategory'])->name('post.category');
     Route::post('check-category-name', [CategoryController::class, 'checkName'])->name('check.category.name');
 
+
+    //Route for Course category
+    Route::get('course-categories', [CourseCategoryController::class, 'index'])->name('course_categories.index');
+    Route::get('get-course-category/{id}', [CourseCategoryController::class, 'getCategory'])->name('get.course_category');
+    Route::post('post-course-category', [CourseCategoryController::class, 'postCategory'])->name('post.course_category');
+    // Route::post('check-category-name', [CourseCategoryController::class, 'checkName'])->name('check.category.name');
+
     //Route for page
     Route::get('pages', [PageController::class, 'index'])->name('pages.index');
     Route::get('get-page/{id}', [PageController::class, 'getPage'])->name('get.page');
@@ -63,6 +71,6 @@ Route::middleware('auth')->group(function () {
     Route::post('post-page', [PageController::class, 'postPage'])->name('post.page');
     Route::post('check-page-name', [PageController::class, 'checkName'])->name('check.page.name');
     Route::delete('pages/{id}', [PageController::class, 'delete'])->name('pages.delete');
-    
+
 });
 require __DIR__.'/auth.php';

@@ -80,6 +80,9 @@ $current_page = '';
                 <div class="dropdown-container">
                     <a href="lesson.php" class="<?php echo ($current_page == 'lessons.php') ? 'active' : ''; ?>">All Lessons</a>
                     <a href="add-lesson.php" class="<?php echo ($current_page == 'add-lesson.php') ? 'active' : ''; ?>">Add New</a>
+                    <x-nav-link :href="route('pages.index')" :active="request()->routeIs('pages.index')" >
+                        Course Category
+                    </x-nav-link>
                 </div>
             </x-nav-li>
             <x-nav-li  class="v-dropdown">
