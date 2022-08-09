@@ -15,6 +15,7 @@ class AddOtpCodeToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('otp_code')->nullable()->after('completed_step');
+            $table->timestamp('otp_sent_at')->nullable()->after('otp_code');
         });
     }
 
