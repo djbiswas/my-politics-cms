@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -21,7 +20,7 @@
         <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
         @stack('css')
         <style>
-            .dataTable tr td { 
+            .dataTable tr td {
                 text-align: left;
             }
             .dataTable td:last-child {

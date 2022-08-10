@@ -34,7 +34,7 @@ class PoliticianController extends Controller
     }
 
     /**
-     * Polician Dashboard 
+     * Polician Dashboard
      *
      */
     public function dashboard()
@@ -42,6 +42,7 @@ class PoliticianController extends Controller
         try {
             $condition = [];
             $politicians = $this->politicianRepository->fetchAllData($condition, 8);
+            //$politicians;
             return view('dashboard', ['politicians' => $politicians]);
         } catch (Exception $e) {
             echo '<pre>'; print_r($e->getMessage()); die;
@@ -81,17 +82,17 @@ class PoliticianController extends Controller
                         ->rawColumns(['action'])
                         ->make(true);
             }
-              
+
             return view('politician.listing');
         } catch (Exception $e) {
             echo '<pre>'; print_r($e->getMessage()); die;
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
-    
+
     /**
      * Method to get Politician Data through id
-     * 
+     *
      * @param $id
      */
     public function getPolitician($id=null){
@@ -106,7 +107,7 @@ class PoliticianController extends Controller
 
     /**
      * Method to post politician data
-     * 
+     *
      */
     public function postPolitician(Request $request){
 
@@ -137,7 +138,7 @@ class PoliticianController extends Controller
 
     /**
      * Method to delete Politician Data through id
-     * 
+     *
      * @param $id
      */
     public function delete($id=null){
