@@ -19,7 +19,8 @@ return new class extends Migration
             $table->integer('politician_id')->unsigned();
             $table->longText('content')->nullable();
             $table->longText('images')->nullable();
-            $table->tinyInteger('status')->default(1)->comment('0 => InActive, 1 => Active')->nullable();
+            $table->tinyInteger('status')->default('InActive')->comment('0 => InActive, 1 => Active')->nullable();
+            $table->integer('updated_by')->unsigned();
             $table->softDeletes();
             $table->foreign('politician_id')->references('id')->on('politicians');
             $table->foreign('user_id')->references('id')->on('users');

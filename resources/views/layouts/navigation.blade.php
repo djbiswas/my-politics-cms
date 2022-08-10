@@ -71,6 +71,7 @@ $current_page = '';
                     </x-nav-link>
                 </div>
             </x-nav-li>
+
             <x-nav-li  class="v-dropdown">
                 <x-nav-link :href="route('dashboard')">
                     <i class="nc-icon nc-laptop"></i>
@@ -85,14 +86,15 @@ $current_page = '';
                     </x-nav-link>
                 </div>
             </x-nav-li>
-            <x-nav-li  class="v-dropdown">
-                <x-nav-link :href="route('dashboard')">
+
+            <x-nav-li  :active="request()->routeIs('issues.index', 'get.issue')" class="v-dropdown">
+                <x-nav-link :href="route('issues.index')">
                 <i class="nc-icon nc-atom"></i>
                     <p>Issues</p>
                     <i class="nc-icon nc-minimal-down dropdown-btn"></i>
                 </x-nav-link>
                 <div class="dropdown-container">
-                    <a href="issues.php" class="<?php echo ($current_page == 'settings.php') ? 'active' : ''; ?>">All Issues</a>
+                    <a href="/issues" class="<?php echo ($current_page == 'issues') ? 'active' : ''; ?>">All Issues</a>
                 </div>
             </x-nav-li>
             <x-nav-li  class="v-dropdown">

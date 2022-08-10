@@ -18,6 +18,7 @@ class CreatePoliticiansTable extends Migration
             $table->string('name')->nullable();
             $table->string('title')->nullable();
             $table->string('name_alias')->nullable();
+            $table->string('slug')->nullable();
             $table->string('affiliation')->nullable();
             $table->string('affiliation_icon')->nullable();
             $table->string('position')->nullable();
@@ -27,7 +28,7 @@ class CreatePoliticiansTable extends Migration
             $table->string('updated_by')->nullable();
             $table->tinyInteger('status')->default(1)->comment('0 => InActive, 1 => Active')->nullable();
             $table->timestamps();
-            $table->softDeletes(); 
+            $table->softDeletes();
         });
     }
 
