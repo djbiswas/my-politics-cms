@@ -9,6 +9,7 @@ use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CourseCategoryController;
+use App\Http\Controllers\IssueCategoryController;
 use App\Http\Controllers\IssueController;
 use App\Models\CourseCategory;
 
@@ -57,6 +58,12 @@ Route::middleware('auth')->group(function () {
     Route::get('get-category/{id}', [CategoryController::class, 'getCategory'])->name('get.category');
     Route::post('post-category', [CategoryController::class, 'postCategory'])->name('post.category');
     Route::post('check-category-name', [CategoryController::class, 'checkName'])->name('check.category.name');
+
+    //Route for Issue Category
+    Route::get('issue-categories', [IssueCategoryController::class, 'index'])->name('issue_categories.index');
+    Route::get('get-issue-category/{id}', [IssueCategoryController::class, 'getIssueCategory'])->name('get.issue_category');
+    Route::post('post-issue-category', [IssueCategoryController::class, 'postIssueCategory'])->name('post.issue_category');
+    Route::post('check-issue-category-name', [IssueCategoryController::class, 'checkName'])->name('check.issue_category.name');
 
     // Route For Issue
     Route::get('issues', [IssueController::class, 'index'])->name('issues.index');

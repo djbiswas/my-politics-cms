@@ -1,27 +1,33 @@
 <div class="generic-form">
-    @php
-        $edit_data = $sub_action = $sub_btn_text = "";
-    @endphp
+    <?php
+    $edit_data = $sub_action = $sub_btn_text = "";
+    ?>
     <h4>{{$data?'Edit' : 'Add'}} new category</h4>
-    <form class="needs-validation-1" id="validRankForm" method="post" action="{{route('post.category')}}" enctype="multipart/form-data" novalidate>
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        @if(!$data)
-            <input type="hidden" name="created_by" value="{{ auth()->user()->id }}">
-        @endif
-        <input type="hidden" name="updated_by" value="{{ auth()->user()->id }}">
+
+
+    {{-- <form class="needs-validation-1" id="validRankForm" method="post" action="{{route('post.issue_category')}}" enctype="multipart/form-data" novalidate> --}}
+
+        {!! Form::open(['route' => 'post.issue_category', 'class' =>'needs-validation-1', 'id' => 'validRankForm', 'novalidate'])  !!}
+
+
         <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
+
         <div class="form-group">
-            <label for="inputTitle">Name</label>
-            <input type="text" class="form-control" name='name' id="inputTitle" placeholder="Name" value="{{ (!empty($data)) ? $data->name : '' }}" required>
+            {!! Form::label('title', 'Title',) !!}
+            {!! Form::text('title', $data? $data->title : null, ['class'=>'form-control', 'placeholder'=>'Title']) !!}
         </div>
-        <div class="form-group">
-            <label for="inputtexteditor">Description</label>
-            <textarea class="form-control" name="description" id="textareaDescription" placeholder="Description">{{ (!empty($data)) ? $data->description : '' }}</textarea>
+
+        <div class="form-group ">
+            {!! Form::label('status', 'Status',) !!}
+            {!! Form::select('status', $status_datas, $data? $data->status : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
+
+
         </div>
-        <div class="form-group-two">
+
+        {{-- <div class="form-group-two">
             <label for="formFile" class="form-label">Icon</label>
             <x-display-image :data="$data?$data : ''" :fileName="'icon'"></x-display-image>
-        </div>
+        </div> --}}
         <input type="submit" name='Save' class="btn btn-primary" />
     </form>
 </div>
@@ -39,20 +45,20 @@
                 },
                 errorClass:"error error_preview",
                 rules: {
-                    name:{
+                    title:{
                         required:true,
                         remote: {
-                            url: "{{ route('check.category.name') }}",
+                            url: "{{ route('check.issue_category.name') }}",
                             type: "post",
                             beforeSend: function (xhr) { // Handle csrf errors
                                 xhr.setRequestHeader('X-CSRF-Token', "{{ csrf_token() }}");
-                                xhr.setRequestHeader('category-id', "{{ (!empty($data)) ? $data->id : '' }}");
+                                xhr.setRequestHeader('issueCategory-id', "{{ (!empty($data)) ? $data->id : '' }}");
                             },
                         }
                     },
                 },
                 messages: {
-                    name: {
+                    title: {
                         remote: "Name already exist"
                     }
                 },
