@@ -30,6 +30,37 @@ class IssueRepository
             $this->userDetails = '';
         }
     }
+
+    /**
+     * For selecting the data
+     *
+     * @param array $condition
+     * @throws InvalidOtpException
+     */
+    public function fetchAllData(array $condition = [], $limit = '')
+    {
+        $data = Issue::where($condition)
+                ->with('user')
+                ->with('politician')
+                ->orderBy('name');
+        if($limit){
+            $data->take($limit);
+        }
+        return $data->get();
+    }
+
+
+    /**
+     * For Create / Updating record into ranks table
+     */
+    public function saveData($condition = [], $fields)
+    {
+        $modelObj = Issue::updateOrCreate($condition, $fields);
+        return $modelObj;
+    }
+
+
+
     /**
      * For fetching Issues records
      *
@@ -38,7 +69,7 @@ class IssueRepository
     public function getIssues($request)
     {
         $data = [];
-        $Issues = Issue::with(['userTrust', 'user', 'user.ranks', 'IssueImages', 'IssueVideos'])->where('politician_id', $request->politicianId)->get();
+        $Issues = Issue::with([ 'user', 'politician'])->where('politician_id', $request->politicianId)->get();
 
         $users = User::with('Issues')->get();
 

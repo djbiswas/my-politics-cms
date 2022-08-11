@@ -6,11 +6,23 @@ use App\Http\Requests\StoreIssueRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateIssueRequest;
 use App\Models\Issue;
+use App\Repositories\PoliticianRepository;
 use Yajra\DataTables\DataTables;
 Use App\Services\CommonService;
 
 class IssueController extends Controller
 {
+    /**
+     * @var IssueRepository
+     */
+    private $issueRepository;
+
+
+    /**
+     * @var PoliticianRepository
+     */
+    private $politicianRepository;
+
     /**
      * Display a listing of the resource.
      *
@@ -22,6 +34,12 @@ class IssueController extends Controller
      * @var commonService
      */
     private $commonService;
+
+    public function __construct(IssueRepository $issueRepository, PoliticianRepository $politicianRepository, CommonService $commonService) {
+        $this->issueRepository = $issueRepository;
+        $this->commonService = $commonService;
+        $this->politicianRepository = $politicianRepository;
+    }
 
 
 
@@ -64,6 +82,50 @@ class IssueController extends Controller
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
+
+
+
+    /**
+     * Method to get Politician Data through id
+     *
+     * @param $id
+     */
+    public function getIssue($id=null){
+
+        $status_datas = ['0'=>'InActive', '1'=>'Active'];
+
+        $politicians = $this->politicianRepository->fetchAllData([])->toArray();
+        if($id){
+              $data=Issue::find($id);
+            //$metaData = $data->getMeta()->toArray();
+            return view('issues.issueFrom',['data'=>$data, 'politicians'=>$politicians, 'status_datas'=>$status_datas]);
+        }
+        return view('issues.issueFrom',['data'=>[]]);
+    }
+
+
+    public function postIssue(Request $request){
+
+         $data=$request->all();
+        try{
+            // if ($request->hasFile('image')) {
+            //     $data['image'] = $this->commonService->storeImage($request->file('image'), config('constants.image.politician'));
+            // }
+            // if ($request->hasFile('affiliation_icon')) {
+            //     $data['affiliation_icon'] = $this->commonService->storeImage($request->file('affiliation_icon'), config('constants.image.politician'), 'affiliation_icon');
+            // }
+            $condition = ['id' => $data['id']];
+            $this->issueRepository->saveData($condition, $data);
+
+            \Session::flash('success',trans('message.success'));
+            return redirect()->route('issues.index');
+        }catch (\Exception $e){
+            \Log::info($e->getMessage());
+            \Session::flash('error',$e->getMessage());
+            return redirect()->route('issues.index');
+        }
+    }
+
 
     /**
      * Show the form for creating a new resource.

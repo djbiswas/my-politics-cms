@@ -15,14 +15,14 @@ class Politician extends Model
 
     use Metable;
 
-    protected $metaTable = 'politician_metas'; 
+    protected $metaTable = 'politician_metas';
 
     protected $metaKeyName = 'politician_id';
-    
+
     protected $disableFluentMeta = true;
 
     protected $fillable = [
-        'name', 'title', 'name_alias', 'affiliation', 'affiliation_icon', 'position', 'politician_description', 
+        'name', 'title', 'name_alias', 'affiliation', 'affiliation_icon', 'position', 'politician_description',
         'image', 'created_by', 'updated_by', 'status'
     ];
 
@@ -50,7 +50,7 @@ class Politician extends Model
     {
         return $query->where('status', config('constants.status.active'));
     }
-    
+
     public function getAffiliationIconAttribute()
     {
         if (!empty($this->attributes['affiliation_icon'])) {
@@ -73,4 +73,29 @@ class Politician extends Model
 
         return $fetchImage;
     }
+
+    public static function boot()
+    {
+        parent::boot();
+        // registering a callback to be executed upon the creation of an activity AR
+        static::creating(function ($politician) {
+        // produce a slug based on the activity title
+        $slug = Str::slug($politician->name);
+        // check to see if any other slugs exist that are the same & count them
+        $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
+        // if other slugs exist that are the same, append the count to the slug
+        $politician->slug = $count ? "{$slug}-{$count}" : $slug;
+        });
+
+        static::updating(function ($politician) {
+            // produce a slug based on the activity name
+            $slug = Str::slug($politician->name);
+            // check to see if any other slugs exist that are the same & count them
+            // $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->where('id','!=',$this->id)->count()>1;
+            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
+            // if other slugs exist that are the same, append the count to the slug
+            $politician->slug = $count ? "{$slug}-{$count}" : $slug;
+            });
+    }
+
 }

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h3>Politicians</h3>
+        <h3>Issues</h3>
     </x-slot>
     <div class="table-responsive">
         <table class="table table-striped data-table" >
@@ -8,6 +8,7 @@
                 <tr>
                     <th> Name </th>
                     <th> User </th>
+                    <th> Status </th>
                     <th>Position</th>
                     <th> Content </th>
                     <th> Last Updated </th>
@@ -30,6 +31,18 @@
                     columns: [
                         {data: 'name', name: 'name'},
                         {data: 'user.first_name', name: 'user.first_name'},
+                        // {data: 'status', name: 'status'},
+                        {data: "status",
+                            "searchable": true,
+                            "orderable":true,
+                            "render": function (data, type, row) {
+                            if ({data:"status"} === '1') {
+                                return 'Active';}
+                                else {
+                                    return 'InActive';
+                                }
+                            }
+                        },
                         {data: 'politician.name', name: 'politician.name'},
                         {data: 'content', name: 'content'},
                         {data: 'updated_at', name: 'updated_at'},

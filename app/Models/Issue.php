@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Issue extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'politician_id', 'content', 'gif', 'status', 'images', 'videos', 'created_at'
+        'id', 'name', 'politician_id', 'content', 'status', 'created_at', 'updated_by'
     ];
 
     public function user()
@@ -21,5 +22,30 @@ class Issue extends Model
     public function politician()
     {
         return $this->belongsTo(Politician::class);
+    }
+
+
+    public static function boot()
+    {
+        parent::boot();
+        // registering a callback to be executed upon the creation of an activity AR
+        static::creating(function ($politician) {
+        // produce a slug based on the activity title
+        $slug = Str::slug($politician->name);
+        // check to see if any other slugs exist that are the same & count them
+        $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
+        // if other slugs exist that are the same, append the count to the slug
+        $politician->slug = $count ? "{$slug}-{$count}" : $slug;
+        });
+
+        static::updating(function ($politician) {
+            // produce a slug based on the activity name
+            $slug = Str::slug($politician->name);
+            // check to see if any other slugs exist that are the same & count them
+            // $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->where('id','!=',$this->id)->count()>1;
+            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
+            // if other slugs exist that are the same, append the count to the slug
+            $politician->slug = $count ? "{$slug}-{$count}" : $slug;
+            });
     }
 }
