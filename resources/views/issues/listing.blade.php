@@ -10,6 +10,7 @@
                     <th> User </th>
                     <th> Status </th>
                     <th>Position</th>
+                    <th>Category</th>
                     <th> Content </th>
                     <th> Last Updated </th>
                     <th class="text-right"> Action </th>
@@ -36,14 +37,16 @@
                             "searchable": true,
                             "orderable":true,
                             "render": function (data, type, row) {
-                            if ({data:"status"} === '1') {
-                                return 'Active';}
+                                if (data == '1') {
+                                    return 'Active';
+                                }
                                 else {
                                     return 'InActive';
                                 }
                             }
                         },
                         {data: 'politician.name', name: 'politician.name'},
+                        {data: 'issue_category.title', name: 'issue_category.title'},
                         {data: 'content', name: 'content'},
                         {data: 'updated_at', name: 'updated_at'},
                         {data: 'action', name: 'action', orderable: false, searchable: false},

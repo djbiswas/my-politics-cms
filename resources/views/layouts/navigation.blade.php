@@ -87,7 +87,7 @@ $current_page = '';
                 </div>
             </x-nav-li>
 
-            <x-nav-li  :active="request()->routeIs('issues.index', 'get.issue')" class="v-dropdown">
+            <x-nav-li  :active="request()->routeIs('issues.index', 'get.issue', 'issue_categories.index','get.issue_category')" class="v-dropdown">
                 <x-nav-link :href="route('issues.index')">
                 <i class="nc-icon nc-atom"></i>
                     <p>Issues</p>
@@ -95,7 +95,12 @@ $current_page = '';
                 </x-nav-link>
                 <div class="dropdown-container">
                     <a href="/issues" class="<?php echo ($current_page == 'issues') ? 'active' : ''; ?>">All Issues</a>
+                    <x-nav-link :href="route('issue_categories.index')" :active="request()->routeIs('issue_categories.index')" >
+                        Categories
+                    </x-nav-link>
                 </div>
+
+
             </x-nav-li>
             <x-nav-li  class="v-dropdown">
                 <x-nav-link :href="route('dashboard')">

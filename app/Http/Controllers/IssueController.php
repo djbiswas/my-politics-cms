@@ -6,6 +6,8 @@ use App\Http\Requests\StoreIssueRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateIssueRequest;
 use App\Models\Issue;
+use App\Models\IssueCategory;
+use App\Models\Politician;
 use App\Repositories\PoliticianRepository;
 use Yajra\DataTables\DataTables;
 Use App\Services\CommonService;
@@ -45,12 +47,12 @@ class IssueController extends Controller
 
     public function index(Request $request)
     {
-       // return $issues =  Issue::with('politician')->with('user')->get();
+        // return $issues =  Issue::with('politician')->with('user')->with('issue_category')->get();
 
         try {
             if ($request->ajax()) {
                 // $data = Issue::select('id', 'name', 'name_alias', 'position', 'politician_description', 'updated_at');
-                $data = Issue::with('user')->with('politician')->get();
+                $data = Issue::with('user')->with('politician')->with('issue_category')->get();
                 // $data = Issue::select('id', 'user_id', 'politician_id', 'name', 'content', 'updated_at');
                 return Datatables::of($data)
                         ->addIndexColumn()
@@ -94,11 +96,14 @@ class IssueController extends Controller
 
         $status_datas = ['0'=>'InActive', '1'=>'Active'];
 
-        $politicians = $this->politicianRepository->fetchAllData([])->toArray();
+        // $politicians = $this->politicianRepository->fetchAllData([])->toArray();
+
+        $politicians = Politician::pluck('name','id');
+        $issueCategories = IssueCategory::pluck('title','id');
         if($id){
               $data=Issue::find($id);
             //$metaData = $data->getMeta()->toArray();
-            return view('issues.issueFrom',['data'=>$data, 'politicians'=>$politicians, 'status_datas'=>$status_datas]);
+            return view('issues.issueFrom',['data'=>$data, 'politicians'=>$politicians, 'issueCategories'=>$issueCategories,'status_datas'=>$status_datas]);
         }
         return view('issues.issueFrom',['data'=>[]]);
     }

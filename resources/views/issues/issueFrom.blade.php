@@ -13,23 +13,22 @@
 
             <div class="row">
 
-                <div class="form-group col-6">
+                <div class="form-group col-4">
                     <label for="inputName">Name</label>
                     <input type="text" class="form-control" name='name' id="inputName" placeholder="Name" value="{{ (!empty($data)) ? $data->name : '' }}" required>
                 </div>
-                <div class="form-group col-6">
-                    <label for="politician_id">Politicians</label>
-                    <select class="form-control" name='politician_id' id="politician_id" required>
-                        <option value="">--Select--</option>
-                        @if(!empty($politicians))
-                            @foreach ($politicians as $item)
-                                <?php
-                                    $p_cat_sel = (!empty($data->politician_id) && $data->politician_id == $item['id']) ? 'selected' : '';
-                                ?>
-                                <option {{$p_cat_sel}} value="{{$item['id']}}">{{$item['name']}}</option>;
-                            @endforeach
-                        @endif
-                    </select>
+
+                <div class="form-group col-4">
+                    {!! Form::label('politician_id', 'Politicians',) !!}
+                    {!! Form::select('politician_id', $politicians, $data? $data->politician_id : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
+
+
+                </div>
+                <div class="form-group col-4">
+                    {!! Form::label('issue_category_id', 'Select Catagory',) !!}
+                    {!! Form::select('issue_category_id', $issueCategories, $data? $data->issue_category_id : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
+
+
                 </div>
             </div>
             {{-- <div class="row">
@@ -43,20 +42,13 @@
                 </div>
             </div> --}}
             <div class="row">
-                <div class="form-group col-4">
-                    <label for="status">Politicians</label>
-                    <select class="form-control" name='status' id="status" required>
-                        <option value="">--Select--</option>
 
-                        @if(!empty($status_datas))
-                            @foreach ($status_datas as $status_in=>$status_val)
-                                <?php
-                                    $p_cat_sel = (!empty($data->status) && $data->status == $status_in) ? 'selected' : '';
-                                ?>
-                                <option {{$p_cat_sel}} value="{{$status_in}}">{{$status_val}}</option>;
-                            @endforeach
-                        @endif
-                    </select>
+
+                <div class="form-group col-4">
+                    {!! Form::label('status', 'Status',) !!}
+                    {!! Form::select('status', $status_datas, $data? $data->status : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
+
+
                 </div>
 
 
