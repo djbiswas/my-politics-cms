@@ -47,12 +47,12 @@ class IssueController extends Controller
 
     public function index(Request $request)
     {
-       // return $issues =  Issue::with('politician')->with('user')->get();
+        // return $issues =  Issue::with('politician')->with('user')->with('issue_category')->get();
 
         try {
             if ($request->ajax()) {
                 // $data = Issue::select('id', 'name', 'name_alias', 'position', 'politician_description', 'updated_at');
-                $data = Issue::with('user')->with('politician')->get();
+                $data = Issue::with('user')->with('politician')->with('issue_category')->get();
                 // $data = Issue::select('id', 'user_id', 'politician_id', 'name', 'content', 'updated_at');
                 return Datatables::of($data)
                         ->addIndexColumn()

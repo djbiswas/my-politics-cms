@@ -23,7 +23,16 @@
                 ajax: "{{ route('issue_categories.index') }}",
                 columns: [
                     {data: 'title', name: 'title'},
-                    {data: 'status', name: 'status'},
+                    {data: "status",
+                            "render": function (data, type, row) {
+                                if (data == '1') {
+                                    return 'Active';
+                                }
+                                else {
+                                    return 'InActive';
+                                }
+                            }
+                        },
                     {data: 'updated_at', name: 'updated_at'},
                     {data: 'action', name: 'action', class:'text-right', orderable: false, searchable: false},
                 ]

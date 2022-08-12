@@ -25,6 +25,11 @@ class Issue extends Model
         return $this->belongsTo(Politician::class);
     }
 
+    public function issue_category()
+    {
+        return $this->belongsTo(IssueCategory::class);
+    }
+
 
     public static function boot()
     {
