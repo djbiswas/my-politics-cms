@@ -24,6 +24,11 @@ class Post extends Model
         return $this->belongsTo(Politician::class);
     }
 
+    public function politician()
+    {
+        return $this->belongsTo(Politician::class);
+    }
+
     public function postImages()
     {
         return $this->hasMany(PostImage::class);
@@ -48,7 +53,7 @@ class Post extends Model
     {
         return $this->hasMany(PostComment::class, 'post_id', 'id');
     }
-    
+
     /**
      *
      * @param type $query

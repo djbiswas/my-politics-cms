@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CourseCategoryController;
 use App\Http\Controllers\IssueCategoryController;
 use App\Http\Controllers\IssueController;
+use App\Http\Controllers\PostController;
 use App\Models\CourseCategory;
 
 /*
@@ -60,6 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::post('check-category-name', [CategoryController::class, 'checkName'])->name('check.category.name');
 
     // Route for posts
+    Route::get('posts', [PostController::class, 'index'])->name('postsclear.index');
 
 
     //Route for Issue Category
