@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('issues', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->unsigned();
-            $table->integer('politician_id')->unsigned();
+            $table->integer('politician_id')->unsigned()->nullable();
             $table->unsignedBigInteger('issue_category_id');
             $table->string('name')->nullable();
             $table->longText('content')->nullable();
