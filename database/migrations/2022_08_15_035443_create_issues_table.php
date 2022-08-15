@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\IssueCategory;
+use App\Models\Politician;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,22 +18,18 @@ return new class extends Migration
     {
         Schema::create('issues', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unsigned();
-            $table->integer('politician_id')->unsigned()->nullable();
-            $table->unsignedBigInteger('issue_category_id');
-            $table->string('name')->nullable();
+            $table->string('title');
+            $table->string('slug');
+            $table->string('image')->nullable();
             $table->longText('content')->nullable();
-            $table->longText('images')->nullable();
-            $table->tinyInteger('status')->default('0')->comment('0 => InActive, 1 => Active')->nullable();
-            $table->string('slug')->nullable();
             $table->boolean('notify_with_replies')->default('0');
-            $table->integer('updated_by')->unsigned();
             $table->json('tags')->nullable();
+            $table->foreignIdFor(User::class)->constant('users')->onDelete('SET NULL');
+            $table->foreignIdFor(Politician::class)->nullable()->constant('politicians')->onDelete('SET NULL');
+            $table->foreignIdFor(IssueCategory::class)->constant('issue_categories')->onDelete('SET NULL');
+            $table->unsignedTinyInteger('status')->default('0')->comment('0 => InActive, 1 => Active');
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->softDeletes();
-
-            $table->foreign('politician_id')->references('id')->on('politicians');
-            $table->foreign('issue_category_id')->references('id')->on('issue_categories')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
