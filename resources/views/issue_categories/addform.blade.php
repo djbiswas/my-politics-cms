@@ -7,7 +7,7 @@
 
     {{-- <form class="needs-validation-1" id="validRankForm" method="post" action="{{route('post.issue_category')}}" enctype="multipart/form-data" novalidate> --}}
 
-        {!! Form::open(['route' => 'post.issue_category', 'class' =>'needs-validation-1', 'id' => 'validRankForm', 'novalidate'])  !!}
+        {!! Form::open(['route' => 'post.issue_category', 'class' =>'needs-validation-1', 'id' => 'validRankForm','enctype' =>'multipart/form-data', 'novalidate'])  !!}
 
 
         <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
@@ -21,7 +21,11 @@
             {!! Form::label('status', 'Status',) !!}
             {!! Form::select('status', $status_datas, $data? $data->status : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
 
+        </div>
 
+        <div class="form-group-two">
+            <label for="formFile" class="form-label">Image</label>
+            <x-display-image :data="$data?$data : ''" :fileName="'image'"></x-display-image>
         </div>
 
         {{-- <div class="form-group-two">

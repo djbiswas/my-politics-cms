@@ -13,7 +13,7 @@ class IssueCategory extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'id', 'title', 'created_by', 'updated_by', 'status'
+        'id', 'title', 'created_by', 'updated_by', 'status', 'image'
     ];
 
     /**
@@ -27,6 +27,18 @@ class IssueCategory extends Model
     //     return $query->where('status', config('constants.status.active'));
     // }
 
+
+    public function getIconAttribute()
+    {
+        $imagePath = config('constants.image.issue_category') . DIRECTORY_SEPARATOR . $this->attributes['image'];
+        $disk = Storage::disk(config('constants.image.driver'));
+        if (!empty($this->attributes['icon']) && $disk->exists($imagePath)) {
+            $fetchImage = config('app.url').Storage::url($imagePath);
+        } else {
+            $fetchImage = config('constants.image.defaultImage');
+        }
+        return $fetchImage;
+    }
 
     public static function boot()
     {
