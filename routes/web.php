@@ -59,6 +59,9 @@ Route::middleware('auth')->group(function () {
     Route::post('post-category', [CategoryController::class, 'postCategory'])->name('post.category');
     Route::post('check-category-name', [CategoryController::class, 'checkName'])->name('check.category.name');
 
+    // Route for posts
+
+
     //Route for Issue Category
     Route::get('issue-categories', [IssueCategoryController::class, 'index'])->name('issue_categories.index');
     Route::get('get-issue-category/{id}', [IssueCategoryController::class, 'getIssueCategory'])->name('get.issue_category');
