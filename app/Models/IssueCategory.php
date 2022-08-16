@@ -22,21 +22,21 @@ class IssueCategory extends Model
      * @return type Illuminate\Support\Collection
      */
 
-    // public function scopeOnlyActive($query)
-    // {
-    //     return $query->where('status', config('constants.status.active'));
-    // }
-
-
-    public function getIconAttribute()
+    public function scopeOnlyActive($query)
     {
-        $imagePath = config('constants.image.issue_category') . DIRECTORY_SEPARATOR . $this->attributes['image'];
-        $disk = Storage::disk(config('constants.image.driver'));
-        if (!empty($this->attributes['icon']) && $disk->exists($imagePath)) {
+        return $query->where('status', config('constants.status.active'));
+    }
+
+
+    public function getImageAttribute()
+    {
+        if (!empty($this->attributes['image'])) {
+            $imagePath = config('constants.image.issue_category') . DIRECTORY_SEPARATOR . $this->attributes['image'];
             $fetchImage = config('app.url').Storage::url($imagePath);
         } else {
             $fetchImage = config('constants.image.defaultImage');
         }
+
         return $fetchImage;
     }
 

@@ -28,6 +28,7 @@
             <x-display-image :data="$data?$data : ''" :fileName="'image'"></x-display-image>
         </div>
 
+
         {{-- <div class="form-group-two">
             <label for="formFile" class="form-label">Icon</label>
             <x-display-image :data="$data?$data : ''" :fileName="'icon'"></x-display-image>
