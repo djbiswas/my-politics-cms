@@ -77,6 +77,11 @@ class IssueCategoryController extends Controller
          $data=$request->all();
         try{
 
+            if ($request->hasFile('image')) {
+                $commonService = new CommonService();
+                $data['image'] = $commonService->storeImage($request->file('image'), config('constants.image.issue_category'), 'image');
+            }
+
             $condition = ['id' => $data['id']];
             $this->issueCategoryRepository->saveData($condition, $data);
             \Session::flash('success',trans('message.success'));

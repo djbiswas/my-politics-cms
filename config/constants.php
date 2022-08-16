@@ -21,6 +21,7 @@ return [
         'defaultImage' => 'https://via.placeholder.com/150x150?text=Default%20Image',
         'defaultImage' => 'https://via.placeholder.com/150x150?text=Default%20Image',
         'category' => 'category',
+        'issue_category' => 'issue_category',
         'politician' => 'politician',
         'user' => 'user',
         'uploads' => 'uploads',
