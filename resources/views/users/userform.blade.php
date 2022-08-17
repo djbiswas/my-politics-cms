@@ -53,7 +53,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-6">
+                <div class="form-group col-3">
                     <label for="zipcode">Rank</label>
                     <select required class="form-control" name='rank_id' id="selectRank">
                         <option value="">--Select--</option>
@@ -67,7 +67,15 @@
                         @endif
                     </select>
                 </div>
+
+                <div class="form-group col-3">
+                    {!! Form::label('role_id', 'Select User Role',) !!}
+                    {!! Form::select('role_id', $roles, $data? $data->role_id : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
+
+
+                </div>
             </div>
+
             <div class="row">
                 <div class="form-group col-6">
                     <label for="lockRank">Lock Rank</label>
@@ -103,7 +111,7 @@
                     return /^[A-Za-z0-9\d=!\-@._`!@#$%^&*()_+\-=\\[\]{};':"\\|,.<>\\/?~*]*$/.test(value) // consists of only these
                         && /[a-z]/.test(value) // has a lowercase letter
                         && /[A-Z]/.test(value) // has a lowercase letter
-                        && /[ `!@#$%^&*()_+\-=\\[\]{};':"\\|,.<>\\/?~]/.test(value) // has a special 
+                        && /[ `!@#$%^&*()_+\-=\\[\]{};':"\\|,.<>\\/?~]/.test(value) // has a special
                         && /\d/.test(value) // has a digit
                 });
                 $("#validUserForm").validate({

@@ -17,10 +17,10 @@ class User extends Authenticatable implements JWTSubject
 
     use Metable;
 
-    protected $metaTable = 'user_metas'; 
+    protected $metaTable = 'user_metas';
 
     protected $metaKeyName = 'user_id';
-    
+
     protected $disableFluentMeta = true;
 
     /**
@@ -82,6 +82,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Rank::class, 'rank_id', 'id');
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     /**
      *
      * @param type $query
@@ -102,6 +107,6 @@ class User extends Authenticatable implements JWTSubject
             $fetchImage = config('constants.image.defaultImage');
         }
 
-        return $fetchImage; 
+        return $fetchImage;
     }
 }

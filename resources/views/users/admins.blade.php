@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h3>Users</h3>
+        <h3>Admin Users</h3>
     </x-slot>
     <div class="table-responsive">
         <table class="table table-striped data-table" >
@@ -27,7 +27,7 @@
                 var table = $('.data-table').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: "{{ route('users.index') }}",
+                    ajax: "{{ route('admin.users') }}",
                     columns: [
                         {data: 'first_name', name: 'first_name'},
                         {data: 'last_name', name: 'last_name'},

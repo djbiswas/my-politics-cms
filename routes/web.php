@@ -12,6 +12,7 @@ use App\Http\Controllers\CourseCategoryController;
 use App\Http\Controllers\IssueCategoryController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RoleController;
 use App\Models\CourseCategory;
 
 /*
@@ -48,11 +49,23 @@ Route::middleware('auth')->group(function () {
     Route::post('check-user-phone', [UserController::class, 'checkPhone'])->name('check.user.phone');
     Route::delete('users/{id}', [UserController::class, 'delete'])->name('users.delete');
 
+    // Route for Admin User
+    Route::get('admin-users', [UserController::class, 'admin_users'])->name('admin.users');
+    Route::get('get-admin/{id}', [UserController::class, 'getAdmin'])->name('get.admin');
+    Route::get('add-admin', [UserController::class, 'getAdmin'])->name('add.admin');
+
     //Route for rank
     Route::get('ranks', [RankController::class, 'index'])->name('ranks.index');
     Route::get('get-rank/{id}', [RankController::class, 'getRank'])->name('get.rank');
     Route::post('post-rank', [RankController::class, 'postRank'])->name('post.rank');
     Route::post('check-rank-title', [RankController::class, 'checkTitle'])->name('check.rank.title');
+
+
+    //Route for role
+    Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('get-role/{id}', [RoleController::class, 'getRole'])->name('get.role');
+    Route::post('post-role', [RoleController::class, 'postRole'])->name('post.role');
+    Route::post('check-role-title', [RoleController::class, 'checkTitle'])->name('check.role.title');
 
     //Route for category
     Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
