@@ -19,7 +19,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
  * Class PostRepository.
  */
 class PostRepository
-{   
+{
 
     private $userDetails;
 
@@ -41,7 +41,7 @@ class PostRepository
     {
         $data = [];
         $posts = Post::with(['userTrust', 'reactions', 'comments', 'user', 'user.ranks', 'postImages', 'postVideos'])->where('politician_id', $request->politicianId)->get();
-       
+
         $users = User::with('posts')->get();
 
         $postCount = [];
@@ -61,7 +61,7 @@ class PostRepository
 
             $imageCount = $post->postImages->count();
             $image = '';
-         
+
             foreach($post->postImages as $images) {
                 if($imageCount > 1) {
                     $image .= $images->image . ',';
@@ -70,7 +70,7 @@ class PostRepository
                 }
             }
 
-            $videoCount = $post->postImages->count();    
+            $videoCount = $post->postImages->count();
             $video = '';
             foreach($post->postVideos as $videos) {
                 if($videoCount > 1) {
@@ -86,9 +86,9 @@ class PostRepository
             if(!empty($this->userDetails)) {
                 $data[$id]['reaction_status'] = $post->reactions->where('user_id', $this->userDetails->id)->first()->reaction ?? [];
             }
-            
+
             $userMeta = $post->user->getMeta()->toArray();
-           
+
             $data[$id]['user']['user_id'] = $post->user->id;
             $data[$id]['user']['first_name'] = $post->user->first_name;
             $data[$id]['user']['last_name'] = $post->user->last_name;
@@ -98,8 +98,8 @@ class PostRepository
 
             $data[$id]['user']['post_count'] = $post_count;
 
-            $data[$id]['user']['meta_data'] = $userMeta; 
-           
+            $data[$id]['user']['meta_data'] = $userMeta;
+
             $data[$id]['timeago_date'] = $post->created_at->diffForHumans();
 
             $up = $post->userTrust->where('trust', 'Up')->count();
@@ -127,20 +127,27 @@ class PostRepository
             $data[$id]['reactionCount'] = $post->reactions->count();
 
             $authLike = 0;
-            
+
             if(!empty($this->userDetails)) {
-                $authLike = $post->reactions->where('user_id', $this->userDetails->id)->count();     
+                $authLike = $post->reactions->where('user_id', $this->userDetails->id)->count();
             }
 
             $reaction = self::getReactionValue($data[$id]['reactionCount'], $authLike);
             $data[$id]['reactionText'] = $reaction;
             $id++;
         }
-        
+
         return [
             'post' => $data,
         ];
     }
+
+    public function saveData($condition = [], $fields)
+    {
+        return Post::updateOrCreate($condition, $fields);
+    }
+
+
 
     /**
      * For Storing the record respective model in storage
@@ -155,7 +162,7 @@ class PostRepository
             'content' => $request->postContent,
             'gif' => $request->postGif ?? '',
             'status' => config('constants.status.active'),
-        ];    
+        ];
 
         $post = Post::create($postData);
 
@@ -209,20 +216,20 @@ class PostRepository
         if(!empty($request->postImages)){
 			$post_images = implode(',',$request->postImages);
 		}
-		
+
 		if(!empty($request->postVideos)){
 			$post_videos = implode(',',$request->postVideos);
 		}
-		
+
 		if(!empty($request->postGif)){
 		    $post_gif = $request->postGif;
 		}
-		
+
         $created_date = date("Y-m-d H:i:s");
 
         $posts = Post::findOrFail($request->post_id);
 
-        $posts->update(['politician_id' => $request->politicianId, 
+        $posts->update(['politician_id' => $request->politicianId,
                         'content' => $request->postContent,
                         'gif' => $post_gif,
                         'images' => $post_images,
@@ -230,7 +237,7 @@ class PostRepository
                         'created_at' =>  $created_date
                     ]);
 
-        return [ 
+        return [
             'post' => $posts
         ];
     }
@@ -245,7 +252,7 @@ class PostRepository
         $postData = [
             'user_id' => Auth::user()->id,
             'id' => $request->postId,
-        ];    
+        ];
 
         $post = Post::where($postData)->delete();
 
@@ -265,7 +272,7 @@ class PostRepository
         }
 
         $fileName = uploadFile('post', $request->file);
-        
+
         return $fileName;
     }
 

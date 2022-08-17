@@ -59,7 +59,7 @@ $current_page = '';
                 </div>
             </x-nav-li>
 
-            <x-nav-li  :active="request()->routeIs('admin.users', 'add.admin', 'get.admin','roles.index','add.user', 'get.role','get.user')" class="v-dropdown">
+            <x-nav-li  :active="request()->routeIs('admin.users', 'add.admin', 'get.admin','roles.index','get.role')" class="v-dropdown">
                 <x-nav-link :href="route('users.index')">
                     <i class="nc-icon nc-single-02"></i>
                     <p>Admin Users</p>
@@ -125,6 +125,21 @@ $current_page = '';
 
 
             </x-nav-li>
+
+            <x-nav-li  :active="request()->routeIs('posts.index','get.post')" class="v-dropdown">
+                <x-nav-link :href="route('posts.index')">
+                <i class="nc-icon nc-single-copy-04"></i>
+                    <p>Posts</p>
+                    <i class="nc-icon nc-minimal-down dropdown-btn"></i>
+                </x-nav-link>
+                <div class="dropdown-container">
+                    <a href="/posts" class="<?php echo ($current_page == 'posts') ? 'active' : ''; ?>">All Posts</a>
+
+                </div>
+
+
+            </x-nav-li>
+
             <x-nav-li  class="v-dropdown">
                 <x-nav-link :href="route('dashboard')">
                     <i class="nc-icon nc-settings-gear-65"></i>

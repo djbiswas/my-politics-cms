@@ -45,7 +45,7 @@ class UserController extends Controller
                     $q->select('id','role');
                 }])
                 ->select('users.id','rank_id', 'users.first_name', 'users.last_name', 'users.email', 'users.phone','role_id')
-                ->where('users.role_id','>',1);
+                ->where('users.role_id','>',2);
 
                 return Datatables::of($data)
                         ->addIndexColumn()
@@ -87,7 +87,7 @@ class UserController extends Controller
                     $q->select('id','role');
                 }])
                 ->select('users.id','rank_id', 'users.first_name', 'users.last_name', 'users.email', 'users.phone','role_id')
-                ->where('users.role_id','<',2);
+                ->where('users.role_id','<',3);
 
                 return Datatables::of($data)
                         ->addIndexColumn()
@@ -124,7 +124,7 @@ class UserController extends Controller
      */
     public function getUser($id=null){
         $ranks = $this->rankRepository->fetchAllData([])->toArray();
-        $roles = Role::where('id', '!=', '1')->pluck('role','id');
+        $roles = Role::where('id', '>', '2')->pluck('role','id');
 
         if($id){
             $data=User::find($id);
@@ -138,15 +138,15 @@ class UserController extends Controller
 
     public function getAdmin($id=null){
         $ranks = $this->rankRepository->fetchAllData([])->toArray();
-        $roles = Role::where('id', '<', '2')->pluck('role','id');
+        $roles = Role::where('id', '<', '3')->pluck('role','id');
 
         if($id){
             $data=User::find($id);
             $metaData = $data->getMeta()->toArray();
-            return view('users.userform',['data'=>$data, 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>$metaData]);
+            return view('users.adminform',['data'=>$data, 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>$metaData]);
         }
 
-        return view('users.userform',['data'=>[], 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>[]]);
+        return view('users.adminform',['data'=>[], 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>[]]);
 
     }
 
@@ -166,7 +166,25 @@ class UserController extends Controller
         }catch (\Exception $e){
             \Log::info($e->getMessage());
             \Session::flash('error',$e->getMessage());
+
             return redirect()->route('users.index');
+        }
+    }
+
+    public function postAdmin(Request $request){
+        $data=$request->all();
+        try{
+            $condition = ['id' => $data['id']];
+            $metaData = ($data['meta'])? $data['meta'] : [];
+            // $data['role_id'] = config('constants.role.user');
+            $this->userRepository->saveData($condition, $data, $metaData);
+            \Session::flash('success',trans('message.success'));
+            return redirect()->route('admin.users');
+        }catch (\Exception $e){
+            \Log::info($e->getMessage());
+            \Session::flash('error',$e->getMessage());
+
+            return redirect()->route('admin.users');
         }
     }
 

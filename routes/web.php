@@ -53,6 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::get('admin-users', [UserController::class, 'admin_users'])->name('admin.users');
     Route::get('get-admin/{id}', [UserController::class, 'getAdmin'])->name('get.admin');
     Route::get('add-admin', [UserController::class, 'getAdmin'])->name('add.admin');
+    Route::post('post-admin', [UserController::class, 'postAdmin'])->name('post.admin');
+
 
     //Route for rank
     Route::get('ranks', [RankController::class, 'index'])->name('ranks.index');
@@ -74,7 +76,10 @@ Route::middleware('auth')->group(function () {
     Route::post('check-category-name', [CategoryController::class, 'checkName'])->name('check.category.name');
 
     // Route for posts
-    Route::get('posts', [PostController::class, 'index'])->name('postsclear.index');
+    Route::get('posts', [PostController::class, 'index'])->name('posts.index');
+    Route::get('get-post/{id}', [PostController::class, 'getPost'])->name('get.post');
+    Route::post('post-post', [PostController::class, 'postPost'])->name('post.post');
+    Route::delete('posts/{id}', [PostController::class, 'delete'])->name('post.delete');
 
 
     //Route for Issue Category
