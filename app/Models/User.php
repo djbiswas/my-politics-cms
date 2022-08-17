@@ -82,6 +82,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Rank::class, 'rank_id', 'id');
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     /**
      *
      * @param type $query

@@ -47,8 +47,6 @@
                 <div class="form-group col-4">
                     {!! Form::label('status', 'Status',) !!}
                     {!! Form::select('status', $status_datas, $data? $data->status : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
-
-
                 </div>
 
 
