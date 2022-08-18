@@ -21,8 +21,6 @@
                 <div class="form-group col-4">
                     {!! Form::label('politician_id', 'Politicians',) !!}
                     {!! Form::select('politician_id', $politicians, $data? $data->politician_id : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
-
-
                 </div>
                 <div class="form-group col-4">
                     {!! Form::label('issue_category_id', 'Select Catagory',) !!}
@@ -31,16 +29,7 @@
 
                 </div>
             </div>
-            {{-- <div class="row">
-                <div class="form-group col-6">
-                    <label for="inputAlias">Alias</label>
-                    <input type="text" class="form-control" name='name_alias' id="inpuAlias" placeholder="Alias" value="{{ (!empty($data)) ? $data->name_alias : '' }}">
-                </div>
-                <div class="form-group col-6">
-                    <label for="inputAffiliation">Affiliation</label>
-                    <input type="text" class="form-control" name='affiliation' id="inpuAffiliation" placeholder="Affiliation" value="{{ (!empty($data)) ? $data->affiliation : '' }}">
-                </div>
-            </div> --}}
+
             <div class="row">
 
 
@@ -52,11 +41,11 @@
 
                 <div class="form-group quill-field-block col-8">
                     <label for="inputDescription">Description</label>
-                    <textarea class="form-control" id="inputDescription" name='content' placeholder="Enter description">{{ (!empty($data)) ? $data->content : '' }}</textarea>
+                    <textarea class="ckeditor" id="inputDescription" name='content' placeholder="Enter description">{{ (!empty($data)) ? $data->content : '' }}</textarea>
                 </div>
             </div>
 
-            <input type="submit" name='Save' class="btn btn-primary" value="save">
+            <input type="submit" name='Save' class="btn btn-primary float-right " value="save">
         </form>
     </div>
     @push('scripts')
@@ -85,6 +74,10 @@
                     }
                 });
             });
+        </script>
+        <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
+        <script>
+            $('.ckeditor').ckeditor();
         </script>
     @endpush
 </x-app-layout>

@@ -8,7 +8,6 @@
                 <tr>
                     <th>Position</th>
                     <th>User</th>
-                    <th>Content</th>
                     <th>Status</th>
                     <th>Last Updated </th>
                     <th class="text-right"> Action </th>
@@ -18,11 +17,9 @@
             </tbody>
         </table>
     </div>
-
     @push('scripts')
         <script type="text/javascript">
             $(function () {
-
                 var table = $('.data-table').DataTable({
                     processing: true,
                     serverSide: true,
@@ -30,7 +27,6 @@
                     columns: [
                         {data: 'politician.name', name: 'politician.name'},
                         {data: 'user.first_name', name: 'user.first_name'},
-                        {data: 'content', name: 'content'},
                         {data: "status",
                             "searchable": true,
                             "orderable":true,
@@ -47,7 +43,6 @@
                         {data: 'action', name: 'action', orderable: false, searchable: false},
                     ]
                 });
-
             });
         </script>
     @endpush

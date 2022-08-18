@@ -4,7 +4,6 @@
         <thead class="text-primary">
             <tr>
                 <th> Name </th>
-                <th> Description </th>
                 <th> Last Updated </th>
                 <th class="text-right"> Action </th>
             </tr>
@@ -20,10 +19,9 @@
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('categories.index') }}",
+                ajax: "{{ route('permission_categories.index') }}",
                 columns: [
                     {data: 'name', name: 'name'},
-                    {data: 'description', name: 'description'},
                     {data: 'updated_at', name: 'updated_at'},
                     {data: 'action', name: 'action', class:'text-right', orderable: false, searchable: false},
                 ]

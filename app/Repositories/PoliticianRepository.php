@@ -84,7 +84,7 @@ class PoliticianRepository
         $result = [];
         $result = $politician;
         $result['meta_datas'] = $politicianMeta;
-        
+
         return [
           'politician' => $result
         ];
@@ -110,7 +110,7 @@ class PoliticianRepository
 
         if(!empty($this->userDetails)) {
             $userVotes = PoliticanVote::select('vote')->onlyActive()->where(['politician_id' => $request->politicianId, 'user_id' => $this->userDetails->id])->get();
-        
+
             if(!empty($userVotes[0])){
                 $userVote = $userVotes[0]->vote;
             }
@@ -183,12 +183,12 @@ class PoliticianRepository
                 'politician_id' => $request->politicianId,
                 'vote' => $request->vote,
                 'status' => config('constants.status.active')
-            ];    
-            $vote = PoliticanVote::create($voteData);	
+            ];
+            $vote = PoliticanVote::create($voteData);
         } else {
            $vote = $is_voted->update(['vote' => $request->vote]);
         }
-       
+
         return [
             'vote' => $vote
         ];
@@ -222,9 +222,9 @@ class PoliticianRepository
                 $trustResponse = $againstData[0]->trust;
             }
         }
-        
+
         return [
-            'trust_percentage' => $percentage ?? 0, 
+            'trust_percentage' => $percentage ?? 0,
             'user_rank' => $userRankTitle ?? '',
             'rank_image' => $rankImage ?? '',
             'trust_response' => $trustResponse ?? NULL
@@ -240,7 +240,7 @@ class PoliticianRepository
     {
         if($request->category_id) {
             $politicianMeta = PoliticianMeta::where('key', 'p_cat')->where('value', $request->category_id)->pluck('politician_id')->toArray();
-            
+
             return Politician::select('id', 'name', 'title', 'name_alias', 'image')->whereIn('id', $politicianMeta)->onlyActive()->paginate(config('constants.recordsPerPage'));
         } else {
             return Politician::select('id', 'name', 'title', 'name_alias', 'image')->onlyActive()->paginate(config('constants.recordsPerPage'));

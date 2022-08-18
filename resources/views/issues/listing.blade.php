@@ -11,7 +11,6 @@
                     <th> Status </th>
                     <th>Position</th>
                     <th>Category</th>
-                    <th> Content </th>
                     <th> Last Updated </th>
                     <th class="text-right"> Action </th>
                 </tr>
@@ -47,7 +46,6 @@
                         },
                         {data: 'politician.name', name: 'politician.name'},
                         {data: 'issue_category.title', name: 'issue_category.title'},
-                        {data: 'content', name: 'content'},
                         {data: 'updated_at', name: 'updated_at'},
                         {data: 'action', name: 'action', orderable: false, searchable: false},
                     ]

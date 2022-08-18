@@ -8,9 +8,11 @@ use App\Http\Controllers\PageController;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\CourseCategoryController;
+// use App\Http\Controllers\CourseCategoryController;
 use App\Http\Controllers\IssueCategoryController;
 use App\Http\Controllers\IssueController;
+use App\Http\Controllers\PermissionCategoryController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RoleController;
 use App\Models\CourseCategory;
@@ -88,6 +90,22 @@ Route::middleware('auth')->group(function () {
     Route::post('post-issue-category', [IssueCategoryController::class, 'postIssueCategory'])->name('post.issue_category');
     Route::post('check-issue-category-name', [IssueCategoryController::class, 'checkName'])->name('check.issue_category.name');
 
+
+    // Route for Permissions Category
+    Route::get('permission-categories', [PermissionCategoryController::class, 'index'])->name('permission_categories.index');
+    Route::get('get-permission-category/{id}', [PermissionCategoryController::class, 'getPermissionCategory'])->name('get.permission_category');
+    Route::post('post-permission-category', [PermissionCategoryController::class, 'postPermissionCategory'])->name('post.permission_category');
+    Route::post('check-permission-category-name', [PermissionCategoryController::class, 'checkName'])->name('check.permission_category.name');
+
+
+    // Route For Permissions
+    Route::get('permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::get('get-permission/{id}', [PermissionController::class, 'getPermission'])->name('get.permission');
+    Route::post('post-permission', [PermissionController::class, 'postPermission'])->name('post.permission');
+    Route::post('check-permission-name', [PermissionController::class, 'checkName'])->name('check.permission.name');
+    Route::delete('permission/{id}', [PermissionController::class, 'delete'])->name('permission.delete');
+
+
     // Route For Issue
     Route::get('issues', [IssueController::class, 'index'])->name('issues.index');
     Route::get('get-issue/{id}', [IssueController::class, 'getIssue'])->name('get.issue');
@@ -98,9 +116,9 @@ Route::middleware('auth')->group(function () {
 
 
     //Route for Course category
-    Route::get('course-categories', [CourseCategoryController::class, 'index'])->name('course_categories.index');
-    Route::get('get-course-category/{id}', [CourseCategoryController::class, 'getCategory'])->name('get.course_category');
-    Route::post('post-course-category', [CourseCategoryController::class, 'postCategory'])->name('post.course_category');
+    // Route::get('course-categories', [CourseCategoryController::class, 'index'])->name('course_categories.index');
+    // Route::get('get-course-category/{id}', [CourseCategoryController::class, 'getCategory'])->name('get.course_category');
+    // Route::post('post-course-category', [CourseCategoryController::class, 'postCategory'])->name('post.course_category');
     // Route::post('check-category-name', [CourseCategoryController::class, 'checkName'])->name('check.category.name');
 
     //Route for page

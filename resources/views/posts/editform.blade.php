@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="form-group col-6">
                     <label for="content">Content</label>
-                    <textarea class="form-control" id="content" name='content' placeholder="Enter Content">{{ (!empty($data)) ? $data->content : '' }}</textarea>
+                    <textarea class="ckeditor" id="content" name='content' placeholder="Enter Content">{{ (!empty($data)) ? $data->content : '' }}</textarea>
 
                 </div>
             </div>
@@ -48,9 +48,9 @@
         </form>
     </div>
     @push('scripts')
-
+        <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
         <script>
-
+            $('.ckeditor').ckeditor();
         </script>
     @endpush
 </x-app-layout>

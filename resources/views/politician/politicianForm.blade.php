@@ -6,8 +6,8 @@
         <form class="needs-validation-1 has-quill-field" id="validPoliticianForm" method="post" action="{{route('post.politician')}}" enctype="multipart/form-data" novalidate>
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
-            @if(!$data) 
-                <input type="hidden" name="created_by" value="{{ auth()->user()->id }}"> 
+            @if(!$data)
+                <input type="hidden" name="created_by" value="{{ auth()->user()->id }}">
             @endif
             <input type="hidden" name="updated_by" value="{{ auth()->user()->id }}">
             <div class="form-group">
@@ -56,7 +56,7 @@
             </div>
             <div class="form-group quill-field-block">
                 <label for="inputDescription">Description</label>
-                <textarea class="form-control" id="inputDescription" name='politician_description' placeholder="Enter description">{{ (!empty($data)) ? $data->politician_description : '' }}</textarea>
+                <textarea class="ckeditor" id="inputDescription" name='politician_description' placeholder="Enter description">{{ (!empty($data)) ? $data->politician_description : '' }}</textarea>
             </div>
             <div class="row">
                 <div class="form-group col-4">
@@ -84,7 +84,7 @@
                     <!-- Repeater Items -->
 
                     <!-- Repeater Content -->
-                    
+
                     @if(!empty($metaData) && isset($metaData['p_pos']))
                         @php
                          $pPos = array_values(json_decode($metaData['p_pos'], true));
@@ -95,7 +95,7 @@
                     @else
                         @include('politician.position-div')
                     @endif
-                    
+
                 </div>
             </div>
             <input type="submit" name='Save' class="btn btn-primary" value="save">
@@ -127,6 +127,11 @@
                     }
                 });
             });
+        </script>
+
+        <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
+        <script>
+            $('.ckeditor').ckeditor();
         </script>
     @endpush
 </x-app-layout>

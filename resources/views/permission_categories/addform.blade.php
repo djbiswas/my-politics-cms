@@ -2,31 +2,18 @@
     <?php
     $edit_data = $sub_action = $sub_btn_text = "";
     ?>
-    <h4>{{$data?'Edit' : 'Add'}} new category</h4>
+    <h4>{{$data?'Edit' : 'Add'}} new permission category</h4>
 
 
-    {{-- <form class="needs-validation-1" id="validRankForm" method="post" action="{{route('post.issue_category')}}" enctype="multipart/form-data" novalidate> --}}
-
-        {!! Form::open(['route' => 'post.issue_category', 'class' =>'needs-validation-1', 'id' => 'validRankForm','enctype' =>'multipart/form-data', 'novalidate'])  !!}
-
+        {!! Form::open(['route' => 'post.permission_category', 'class' =>'needs-validation-1', 'id' => 'validRankForm','enctype' =>'multipart/form-data', 'novalidate'])  !!}
 
         <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
 
         <div class="form-group">
-            {!! Form::label('title', 'Title',) !!}
-            {!! Form::text('title', $data? $data->title : null, ['class'=>'form-control', 'placeholder'=>'Title']) !!}
+            {!! Form::label('name', 'Name',) !!}
+            {!! Form::text('name', $data? $data->name : null, ['class'=>'form-control', 'placeholder'=>'Name']) !!}
         </div>
 
-        <div class="form-group ">
-            {!! Form::label('status', 'Status',) !!}
-            {!! Form::select('status', $status_datas, $data? $data->status : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
-
-        </div>
-
-        <div class="form-group-two">
-            <label for="formFile" class="form-label">Image</label>
-            <x-display-image :data="$data?$data : ''" :fileName="'image'"></x-display-image>
-        </div>
         <input type="submit" name='Save' class="btn btn-primary" />
     </form>
 </div>
@@ -44,14 +31,14 @@
                 },
                 errorClass:"error error_preview",
                 rules: {
-                    title:{
+                    name:{
                         required:true,
                         remote: {
-                            url: "{{ route('check.issue_category.name') }}",
+                            url: "{{ route('check.permission_category.name') }}",
                             type: "post",
                             beforeSend: function (xhr) { // Handle csrf errors
                                 xhr.setRequestHeader('X-CSRF-Token', "{{ csrf_token() }}");
-                                xhr.setRequestHeader('issueCategory-id', "{{ (!empty($data)) ? $data->id : '' }}");
+                                xhr.setRequestHeader('permissionCategory-id', "{{ (!empty($data)) ? $data->id : '' }}");
                             },
                         }
                     },
