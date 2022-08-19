@@ -6,16 +6,11 @@
         </div>
     </x-slot>
     @if(!empty($politicians))
-
-                {{-- @php
-                    print_r($politicians);
-                @endphp --}}
-
         <ul class="politicians-list-ul">
             @foreach($politicians as $item)
 
                 <li>
-                    <a target="_blank" href="https://devuforiawork239.site/#/politician/{{$item['id']}}">
+                    <a target="_blank" href="/#/politician/{{$item['id']}}">
                         {{-- <img src="{{asset($item['image'])}}" /> --}}
                         <img src="{{$item['image']}}" />
                     </a>

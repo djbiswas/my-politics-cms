@@ -4,7 +4,9 @@
         <thead class="text-primary">
             <tr>
                 <th> Name </th>
-                <th> Description </th>
+                <th> Permission Category </th>
+                <th> Slug </th>
+                <th> Route Name </th>
                 <th> Last Updated </th>
                 <th class="text-right"> Action </th>
             </tr>
@@ -20,13 +22,15 @@
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('categories.index') }}",
+                ajax: "{{ route('permissions.index') }}",
                 columns: [
-                    {data: 'name', name: 'name'},
-                    {data: 'description', name: 'description'},
-                    {data: 'updated_at', name: 'updated_at'},
-                    {data: 'action', name: 'action', class:'text-right', orderable: false, searchable: false},
-                ]
+                        {data: 'name', name: 'name'},
+                        {data: 'permission_category_id', name: 'permission_category_id'},
+                        {data: 'slug', name: 'slug'},
+                        {data: 'route.name', name: 'route.name'},
+                        {data: 'updated_at', name: 'updated_at'},
+                        {data: 'action', name: 'action', orderable: false, searchable: false},
+                    ]
             });
             // $('.ckeditor').ckeditor();
         });

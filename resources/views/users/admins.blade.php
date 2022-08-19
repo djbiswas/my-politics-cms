@@ -10,7 +10,7 @@
                     <th>Last Name </th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Rank</th>
+                    {{-- <th>Rank</th> --}}
                     <th>Role</th>
                     <th class="text-right"> Action </th>
                 </tr>
@@ -33,7 +33,7 @@
                         {data: 'last_name', name: 'last_name'},
                         {data: 'email', name: 'email'},
                         {data: 'phone', name: 'phone'},
-                        {data: 'ranks.title', name: 'ranks.title'},
+                        // {data: 'ranks.title', name: 'ranks.title'},
                         {data: 'role.role', name: 'role.role'},
                         {data: 'action', name: 'action', orderable: false, searchable: false},
                     ]

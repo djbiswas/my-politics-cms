@@ -1,5 +1,5 @@
 <?php
-$current_page = '';
+    $current_page = '';
 ?>
 <div class="sidebar" data-color="white" data-active-color="danger">
     <div class="logo">
@@ -39,7 +39,33 @@ $current_page = '';
                 </div>
             </x-nav-li>
 
-            <x-nav-li  :active="request()->routeIs('users.index', 'ranks.index', 'get.rank', 'add.user', 'get.user')" class="v-dropdown">
+            <x-nav-li  :active="request()->routeIs('permissions.index', 'ranks.index', 'get.rank', 'roles.index','get.role','permission_categories.index' )" class="v-dropdown">
+                <x-nav-link :href="route('users.index')">
+                    <i class="nc-icon nc-single-02"></i>
+                    <p>Roles</p>
+                    <i class="nc-icon nc-minimal-down dropdown-btn"></i>
+                </x-nav-link>
+                <div class="dropdown-container">
+                    <x-nav-link :href="route('roles.index')" :active="request()->routeIs('roles.index')" >
+                        All Roles
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('permission_categories.index')" :active="request()->routeIs('permission_categories.index')" >
+                        Permission Categories
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('permissions.index')" :active="request()->routeIs('permissions.index')" >
+                        User Permissions
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('ranks.index')" :active="request()->routeIs('ranks.index', 'get.rank')" >
+                        All Ranks
+                    </x-nav-link>
+
+                </div>
+            </x-nav-li>
+
+            <x-nav-li  :active="request()->routeIs('users.index', 'add.user', 'get.user')" class="v-dropdown">
                 <x-nav-link :href="route('users.index')">
                     <i class="nc-icon nc-single-02"></i>
                     <p>Users</p>
@@ -52,14 +78,10 @@ $current_page = '';
                     <x-nav-link :href="route('add.user')" :active="request()->routeIs('add.user')" >
                         Add New
                     </x-nav-link>
-                    <x-nav-link :href="route('ranks.index')" :active="request()->routeIs('ranks.index', 'get.rank')" >
-                        Ranks
-                    </x-nav-link>
-
                 </div>
             </x-nav-li>
 
-            <x-nav-li  :active="request()->routeIs('admin.users', 'add.admin', 'get.admin','roles.index','add.user', 'get.role','get.user')" class="v-dropdown">
+            <x-nav-li  :active="request()->routeIs('admin.users', 'add.admin', 'get.admin')" class="v-dropdown">
                 <x-nav-link :href="route('users.index')">
                     <i class="nc-icon nc-single-02"></i>
                     <p>Admin Users</p>
@@ -71,10 +93,6 @@ $current_page = '';
                     </x-nav-link>
                     <x-nav-link :href="route('add.admin')" :active="request()->routeIs('add.admin')" >
                         Add Admin
-                    </x-nav-link>
-
-                    <x-nav-link :href="route('roles.index')" :active="request()->routeIs('roles.index', 'get.role')" >
-                        Roles
                     </x-nav-link>
                 </div>
             </x-nav-li>
@@ -125,6 +143,21 @@ $current_page = '';
 
 
             </x-nav-li>
+
+            <x-nav-li  :active="request()->routeIs('posts.index','get.post')" class="v-dropdown">
+                <x-nav-link :href="route('posts.index')">
+                <i class="nc-icon nc-single-copy-04"></i>
+                    <p>Posts</p>
+                    <i class="nc-icon nc-minimal-down dropdown-btn"></i>
+                </x-nav-link>
+                <div class="dropdown-container">
+                    <a href="/posts" class="<?php echo ($current_page == 'posts') ? 'active' : ''; ?>">All Posts</a>
+
+                </div>
+
+
+            </x-nav-li>
+
             <x-nav-li  class="v-dropdown">
                 <x-nav-link :href="route('dashboard')">
                     <i class="nc-icon nc-settings-gear-65"></i>
