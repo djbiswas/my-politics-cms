@@ -174,3 +174,10 @@
 .show{
     display: block;
 }
+
+.checkfix{
+    opacity: 100% !important;
+    visibility: visible !important;
+    margin-top: .3rem;
+    margin-left: 0;
+}

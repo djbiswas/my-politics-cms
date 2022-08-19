@@ -15,6 +15,7 @@ use App\Http\Controllers\PermissionCategoryController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RolePermissionController;
 use App\Models\CourseCategory;
 
 /*
@@ -105,6 +106,12 @@ Route::middleware('auth')->group(function () {
     Route::post('check-permission-name', [PermissionController::class, 'checkName'])->name('check.permission.name');
     Route::delete('permission/{id}', [PermissionController::class, 'delete'])->name('permission.delete');
 
+    // Route For Set Role Permission
+    Route::get('role-permissions',[RolePermissionController::class, 'index'])->name('role.permissions.index');
+    Route::get('ger-role-permission/{id}', [RolePermissionController::class, 'getRolePermission'])->name('get.role.permission');
+    Route::post('post-role-permission', [RolePermissionController::class, 'postRolePermission'])->name('post.role.permission');
+    Route::post('check-role-permission-name', [RolePermissionController::class, 'checkRolePermission'])->name('check.role.permission');
+    Route::delete('role-permisson/{id}', [RolePermissionController::class, 'delete'])->name('role.permission.delete');
 
     // Route For Issue
     Route::get('issues', [IssueController::class, 'index'])->name('issues.index');
@@ -112,8 +119,6 @@ Route::middleware('auth')->group(function () {
     Route::post('post-issue', [IssueController::class, 'postIssue'])->name('post.issue');
     Route::post('check-issue-name', [IssueController::class, 'checkName'])->name('check.issue.name');
     Route::delete('issues/{id}', [IssueController::class, 'delete'])->name('issues.delete');
-
-
 
     //Route for Course category
     // Route::get('course-categories', [CourseCategoryController::class, 'index'])->name('course_categories.index');

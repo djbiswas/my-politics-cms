@@ -16,4 +16,9 @@ class PermissionCategory extends Model
         'id', 'name'
     ];
 
+    public function permission()
+    {
+        return $this->hasMany(Permission::class);
+    }
+
 }

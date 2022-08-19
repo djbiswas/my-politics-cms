@@ -1,38 +1,38 @@
 <x-app-layout>
     <x-slot name="header">
-        <h4>{{$data?'Edit' : 'Add'}}  Page</h4>
+        <h4>{{$data?'Edit' : 'Add'}}  User Roles</h4>
     </x-slot>
     <div class="generic-form" style="text-align: left;">
         <form class="needs-validation-1" id="validPageForm" method="post" action="{{route('post.page')}}" enctype="multipart/form-data" novalidate>
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
+            {{-- <input type="hidden" name="id" value="{{$data?$data->id : ''}}"> --}}
+            <input type="hidden" name="role_id" value="{{$data?$role_id : ''}}">
             <div class="row a-i-center">
-                <div class="form-group col-6">
-                    <label for="page_name">Page Name</label>
-                    <input type="text" required class="form-control" name='page_name' id="page_name" placeholder="Page Name" value="{{$data?$data->page_name : ''}}">
-                </div>
-                <div class="form-group col-6">
-                    <label for="page_url">Page URL</label>
-                    <input type="text" required class="form-control" name='page_url' id="page_url" placeholder="Page URL" value="{{$data?$data->page_url : ''}}">
-                </div>
-                <div class=" col-12">
-                    <div class="form-group">
-                        <label for="inputtexteditor">Page Content</label>
-                        <textarea required class="ckeditor" id='page_content' name='page_content' >{{$data?$data->page_content : ''}}</textarea><br>
+                <div class="col-6">
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label for="page_name">Role Name</label>
+                            <input type="text" required class="form-control" name='role_name' id="page_name" placeholder="Page Name" value="{{$data?$role_name : ''}}" readonly>
+                        </div>
+                    </div>
+
+                    @php $checkbox_auto_id = 1; @endphp
+                    <div class="row">
+                        <div class="col-12">
+                            @foreach ($data as $permission)
+                                <div class="form-group col-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="permission_id[]" class="form-check-input checkfix" id="permission_id_{{$checkbox_auto_id}}" value="{{$permission->id}}">
+                                        <label class="form-check-label" for="permission_id_{{$checkbox_auto_id}}">{{$permission->permission->name}}</label>
+                                    </div>
+                                </div>
+                                @php $checkbox_auto_id = $checkbox_auto_id + 1; @endphp
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class=" col-6">
-                    <div class="display_status">Display Status</div>
-                    <div class="form-group">
-                        <input type="radio" name='status' id="radioButton1" value="1" {{(empty($data) || (!empty($data) && $data->status == 1)) ? 'checked' : ''}} >
-                        <label for="radioButton1">Active</label>
-                        <input type="radio" name='status' id="radioButton2" value="0" {{((!empty($data) && $data->status == 0)) ? 'checked' : ''}} >
-                        <label for="radioButton2">Inactive</label>
-                    </div>
-                </div>
-            </div>
+
             <input type="submit" name='Save' class="btn btn-primary" />
         </form>
     </div>
@@ -59,7 +59,7 @@
                             type: "post",
                             beforeSend: function (xhr) { // Handle csrf errors
                                 xhr.setRequestHeader('X-CSRF-Token', "{{ csrf_token() }}");
-                                xhr.setRequestHeader('page-id', "{{ (!empty($data)) ? $data->id : '' }}");
+                                xhr.setRequestHeader('page-id', "{{ (!empty($data)) ? $role_id : '' }}");
                             },
                         }
                     },

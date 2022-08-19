@@ -4,7 +4,7 @@
     ?>
     <h4>{{$data?'Edit' : 'Add'}} permission</h4>
 
-        {!! Form::open(['route' => 'post.issue_category', 'class' =>'needs-validation-1', 'id' => 'validRankForm','enctype' =>'multipart/form-data', 'novalidate'])  !!}
+        {!! Form::open(['route' => 'post.permission', 'class' =>'needs-validation-1', 'id' => 'validRankForm','enctype' =>'multipart/form-data', 'novalidate'])  !!}
 
 
         <input type="hidden" name="id" value="{{$data?$data->id : ''}}">

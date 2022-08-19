@@ -39,7 +39,7 @@
                 </div>
             </x-nav-li>
 
-            <x-nav-li  :active="request()->routeIs('permissions.index', 'ranks.index', 'get.rank', 'roles.index','get.role','permission_categories.index' )" class="v-dropdown">
+            <x-nav-li  :active="request()->routeIs('permissions.index', 'ranks.index', 'get.rank', 'roles.index','get.role','permission_categories.index', 'role.permissions.index','get.role.permission' )" class="v-dropdown">
                 <x-nav-link :href="route('users.index')">
                     <i class="nc-icon nc-single-02"></i>
                     <p>Roles</p>
@@ -56,6 +56,9 @@
 
                     <x-nav-link :href="route('permissions.index')" :active="request()->routeIs('permissions.index')" >
                         User Permissions
+                    </x-nav-link>
+                    <x-nav-link :href="route('role.permissions.index')" :active="request()->routeIs('role.permissions.index')" >
+                        Role Permissions
                     </x-nav-link>
 
                     <x-nav-link :href="route('ranks.index')" :active="request()->routeIs('ranks.index', 'get.rank')" >
