@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h4>{{$data?'Edit' : 'Add'}}  User</h4>
+        <h4>Edit User</h4>
     </x-slot>
     <div class="generic-form" style="text-align: left;">
-        <form class="needs-validation-1" action="{{route('post.user')}}" method="post" id="validUserForm" name="form_01" enctype="multipart/form-data" novalidate>
+        <form class="needs-validation-1" action="{{route('post.admin')}}" method="post" id="validUserForm" name="form_01" enctype="multipart/form-data" novalidate>
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
             <div class="row a-i-center">
@@ -34,8 +34,8 @@
                     <input type="text" required class="form-control" name='last_name' id="lastName" placeholder="Last Name" value="{{ (!empty($data)) ? $data->last_name : '' }}">
                 </div>
             </div>
-            {{-- <div class="row {{ (!empty($data)) ? 'hide' : '' }} "> --}}
             <div class="row ">
+            {{-- <div class="row {{ (!empty($data)) ? 'hide' : '' }} "> --}}
                 <div class="form-group col-3">
                     <label for="password">Password </label>
                     <input type="password" class="form-control" name='password' id="password" placeholder="Password" value="" >
@@ -59,33 +59,12 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-3">
-                    <label for="zipcode">Rank</label>
-                    <select required class="form-control" name='rank_id' id="selectRank">
-                        <option value="">--Select--</option>
-                        @if(!empty($ranks))
-                            @foreach ($ranks as $item)
-                                <?php
-                                    $rank_sel = (!empty($data) && $data->rank_id == $item['id']) ? 'selected' : '';
-                                ?>
-                                <option {{$rank_sel}} value="{{$item['id']}}">{{$item['title']}}</option>;
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-
-                <div class="form-group col-3">
+                <div class="form-group col-6">
                     {!! Form::label('role_id', 'Select User Role',) !!}
                     {!! Form::select('role_id', $roles, $data? $data->role_id : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
                 </div>
             </div>
 
-            <div class="row">
-                <div class="form-group col-6">
-                    <label for="lockRank">Lock Rank</label>
-                    <input type="checkbox" name='lock_rank' id="lockRank" value="1" {{ (!empty($data->lock_rank) && $data->lock_rank == 1) ? 'checked' : '' }}>
-                </div>
-            </div>
             <div class="row">
                 <div class="form-group col-6">
                         <div class="display_status">Status</div>
@@ -97,6 +76,7 @@
                         </div>
                 </div>
             </div>
+
 
             <?php
             if (isset($_GET['id'])) {
@@ -132,7 +112,7 @@
                         },
                         password:{
                             required:true,
-                            pwcheck : true,
+\                           pwcheck : true,
                             minlength:10
                         },
                         re_password:{
@@ -163,7 +143,6 @@
                                 },
                             }
                         }
-
                     },
                     messages: {
                         password: {

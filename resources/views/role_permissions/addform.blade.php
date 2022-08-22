@@ -1,6 +1,6 @@
 <div class="generic-form">
     <?php
-    $edit_data = $sub_action = $sub_btn_text = "";
+        $edit_data = $sub_action = $sub_btn_text = "";
     ?>
     <h4>{{$data?'Edit' : 'Add'}} Permission assign for roles</h4>
 
@@ -21,6 +21,7 @@
         </div>
 
         <span>Select Permissions For the Selected Role</span>
+
         <hr>
 
         <div class="row">

@@ -53,11 +53,14 @@ class RolePermissionController extends Controller
     {
         //$permissions = Permission::pluck('name','id');
         $permissions = PermissionCategory::with('permission')->get();
-        //$rolePermissions = RolePermission::with('permission')->with('role')->get();
+        // $rolePermissions = RolePermission::with('permission')->with('role')->get();
+        // return $data = Role::get();
+
         $roles = Role::pluck('role', 'id');
         try {
             if ($request->ajax()) {
-                 $data = RolePermission::with('permission')->with('role')->get();
+                // $data = RolePermission::with('permission')->with('role')->get();
+                $data = Role::get();
                 return Datatables::of($data)
                         ->addIndexColumn()
                         // ->editColumn('content',function($row){

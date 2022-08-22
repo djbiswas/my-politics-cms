@@ -34,10 +34,11 @@
                     <input type="text" required class="form-control" name='last_name' id="lastName" placeholder="Last Name" value="{{ (!empty($data)) ? $data->last_name : '' }}">
                 </div>
             </div>
-            <div class="row {{ (!empty($data)) ? 'hide' : '' }} ">
+            <div class="row ">
+            {{-- <div class="row {{ (!empty($data)) ? 'hide' : '' }} "> --}}
                 <div class="form-group col-3">
                     <label for="password">Password </label>
-                    <input type="password" class="form-control" name='password' id="password" placeholder="Password" value="" >
+                    <input type="text" class="form-control" name='password' id="password" placeholder="Password" value="" >
                 </div>
 
                 <div class="form-group col-3">

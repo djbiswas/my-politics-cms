@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Repositories\RankRepository;
 use App\Http\Controllers\csrf;
 use App\Models\Role;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -35,6 +36,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request){
+
+        // return User::get();
         try {
             $ranks = $this->rankRepository->fetchAllData([])->toArray();
             if ($request->ajax()) {
@@ -122,32 +125,29 @@ class UserController extends Controller
      *
      * @param $id
      */
+
     public function getUser($id=null){
         $ranks = $this->rankRepository->fetchAllData([])->toArray();
-        $roles = Role::where('id', '>', '2')->pluck('role','id');
-
+        // $roles = Role::where('id', '>', '2')->pluck('role','id');
+        $roles = Role::pluck('role','id');
         if($id){
             $data=User::find($id);
             $metaData = $data->getMeta()->toArray();
             return view('users.userform',['data'=>$data, 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>$metaData]);
         }
-
         return view('users.userform',['data'=>[], 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>[]]);
-
     }
 
     public function getAdmin($id=null){
         $ranks = $this->rankRepository->fetchAllData([])->toArray();
         $roles = Role::where('id', '<', '3')->pluck('role','id');
-
         if($id){
-            $data=User::find($id);
+            $data = User::find($id);
+            // return $data;
             $metaData = $data->getMeta()->toArray();
-            return view('users.adminform',['data'=>$data, 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>$metaData]);
+            return view('users.adminform',['data'=>$data, 'ranks'=>$ranks, 'roles'=>$roles, 'metaData'=>$metaData]);
         }
-
-        return view('users.adminform',['data'=>[], 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>[]]);
-
+        return view('users.adminform',['data'=>[], 'ranks'=>$ranks, 'roles'=>$roles, 'metaData'=>[]]);
     }
 
     /**
@@ -166,24 +166,40 @@ class UserController extends Controller
         }catch (\Exception $e){
             \Log::info($e->getMessage());
             \Session::flash('error',$e->getMessage());
-
             return redirect()->route('users.index');
         }
     }
 
     public function postAdmin(Request $request){
-        $data=$request->all();
+         $data=$request->all();
+
+        // $validateData = $request->validate([
+        //     'id' => 'sometimes',
+        //     'email' => 'required',
+        //     'phone' => 'required',
+        //     'meta' => 'required',
+        //     'first_name' => 'required',
+        //     'last_name' => 'required',
+        //     'password' => 'sometimes',
+        //     're_password' => 'sometimes',
+        //     'role_id' => 'required',
+        //     'status' => 'required',
+        // ]);
+
+        //   if($request->filled('password')){
+        //     return  $request->password;
+        //   }
+
         try{
             $condition = ['id' => $data['id']];
             $metaData = ($data['meta'])? $data['meta'] : [];
             // $data['role_id'] = config('constants.role.user');
-            $this->userRepository->saveData($condition, $data, $metaData);
+             $this->userRepository->saveData($condition, $data, $metaData);
             \Session::flash('success',trans('message.success'));
             return redirect()->route('admin.users');
         }catch (\Exception $e){
             \Log::info($e->getMessage());
             \Session::flash('error',$e->getMessage());
-
             return redirect()->route('admin.users');
         }
     }
