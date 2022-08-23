@@ -30,7 +30,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'rank_id', 'role_id', 'login', 'email', 'password', 'first_name', 'last_name', 'display_name', 'phone',
-        'image', 'lock_rank', 'display_status', 'reg_status', 'status', 'registered_date'
+        'image', 'lock_rank', 'display_status', 'reg_status', 'status', 'registered_date', 'completed_step', 'otp_code'
     ];
 
     /**
@@ -102,7 +102,7 @@ class User extends Authenticatable implements JWTSubject
         $imagePath = config('constants.image.user') . DIRECTORY_SEPARATOR . $this->attributes['image'];
         $disk = Storage::disk(config('constants.image.driver'));
         if (!empty($this->attributes['image']) && $disk->exists($imagePath)) {
-            $fetchImage = config('app.url').Storage::url($imagePath);
+            $fetchImage = config('app.url') . Storage::url($imagePath);
         } else {
             $fetchImage = config('constants.image.defaultImage');
         }

@@ -43,8 +43,8 @@ class IssueCategory extends Model
     public static function boot()
     {
         parent::boot();
-            // registering a callback to be executed upon the creation of an activity AR
-            static::creating(function ($issueCategory) {
+        // registering a callback to be executed upon the creation of an activity AR
+        static::creating(function ($issueCategory) {
             // produce a slug based on the activity title
             $slug = Str::slug($issueCategory->title);
             // check to see if any other slugs exist that are the same & count them
