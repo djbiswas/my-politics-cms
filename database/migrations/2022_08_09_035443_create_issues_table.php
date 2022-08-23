@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('politician_id')->unsigned()->nullable();
             $table->unsignedBigInteger('issue_category_id');
-            $table->string('name')->nullable();
+            $table->string('title')->nullable();
             $table->longText('content')->nullable();
             $table->longText('images')->nullable();
             $table->tinyInteger('status')->default('0')->comment('0 => InActive, 1 => Active')->nullable();

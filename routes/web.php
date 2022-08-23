@@ -14,6 +14,7 @@ use App\Http\Controllers\IssueController;
 use App\Http\Controllers\PermissionCategoryController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostFlagController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RolePermissionController;
 use App\Models\CourseCategory;
@@ -83,6 +84,12 @@ Route::middleware('auth')->group(function () {
     Route::get('get-post/{id}', [PostController::class, 'getPost'])->name('get.post');
     Route::post('post-post', [PostController::class, 'postPost'])->name('post.post');
     Route::delete('posts/{id}', [PostController::class, 'delete'])->name('post.delete');
+
+    // Route for post flag
+    Route::get('flags', [PostFlagController::class, 'index'])->name('flag.index');
+    Route::get('get-flag/{id}', [PostFlagController::class, 'getFlag'])->name('get.flag');
+    Route::post('post-flag', [PostFlagController::class, 'postFlag'])->name('post.flag');
+    Route::delete('flags/{id}', [PostFlagController::class, 'delete'])->name('flag.delete');
 
 
     //Route for Issue Category

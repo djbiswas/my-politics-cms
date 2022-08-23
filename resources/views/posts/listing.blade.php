@@ -8,7 +8,7 @@
                 <tr>
                     <th>Position</th>
                     <th>User</th>
-                    <th>Status</th>
+                    <th>Flagged</th>
                     <th>Last Updated </th>
                     <th class="text-right"> Action </th>
                 </tr>
