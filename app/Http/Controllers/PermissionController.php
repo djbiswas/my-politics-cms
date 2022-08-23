@@ -30,12 +30,10 @@ class PermissionController extends Controller
 
     public function index(Request $request)
     {
-        $permission =  Permission::with('permission_category')->get();
-
         $permission_categoris = PermissionCategory::pluck('name','id');;
         try {
             if ($request->ajax()) {
-                $data = Permission::with('permission_category')->get();
+                 $data = Permission::with('permission_category')->get();
                 return Datatables::of($data)
                         ->addIndexColumn()
                         // ->editColumn('content',function($row){
@@ -49,7 +47,7 @@ class PermissionController extends Controller
                         })
                         ->addColumn('action', function($row){
                             $btn = '<a href="'.route('get.permission',$row->id).'">Edit </a> |';
-                            $btn .= '<form method="POST" action="'.route('issues.delete', $row->id).'" style="float:right;">
+                            $btn .= '<form method="POST" action="'.route('permission.delete', $row->id).'" style="float:right;">
                                         <input type="hidden" name="_token" value="'.csrf_token().'">
                                         <input name="_method" type="hidden" value="DELETE">
                                         <a href="javascript:void(0)" class="btn-delete" onclick="return DeleteFunction($(this))"> Delete</a>
@@ -74,110 +72,31 @@ class PermissionController extends Controller
      *
      * @param $id
      */
-    public function getIssue($id=null){
+    public function getPermission($id=null){
 
-        $status_datas = ['0'=>'InActive', '1'=>'Active'];
-
-        // $politicians = $this->politicianRepository->fetchAllData([])->toArray();
-
-        $politicians = Politician::pluck('name','id');
-        $issueCategories = IssueCategory::pluck('title','id');
+        $permission_categoris = PermissionCategory::pluck('name','id');
         if($id){
-              $data=Issue::find($id);
-            //$metaData = $data->getMeta()->toArray();
-            return view('issues.issueFrom',['data'=>$data, 'politicians'=>$politicians, 'issueCategories'=>$issueCategories,'status_datas'=>$status_datas]);
+
+            $data=Permission::find($id);
+            return view('permissions.main',['data'=>$data, 'permission_categoris'=>$permission_categoris,]);
         }
-        return view('issues.issueFrom',['data'=>[]]);
+        return view('permissions.main',['data'=>[]]);
     }
 
 
-    public function postIssue(Request $request){
+    public function postPermission(Request $request){
 
-         $data=$request->all();
+        $data=$request->all();
         try{
-            // if ($request->hasFile('image')) {
-            //     $data['image'] = $this->commonService->storeImage($request->file('image'), config('constants.image.politician'));
-            // }
-            // if ($request->hasFile('affiliation_icon')) {
-            //     $data['affiliation_icon'] = $this->commonService->storeImage($request->file('affiliation_icon'), config('constants.image.politician'), 'affiliation_icon');
-            // }
             $condition = ['id' => $data['id']];
-            $this->issueRepository->saveData($condition, $data);
-
+            $this->permissionRepository->saveData($condition, $data);
             \Session::flash('success',trans('message.success'));
-            return redirect()->route('issues.index');
+            return redirect()->route('permissions.index');
         }catch (\Exception $e){
             \Log::info($e->getMessage());
             \Session::flash('error',$e->getMessage());
-            return redirect()->route('issues.index');
+            return redirect()->route('permissions.index');
         }
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreIssueRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreIssueRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Issue  $issue
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Issue $issue)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Issue  $issue
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Issue $issue)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateIssueRequest  $request
-     * @param  \App\Models\Issue  $issue
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateIssueRequest $request, Issue $issue)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Issue  $issue
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Issue $issue)
-    {
-        //
     }
 
 
@@ -187,8 +106,8 @@ class PermissionController extends Controller
      * @param $id
      */
     public function delete($id=null){
-        $data = Issue::find($id)->delete();
+        $data = Permission::find($id)->delete();
         \Session::flash('success',trans('message.success'));
-        return redirect()->route('issues.index');
+        return redirect()->route('permissions.index');
     }
 }

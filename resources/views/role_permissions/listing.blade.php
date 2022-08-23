@@ -3,11 +3,9 @@
     <table class="table table-striped data-table" >
         <thead class="text-primary">
             <tr>
-                <th> Name </th>
-                <th> Permission Category </th>
-                <th> Slug </th>
-                <th> Route Name </th>
-                <th> Last Updated </th>
+                <th> Role </th>
+                {{-- <th> Permission </th> --}}
+                {{-- <th> Last Updated </th> --}}
                 <th class="text-right"> Action </th>
             </tr>
         </thead>
@@ -15,6 +13,7 @@
         </tbody>
     </table>
 </div>
+
 @push('scripts')
     <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
     <script type="text/javascript">
@@ -22,13 +21,11 @@
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('permissions.index') }}",
+                ajax: "{{ route('role.permissions.index') }}",
                 columns: [
-                        {data: 'name', name: 'name'},
-                        {data: 'permission_category.name', name: 'permission_category.name'},
-                        {data: 'slug', name: 'slug'},
-                        {data: 'route_name', name: 'route_name'},
-                        {data: 'updated_at', name: 'updated_at'},
+                        {data: 'role', name: 'role'},
+                        // {data: 'permission.name', name: 'permission.name'},
+                        // {data: 'updated_at', name: 'updated_at'},
                         {data: 'action', name: 'action', orderable: false, searchable: false},
                     ]
             });

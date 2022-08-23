@@ -44,10 +44,9 @@ class IssueController extends Controller
     }
 
 
-
     public function index(Request $request)
     {
-        // return $issues =  Issue::with('politician')->with('user')->with('issue_category')->get();
+         $issues =  Issue::with('politician')->with('user')->with('issue_category')->get();
 
         try {
             if ($request->ajax()) {
@@ -130,74 +129,6 @@ class IssueController extends Controller
             return redirect()->route('issues.index');
         }
     }
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreIssueRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreIssueRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Issue  $issue
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Issue $issue)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Issue  $issue
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Issue $issue)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateIssueRequest  $request
-     * @param  \App\Models\Issue  $issue
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateIssueRequest $request, Issue $issue)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Issue  $issue
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Issue $issue)
-    {
-        //
-    }
-
 
     /**
      * Method to delete Politician Data through id

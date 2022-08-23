@@ -12,7 +12,7 @@ class Issue extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id', 'name', 'politician_id','issue_category_id', 'content', 'status', 'created_at', 'updated_by'
+        'id', 'title', 'politician_id','issue_category_id', 'content', 'status', 'created_at', 'updated_by'
     ];
 
     public function user()

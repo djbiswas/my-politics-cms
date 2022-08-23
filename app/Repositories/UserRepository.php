@@ -43,10 +43,10 @@ class UserRepository
         $user = [
             'id' => Auth::id()
         ];
-        
+
         $userMetaDetails = User::with(['ranks'])->withCount('posts')->where($user)->firstOrFail();
         $userMeta =  $userMetaDetails->getMeta()->toArray();
-        
+
         $userMetaDetails['meta_data'] = $userMeta;
 
         return [
@@ -102,7 +102,7 @@ class UserRepository
                 }
                 else{
                     return [
-                        'action' => 'sendOtp'   
+                        'action' => 'sendOtp'
                     ];
                 }
 
@@ -501,7 +501,7 @@ class UserRepository
 
     public function registerUser($request) {
 
-        if ($request->fieldType == 'phone') { 
+        if ($request->fieldType == 'phone') {
             $fields = [
                 'phone' => $request->fieldValue,
                 'password' => bcrypt($request->password),
@@ -534,14 +534,14 @@ class UserRepository
                 $user = [
                     'email' => $request->email
                 ];
-                
+
                 $userDetails = self::getUserDetails($user);
-                
+
                 if(!empty($userDetails)) {
                     return [
                         'action' => 'userExist',
                         'status' => 'error'
-                    ];     
+                    ];
                 }
 
                 $status = self::registerUserStepThree($request);
@@ -617,24 +617,25 @@ class UserRepository
         $updateUser = self::updateUserData($condition, $fields);
 
         $userDetails = self::fetchUserDetails($condition);
-        
+
         $metaRequest = $request->except('userId', 'validationCode', 'firstName', 'lastName', 'email', 'phone', 'profilePhoto', 'reg_status', 'registered_date', 'status', 'action', 'step', 'fieldType', 'fieldValue');
-        
+
         $userDetails->setMeta($metaRequest);
         $userDetails->save();
 
         return $userDetails;
 
     }
-    
+
     /**
      * For Create / Updating record into ranks table
      */
     public function saveData($condition = [], $fields, $metaData = [])
     {
-        if($fields['password']){
+        if($fields['password'] && $fields['password'] != null){
             $fields['password'] = \Hash::make($fields['password']);
         }
+
         $userObj = User::updateOrCreate($condition, $fields);
         if(!empty($metaData)){
             $userObj->setMeta($metaData);

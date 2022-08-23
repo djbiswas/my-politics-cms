@@ -39,8 +39,8 @@
                 </div>
             </x-nav-li>
 
-            <x-nav-li  :active="request()->routeIs('permissions.index', 'ranks.index', 'get.rank', 'roles.index','get.role','permission_categories.index' )" class="v-dropdown">
-                <x-nav-link :href="route('users.index')">
+            <x-nav-li  :active="request()->routeIs('permissions.index', 'ranks.index', 'get.rank', 'roles.index','get.role','permission_categories.index', 'role.permissions.index','get.role.permission' )" class="v-dropdown">
+                <x-nav-link :href="route('roles.index')">
                     <i class="nc-icon nc-single-02"></i>
                     <p>Roles</p>
                     <i class="nc-icon nc-minimal-down dropdown-btn"></i>
@@ -57,6 +57,9 @@
                     <x-nav-link :href="route('permissions.index')" :active="request()->routeIs('permissions.index')" >
                         User Permissions
                     </x-nav-link>
+                    <x-nav-link :href="route('role.permissions.index')" :active="request()->routeIs('role.permissions.index')" >
+                        Role Permissions
+                    </x-nav-link>
 
                     <x-nav-link :href="route('ranks.index')" :active="request()->routeIs('ranks.index', 'get.rank')" >
                         All Ranks
@@ -65,7 +68,7 @@
                 </div>
             </x-nav-li>
 
-            <x-nav-li  :active="request()->routeIs('users.index', 'add.user', 'get.user')" class="v-dropdown">
+            <x-nav-li  :active="request()->routeIs('users.index', 'add.user', 'get.user','admin.users', 'add.admin', 'get.admin')" class="v-dropdown">
                 <x-nav-link :href="route('users.index')">
                     <i class="nc-icon nc-single-02"></i>
                     <p>Users</p>
@@ -78,19 +81,13 @@
                     <x-nav-link :href="route('add.user')" :active="request()->routeIs('add.user')" >
                         Add New
                     </x-nav-link>
-                </div>
-            </x-nav-li>
 
-            <x-nav-li  :active="request()->routeIs('admin.users', 'add.admin', 'get.admin')" class="v-dropdown">
-                <x-nav-link :href="route('users.index')">
-                    <i class="nc-icon nc-single-02"></i>
-                    <p>Admin Users</p>
-                    <i class="nc-icon nc-minimal-down dropdown-btn"></i>
-                </x-nav-link>
-                <div class="dropdown-container">
+                    <hr style="width: 70%; margin-left: 0%; ">
+
                     <x-nav-link :href="route('admin.users')" :active="request()->routeIs('admin.users')" >
-                        All Admin Users
+                        All Admins
                     </x-nav-link>
+
                     <x-nav-link :href="route('add.admin')" :active="request()->routeIs('add.admin')" >
                         Add Admin
                     </x-nav-link>
@@ -144,7 +141,7 @@
 
             </x-nav-li>
 
-            <x-nav-li  :active="request()->routeIs('posts.index','get.post')" class="v-dropdown">
+            <x-nav-li  :active="request()->routeIs('posts.index','get.post','flag.index','get.flag')" class="v-dropdown">
                 <x-nav-link :href="route('posts.index')">
                 <i class="nc-icon nc-single-copy-04"></i>
                     <p>Posts</p>
@@ -152,9 +149,10 @@
                 </x-nav-link>
                 <div class="dropdown-container">
                     <a href="/posts" class="<?php echo ($current_page == 'posts') ? 'active' : ''; ?>">All Posts</a>
-
+                    <x-nav-link :href="route('flag.index')" :active="request()->routeIs('flag.index')" >
+                        Flagged Posts
+                    </x-nav-link>
                 </div>
-
 
             </x-nav-li>
 

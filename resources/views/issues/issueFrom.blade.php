@@ -15,7 +15,7 @@
 
                 <div class="form-group col-4">
                     <label for="inputName">Name</label>
-                    <input type="text" class="form-control" name='name' id="inputName" placeholder="Name" value="{{ (!empty($data)) ? $data->name : '' }}" required>
+                    <input type="text" class="form-control" name='title' id="inputName" placeholder="Name" value="{{ (!empty($data)) ? $data->title : '' }}" required>
                 </div>
 
                 <div class="form-group col-4">
