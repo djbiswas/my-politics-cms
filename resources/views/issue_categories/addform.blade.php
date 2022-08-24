@@ -23,10 +23,16 @@
 
         </div>
 
-        <div class="form-group-two">
+        <div class="form-group ">
+            {!! Form::label('image', 'Select Icon',) !!}
+            {!! Form::select('image', $heroicons, $data? $data->image : null, ['class' => 'form-control select2img', 'placeholder' => '--Select--', 'requird']) !!}
+        </div>
+
+
+        {{-- <div class="form-group-two">
             <label for="formFile" class="form-label">Image</label>
             <x-display-image :data="$data?$data : ''" :fileName="'image'"></x-display-image>
-        </div>
+        </div> --}}
         <input type="submit" name='Save' class="btn btn-primary" />
     </form>
 </div>

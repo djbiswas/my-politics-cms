@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h4>{{$data?'Edit' : 'Add'}}  User</h4>
+        <h4>{{$data?'Edit' : 'Add'}} politician</h4>
     </x-slot>
     <div class="generic-form" style="text-align: left;">
         <form class="needs-validation-1 has-quill-field" id="validPoliticianForm" method="post" action="{{route('post.politician')}}" enctype="multipart/form-data" novalidate>
@@ -54,6 +54,18 @@
                     <input type="url" class="form-control" name='meta[twitter_feed]' id="inputTwitterFeed" placeholder="URL" value="{{ (!empty($metaData['twitter_feed'])) ? $metaData['twitter_feed'] : '' }}">
                 </div>
             </div>
+
+            <div class="row">
+                <div class="form-group col-6">
+                    {!! Form::label('state', 'Select State') !!}
+                    {!! Form::select('state', $states, $data? $data->state : null, ['class' => 'form-control select2on', 'placeholder' => '--Select--', 'requird']) !!}
+                </div>
+                <div class="form-group col-6">
+                    <label for="zip">Zip</label>
+                    <input type="text" class="form-control" name='zip' id="zip" placeholder="ZIP" value="{{ (!empty($data)) ? $data->zip : '' }}">
+                </div>
+            </div>
+
             <div class="form-group quill-field-block">
                 <label for="inputDescription">Description</label>
                 <textarea class="ckeditor" id="inputDescription" name='politician_description' placeholder="Enter description">{{ (!empty($data)) ? $data->politician_description : '' }}</textarea>
@@ -72,6 +84,7 @@
                     <x-display-image :data="$data?$data : ''" :required="'true'"></x-display-image>
                 </div>
             </div>
+
 
             <div class="form-group">
 

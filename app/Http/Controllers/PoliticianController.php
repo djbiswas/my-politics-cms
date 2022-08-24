@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Datatables;
 Use App\Services\CommonService;
 use App\Repositories\CategoryRepository;
+use CountryState;
 
 class PoliticianController extends Controller
 {
@@ -44,7 +45,10 @@ class PoliticianController extends Controller
             $politicians = $this->politicianRepository->fetchAllData($condition, 8);
             //$politicians;
             return view('dashboard', ['politicians' => $politicians]);
+            return view('dashboard', ['politicians' => $politicians]);
         } catch (Exception $e) {
+        } catch (Exception $e) {
+
             echo '<pre>'; print_r($e->getMessage()); die;
             return $this->apiResponse->handleAndResponseException($e);
         }
@@ -56,6 +60,7 @@ class PoliticianController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request){
+        $heroicons = config('heroicons');
         try {
             if ($request->ajax()) {
                 $data = Politician::select('id', 'name', 'name_alias', 'position', 'politician_description', 'updated_at');
@@ -96,13 +101,15 @@ class PoliticianController extends Controller
      * @param $id
      */
     public function getPolitician($id=null){
+
+        $states = CountryState::getStates('US');
         $categories = $this->categoryRepository->fetchAllData([])->toArray();
         if($id){
             $data=Politician::find($id);
             $metaData = $data->getMeta()->toArray();
-            return view('politician.politicianForm',['data'=>$data, 'categories'=>$categories, 'metaData'=>$metaData]);
+            return view('politician.politicianForm',['data'=>$data, 'categories'=>$categories, 'states'=>$states, 'metaData'=>$metaData]);
         }
-        return view('politician.politicianForm',['data'=>[], 'categories'=>$categories, 'metaData'=>[]]);
+        return view('politician.politicianForm',['data'=>[], 'categories'=>$categories, 'states'=>$states, 'metaData'=>[]]);
     }
 
     /**

@@ -33,6 +33,7 @@ class IssueCategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $heroicons = config('heroicons');
         try {
             if ($request->ajax()) {
                 $data = IssueCategory::select('*');
@@ -49,7 +50,7 @@ class IssueCategoryController extends Controller
                         ->make(true);
             }
             $status_datas = ['0'=>'InActive', '1'=>'Active'];
-            return view('issue_categories.main-category',['data'=>[], 'status_datas'=>$status_datas]);
+            return view('issue_categories.main-category',['data'=>[], 'status_datas'=>$status_datas,'heroicons'=>$heroicons]);
         } catch (\Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
         }
@@ -62,10 +63,11 @@ class IssueCategoryController extends Controller
      * @param $id
      */
     public function getIssueCategory($id=null){
+        $heroicons = config('heroicons');
         $data=IssueCategory::find($id);
         $status_datas = ['0'=>'InActive', '1'=>'Active'];
         // return view('issue_categories.main-category',['data'=>$issueCategory, 'status_datas'=>$status_datas]);
-        return view('issue_categories.main-category',compact('data','status_datas'));
+        return view('issue_categories.main-category',compact('data','status_datas','heroicons'));
     }
 
 
@@ -74,22 +76,22 @@ class IssueCategoryController extends Controller
      *
      */
     public function postIssueCategory(Request $request){
-         $data=$request->all();
-        try{
+          $data=$request->all();
+            try{
 
-            if ($request->hasFile('image')) {
-                $commonService = new CommonService();
-                $data['image'] = $commonService->storeImage($request->file('image'), config('constants.image.issue_category'), 'image');
+                // if ($request->hasFile('image')) {
+                //     $commonService = new CommonService();
+                //     $data['image'] = $commonService->storeImage($request->file('image'), config('constants.image.issue_category'), 'image');
+                // }
+
+                $condition = ['id' => $data['id']];
+                $this->issueCategoryRepository->saveData($condition, $data);
+                \Session::flash('success',trans('message.success'));
+                return redirect()->route('issue_categories.index');
+            }catch (\Exception $e){
+                \Session::flash('error',$e->getMessage());
+                return redirect()->route('issue_categories.index');
             }
-
-            $condition = ['id' => $data['id']];
-            $this->issueCategoryRepository->saveData($condition, $data);
-            \Session::flash('success',trans('message.success'));
-            return redirect()->route('issue_categories.index');
-        }catch (\Exception $e){
-            \Session::flash('error',$e->getMessage());
-            return redirect()->route('issue_categories.index');
-        }
     }
 
 

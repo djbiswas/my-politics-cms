@@ -34,7 +34,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
   <script src="{{ asset('assets/js/scripts.js')}}"></script>
   <script src="{{ asset('assets/js/common.js')}}"></script>
-  
+
   <script>
     function DeleteFunction(thisVal){
         var form =  $(thisVal).closest("form");
@@ -55,7 +55,6 @@
     }
 </script>
 
-  
 
 
 

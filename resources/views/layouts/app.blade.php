@@ -27,6 +27,9 @@
                 text-align: right;
             }
         </style>
+        <!-- select 2 cdn connect  -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     </head>
 
     <body class="page-index">
@@ -78,6 +81,30 @@
                             return true;
                         }
                     });
+            });
+        </script>
+        <!-- Select 2 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('.select2on').select2();
+            });
+
+            function formatState (state) {
+                if (!state.id) {
+                    return state.text;
+                }
+
+                var $state = $(state.text +' IMG');
+
+                return $state;
+            };
+
+            $(".select2img").select2({
+                // templateResult: formatState
+                escapeMarkup: function(m) {
+                    return m;
+                }
             });
         </script>
     </body>
