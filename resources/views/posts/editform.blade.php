@@ -9,7 +9,7 @@
 
             <div class="row a-i-center">
                 <div class="form-group col-3">
-                    <label for="">Position Name</label>
+                    <label for="">Politician Name</label>
                     <input type="text"  class="form-control" name='' id="position_name" placeholder="Position Name" value="{{ (!empty($data)) ? $data->politician->name : '' }}" readonly>
                 </div>
                 <div class="form-group col-3 user-phone">
@@ -27,14 +27,24 @@
             </div>
 
             <div class="row">
-                <div class="form-group col-6">
-                        <div class="display_status">Status</div>
-                        <div class="form-group">
-                            <input type="radio" name='status' id="radioButton1" value="1" {{(empty($data) || (!empty($data) && $data->status == 1)) ? 'checked' : ''}} >
-                            <label for="radioButton1">Active</label>
-                            <input type="radio" name='status' id="radioButton2" value="0" {{((!empty($data) && $data->status == 0)) ? 'checked' : ''}} >
-                            <label for="radioButton2">Inactive</label>
-                        </div>
+                <div class="form-group col-3">
+                    <div class="display_status">Post Status</div>
+                    <div class="form-group">
+                        <input type="radio" name='status' id="radioButton1" value="1" {{(empty($data) || (!empty($data) && $data->status == 1)) ? 'checked' : ''}} >
+                        <label for="radioButton1">Active</label>
+                        <input type="radio" name='status' id="radioButton2" value="0" {{((!empty($data) && $data->status == 0)) ? 'checked' : ''}} >
+                        <label for="radioButton2">Inactive</label>
+                    </div>
+                </div>
+
+                <div class="form-group col-3">
+                    <div class="display_status">Comment Status</div>
+                    <div class="form-group">
+                        <input type="radio" name='comment_status' id="radioButton1" value="1" {{(empty($data) || (!empty($data) && $data->comment_status == 1)) ? 'checked' : ''}} >
+                        <label for="radioButton1">Active</label>
+                        <input type="radio" name='comment_status' id="radioButton2" value="0" {{((!empty($data) && $data->comment_status == 0)) ? 'checked' : ''}} >
+                        <label for="radioButton2">Inactive</label>
+                    </div>
                 </div>
             </div>
 

@@ -6,9 +6,10 @@
         <table class="table table-striped data-table" >
             <thead class="text-primary">
                 <tr>
-                    <th>Position</th>
+                    <th>Politicians</th>
                     <th>User</th>
-                    <th>Flagged</th>
+                    <th>Post Status</th>
+                    <th>Comment Status</th>
                     <th>Last Updated </th>
                     <th class="text-right"> Action </th>
                 </tr>
@@ -28,6 +29,18 @@
                         {data: 'politician.name', name: 'politician.name'},
                         {data: 'user.first_name', name: 'user.first_name'},
                         {data: "status",
+                            "searchable": true,
+                            "orderable":true,
+                            "render": function (data, type, row) {
+                                if (data == '1') {
+                                    return 'Active';
+                                }
+                                else {
+                                    return 'InActive';
+                                }
+                            }
+                        },
+                        {data: "comment_status",
                             "searchable": true,
                             "orderable":true,
                             "render": function (data, type, row) {

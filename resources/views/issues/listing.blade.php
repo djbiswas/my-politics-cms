@@ -9,8 +9,8 @@
                     <th> Name </th>
                     <th> User </th>
                     <th> Status </th>
-                    <th>Position</th>
-                    <th>Category</th>
+                    <th> Politician </th>
+                    <th> Category </th>
                     <th> Last Updated </th>
                     <th class="text-right"> Action </th>
                 </tr>
