@@ -43,7 +43,7 @@ class PostController extends Controller
         try {
             if ($request->ajax()) {
                 // $data = Post::get();
-                $data = Post::where('status','1')->with('postImages')->with('postVideos')->with('politician')->with('user')->get();
+                $data = Post::with('postImages')->with('postVideos')->with('politician')->with('user')->get();
                 return Datatables::of($data)
                         ->addIndexColumn()
                         ->editColumn('content',function($row){

@@ -8,7 +8,7 @@
                 <tr>
                     <th> Name </th>
                     <th> Alias </th>
-                    <th>Position</th>
+                    <th> Politician</th>
                     <th> Last Updated </th>
                     <th class="text-right"> Action </th>
                 </tr>

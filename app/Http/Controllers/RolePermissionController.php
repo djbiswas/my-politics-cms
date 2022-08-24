@@ -57,10 +57,11 @@ class RolePermissionController extends Controller
         // return $data = Role::get();
 
         $roles = Role::pluck('role', 'id');
+
         try {
             if ($request->ajax()) {
                 // $data = RolePermission::with('permission')->with('role')->get();
-                $data = Role::get();
+                $data = RolePermission::select('id','role_id')->groupBy('role_id')->with('role')->get();
                 return Datatables::of($data)
                         ->addIndexColumn()
                         // ->editColumn('content',function($row){
@@ -73,8 +74,8 @@ class RolePermissionController extends Controller
                             return date('Y-m-d H:i',strtotime($row->updated_at));
                         })
                         ->addColumn('action', function($row){
-                            $btn = '<a href="'.route('get.role.permission',$row->id).'">Edit </a> |';
-                            $btn .= '<form method="POST" action="'.route('role.permission.delete', $row->id).'" style="float:right;">
+                            $btn = '<a href="'.route('get.role.permission',$row->role_id).'">Edit </a> |';
+                            $btn .= '<form method="POST" action="'.route('role.permission.delete', $row->role_id).'" style="float:right;">
                                         <input type="hidden" name="_token" value="'.csrf_token().'">
                                         <input name="_method" type="hidden" value="DELETE">
                                         <a href="javascript:void(0)" class="btn-delete" onclick="return DeleteFunction($(this))"> Delete</a>
@@ -106,16 +107,15 @@ class RolePermissionController extends Controller
         $permission_categoris = PermissionCategory::pluck('name','id');
 
         if($id){
-            $data = RolePermission::where('id', $id)->with('role')->first();
-            $role_id = $data->role_id;
-            $role_name = $data->role->role;
-            $data = RolePermission::where('role_id', $role_id)->with('permission')->get();
+            $role = Role::where('id', $id)->first();
+            $role_id = $role->id;
+            $role_name = $role->name;
+            $data = RolePermission::where('role_id', $id)->with('permission')->get();
 
             $permission_ids = [];
             foreach($data as $rolePermission){
                 array_push($permission_ids, $rolePermission->permission_id);
             }
-
 
             return view('role_permissions.main',['data'=>$data, 'permissions'=>$permissions, 'permission_ids'=> $permission_ids, 'roles'=>$roles,'role_id'=>$role_id, 'role_name'=>$role_name]);
         }
@@ -150,16 +150,19 @@ class RolePermissionController extends Controller
         }
     }
 
-
     /**
      * Method to delete Politician Data through id
      *
      * @param $id
      */
     public function delete($id=null){
-        $data = Permission::find($id)->delete();
+
+        $role_permissions = RolePermission::where('role_id',$id)->get();
+        foreach($role_permissions as $role_permission){
+            $data = RolePermission::find($role_permission->id)->delete();
+        }
         \Session::flash('success',trans('message.success'));
-        return redirect()->route('permissions.index');
+        return redirect()->route('role.permissions.index');
     }
 
 }

@@ -17,6 +17,14 @@ class Role extends Model
         'id', 'role', 'status'
     ];
 
+
+    public function role_permissions()
+    {
+        return $this->hasMany(RolePermission::class);
+    }
+
+
+
     /**
      *
      * @param type $query

@@ -17,7 +17,7 @@
         <span class="navbar-toggler-bar navbar-kebab"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navigation">
-        
+
         <ul class="navbar-nav">
             <li class="nav-item btn-rotate dropdown">
             <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -27,7 +27,7 @@
                 </p>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="#">Profile</a>
+                {{-- <a class="dropdown-item" href="">Profile</a> --}}
                 <form  method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-nav-link :href="route('logout')"
@@ -42,4 +42,4 @@
         </div>
     </div>
 </nav>
-      <!-- End Navbar -->
+<!-- End Navbar -->
