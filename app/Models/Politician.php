@@ -23,7 +23,7 @@ class Politician extends Model
 
     protected $fillable = [
         'name', 'title', 'name_alias', 'affiliation', 'affiliation_icon', 'position', 'politician_description',
-        'image', 'created_by', 'updated_by', 'status'
+        'image', 'created_by', 'updated_by', 'status','zip','state'
     ];
 
     public function posts()
