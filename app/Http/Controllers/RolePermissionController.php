@@ -37,7 +37,7 @@ class RolePermissionController extends Controller
      */
     private $commonService;
 
-    public function __construct(RolePermissionRepository $rolePermissionRepository, PermissionRepository $permissionRepository, RoleRepository $roleRepository, CommonService $commonService) {
+    public function __construct(RolePermissionRepository $rolePermissionRepository, PermissionRepository        $permissionRepository, RoleRepository $roleRepository, CommonService $commonService) {
         $this->rolePermissionRepository = $rolePermissionRepository;
         $this->permissionRepository = $permissionRepository;
         $this->roleRepository = $roleRepository;
@@ -56,12 +56,12 @@ class RolePermissionController extends Controller
         // $rolePermissions = RolePermission::with('permission')->with('role')->get();
         // return $data = Role::get();
 
-        $roles = Role::pluck('role', 'id');
+        $roles = Role::where('id','>','1')->pluck('role', 'id');
 
         try {
             if ($request->ajax()) {
                 // $data = RolePermission::with('permission')->with('role')->get();
-                $data = RolePermission::select('id','role_id')->groupBy('role_id')->with('role')->get();
+                $data = RolePermission::where('role_id', '>', '1')->select('id','role_id')->groupBy('role_id')->with('role')->get();
                 return Datatables::of($data)
                         ->addIndexColumn()
                         // ->editColumn('content',function($row){

@@ -39,16 +39,13 @@
                 </div>
             </x-nav-li>
 
-            <x-nav-li  :active="request()->routeIs('permissions.index', 'ranks.index', 'get.rank', 'roles.index','get.role','permission_categories.index', 'role.permissions.index','get.role.permission' )" class="v-dropdown">
+            {{-- <x-nav-li  :active="request()->routeIs('permissions.index', 'ranks.index', 'get.rank', 'roles.index','get.role','permission_categories.index', 'role.permissions.index','get.role.permission' )" class="v-dropdown">
                 <x-nav-link :href="route('roles.index')">
                     <i class="nc-icon nc-single-02"></i>
                     <p>Roles</p>
                     <i class="nc-icon nc-minimal-down dropdown-btn"></i>
                 </x-nav-link>
                 <div class="dropdown-container">
-                    <x-nav-link :href="route('roles.index')" :active="request()->routeIs('roles.index')" >
-                        All Roles
-                    </x-nav-link>
 
                     <x-nav-link :href="route('permission_categories.index')" :active="request()->routeIs('permission_categories.index')" >
                         Permission Categories
@@ -61,14 +58,10 @@
                         Role Permissions
                     </x-nav-link>
 
-                    <x-nav-link :href="route('ranks.index')" :active="request()->routeIs('ranks.index', 'get.rank')" >
-                        All Ranks
-                    </x-nav-link>
-
                 </div>
-            </x-nav-li>
+            </x-nav-li> --}}
 
-            <x-nav-li  :active="request()->routeIs('users.index', 'add.user', 'get.user','admin.users', 'add.admin', 'get.admin')" class="v-dropdown">
+            <x-nav-li  :active="request()->routeIs('users.index', 'add.user', 'get.user','admin.users', 'add.admin', 'get.admin', 'permissions.index', 'ranks.index', 'get.rank', 'roles.index','get.role', 'role.permissions.index','get.role.permission')" class="v-dropdown">
                 <x-nav-link :href="route('users.index')">
                     <i class="nc-icon nc-single-02"></i>
                     <p>Users</p>
@@ -92,7 +85,21 @@
                         Add Admin
                     </x-nav-link>
 
+                    <hr style="width: 70%; margin-left: 0%; ">
 
+                    <x-nav-link :href="route('ranks.index')" :active="request()->routeIs('ranks.index', 'get.rank')" >
+                        Rank
+                    </x-nav-link>
+
+                    <hr style="width: 70%; margin-left: 0%; ">
+
+                    <x-nav-link :href="route('roles.index')" :active="request()->routeIs('roles.index')" >
+                        Roles
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('role.permissions.index')" :active="request()->routeIs('role.permissions.index')" >
+                         Permissions
+                    </x-nav-link>
 
                 </div>
             </x-nav-li>
@@ -171,4 +178,3 @@
         </ul>
     </div>
 </div>
-

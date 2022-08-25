@@ -181,3 +181,25 @@
     margin-top: .3rem;
     margin-left: 0;
 }
+
+
+/* remove scroll bar from side bar  */
+.sidebar .sidebar-wrapper {
+    height: auto;
+    overflow: visible;
+}
+
+/* Remove Scroll bar form datatable */
+.table-responsive {
+    overflow: visible;
+}
+
+/* body scroll bar remove   */
+.wrapper {
+    overflow: hidden;
+    height: auto;
+}
+
+.main-panel > .content {
+    min-height: calc(95vh - 123px);
+}

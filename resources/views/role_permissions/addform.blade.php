@@ -13,9 +13,9 @@
             <div class="form-group col-12">
                 {!! Form::label('role_id', 'Select Role',) !!}
                 @if (isset($role_id))
-                    {!! Form::select('role_id', $roles, $data? $role_id : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird', 'readonly', 'disabled']) !!}
+                    {!! Form::select('role_id', $roles, $data? $role_id : null, ['class' => 'form-control select2on', 'placeholder' => '--Select--', 'requird', 'readonly', 'disabled']) !!}
                 @else
-                    {!! Form::select('role_id', $roles, $data? $role_id : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
+                    {!! Form::select('role_id', $roles, $data? $role_id : null, ['class' => 'form-control select2on', 'placeholder' => '--Select--', 'requird']) !!}
                 @endif
             </div>
         </div>

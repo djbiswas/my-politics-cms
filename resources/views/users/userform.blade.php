@@ -15,6 +15,20 @@
                     <label for="phone">Phone</label>
                     <input type="text" <?php echo isset($_GET['id'])?'readonly':'required'; ?> class="form-control" name='phone' id="phone" placeholder="Phone" value="{{ (!empty($data)) ? $data->phone : '' }}">
                 </div>
+
+                <div class="col-1"></div>
+
+                <div class="form-group col-5">
+                    <div class="display_status">Status</div>
+                    <div class="form-group">
+                        <input type="radio" name='status' id="radioButton1" value="1" {{(empty($data) || (!empty($data) && $data->status == 1)) ? 'checked' : ''}} >
+                        <label for="radioButton1">Active</label>
+                        <input type="radio" name='status' id="radioButton2" value="0" {{((!empty($data) && $data->status == 0)) ? 'checked' : ''}} >
+                        <label for="radioButton2">Inactive</label>
+                    </div>
+            </div>
+
+
             </div>
             <div class="row a-i-end">
                 <div class="form-group col-3">
@@ -23,6 +37,21 @@
                 </div>
                 <div class="form-group col-3">
                     <input type="text" required class="form-control" name='meta[p_last_name]' id="p_lastName" placeholder="Last Name" value="{{ (!empty($metaData['p_last_name'])) ? $metaData['p_last_name'] : '' }}">
+                </div>
+                <div class="col-1">
+
+                </div>
+
+                <div class="form-group col-5">
+                        <div class="display_status">Ban/Block/Warn</div>
+                        <div class="form-group">
+                            <input type="radio" name='user_ban' id="user_ban1" value="1" {{(empty($data) || (!empty($data) && $data->user_ban == 1)) ? 'checked' : ''}} >
+                            <label for="user_ban1">Warn</label>
+                            <input type="radio" name='user_ban' id="user_ban2" value="2" {{((!empty($data) && $data->user_ban == 2)) ? 'checked' : ''}} >
+                            <label for="user_ban2">Block</label>
+                            <input type="radio" name='user_ban' id="user_ban3" value="3" {{((!empty($data) && $data->user_ban == 3)) ? 'checked' : ''}} >
+                            <label for="user_ban3">Ban</label>
+                        </div>
                 </div>
             </div>
             <div class="row a-i-end">
@@ -33,6 +62,14 @@
                 <div class="form-group col-3">
                     <input type="text" required class="form-control" name='last_name' id="lastName" placeholder="Last Name" value="{{ (!empty($data)) ? $data->last_name : '' }}">
                 </div>
+
+                <div class="col-1"></div>
+
+                <div class="form-group col-4">
+                    <label for="ban_till">Block Till</label>
+                    <input type="date" required class="form-control" name='ban_till' id="ban_till" placeholder="Ban/Blocl/Warn Reason" value="{{ (!empty($data)) ? $data->ban_till : '' }}">
+                </div>
+
             </div>
             {{-- <div class="row {{ (!empty($data)) ? 'hide' : '' }} "> --}}
             <div class="row ">
@@ -45,6 +82,14 @@
                     <label for="re_password">Confirm Password </label>
                     <input type="password" class="form-control" name='re_password' id="re_password" placeholder="Confirm Password" value="" >
                 </div>
+
+                <div class="col-1"></div>
+
+                <div class="form-group col-4">
+                    <label for="ban_reason">Ban Reason</label>
+                    <input type="text" required class="form-control" name='ban_reason' id="ban_reason" placeholder="Ban/Blocl/Warn Reason" value="{{ (!empty($data)) ? $data->ban_reason : '' }}">
+                </div>
+
             </div>
             <div class="row">
                 <div class="form-group col-6">
@@ -87,15 +132,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-6">
-                        <div class="display_status">Status</div>
-                        <div class="form-group">
-                            <input type="radio" name='status' id="radioButton1" value="1" {{(empty($data) || (!empty($data) && $data->status == 1)) ? 'checked' : ''}} >
-                            <label for="radioButton1">Active</label>
-                            <input type="radio" name='status' id="radioButton2" value="0" {{((!empty($data) && $data->status == 0)) ? 'checked' : ''}} >
-                            <label for="radioButton2">Inactive</label>
-                        </div>
-                </div>
+
+            </div>
+
+            <div class="row">
+
             </div>
 
             <?php
