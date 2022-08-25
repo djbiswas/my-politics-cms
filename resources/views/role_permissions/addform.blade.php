@@ -2,7 +2,7 @@
     <?php
         $edit_data = $sub_action = $sub_btn_text = "";
     ?>
-    <h4>{{$data?'Edit' : 'Add'}} Permission assign for roles</h4>
+    <h4>Assign role permissions</h4>
 
         {!! Form::open(['route' => 'post.role.permission', 'class' =>'needs-validation-1', 'id' => 'validRankForm','enctype' =>'multipart/form-data', 'novalidate'])  !!}
 

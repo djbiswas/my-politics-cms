@@ -74,7 +74,7 @@ class RolePermissionController extends Controller
                             return date('Y-m-d H:i',strtotime($row->updated_at));
                         })
                         ->addColumn('action', function($row){
-                            $btn = '<a href="'.route('get.role.permission',$row->role_id).'">Edit </a> |';
+                            $btn = '<a href="'.route('get.role.permission',$row->role_id).'">Permissions </a> |';
                             $btn .= '<form method="POST" action="'.route('role.permission.delete', $row->role_id).'" style="float:right;">
                                         <input type="hidden" name="_token" value="'.csrf_token().'">
                                         <input name="_method" type="hidden" value="DELETE">
@@ -92,8 +92,6 @@ class RolePermissionController extends Controller
             return $this->apiResponse->handleAndResponseException($e);
         }
     }
-
-
 
     /**
      * Method to get Politician Data through id

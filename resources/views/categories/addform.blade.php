@@ -18,10 +18,16 @@
             <label for="inputtexteditor">Description</label>
             <textarea class="form-control" name="description" id="textareaDescription" placeholder="Description">{{ (!empty($data)) ? $data->description : '' }}</textarea>
         </div>
-        <div class="form-group-two">
+        <div class="form-group-two ">
+            {!! Form::label('icon', 'Select Icon',) !!}
+            {!! Form::select('icon', $heroicons, $data? $data->icon : null, ['class' => 'form-control select2img', 'placeholder' => '--Select--', 'requird']) !!}
+        </div>
+
+        {{-- <div class="form-group-two">
             <label for="formFile" class="form-label">Icon</label>
             <x-display-image :data="$data?$data : ''" :fileName="'icon'"></x-display-image>
-        </div>
+        </div> --}}
+
         <input type="submit" name='Save' class="btn btn-primary" />
     </form>
 </div>

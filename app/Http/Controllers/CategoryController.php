@@ -30,6 +30,7 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request){
+        $heroicons = config('heroicons');
         try {
             if ($request->ajax()) {
                 $data = Category::select('*');
@@ -45,7 +46,7 @@ class CategoryController extends Controller
                         ->rawColumns(['action'])
                         ->make(true);
             }
-            return view('categories.main-category',['data'=>[]]);
+            return view('categories.main-category',['data'=>[],'heroicons'=>$heroicons]);
         } catch (\Exception $e) {
             return $this->apiResponse->handleAndResponseException($e);
         }
@@ -53,25 +54,27 @@ class CategoryController extends Controller
 
     /**
      * Method to get Category Data through id
-     * 
+     *
      * @param $id
      */
     public function getCategory($id=null){
+        $heroicons = config('heroicons');
         $getData=Category::find($id);
-        return view('categories.main-category',['data'=>$getData]);
+        return view('categories.main-category',['data'=>$getData,'heroicons'=>$heroicons]);
     }
 
     /**
      * Method to post category data
-     * 
+     *
      */
     public function postCategory(Request $request){
         $data=$request->all();
         try{
-            if ($request->hasFile('icon')) {
-                $commonService = new CommonService();
-                $data['icon'] = $commonService->storeImage($request->file('icon'), config('constants.image.category'), 'icon');
-            }
+            // if ($request->hasFile('icon')) {
+            //     $commonService = new CommonService();
+            //     $data['icon'] = $commonService->storeImage($request->file('icon'), config('constants.image.category'), 'icon');
+            // }
+
             $condition = ['id' => $data['id']];
             $this->categoryRepository->saveData($condition, $data);
             \Session::flash('success',trans('message.success'));
@@ -84,7 +87,7 @@ class CategoryController extends Controller
 
     /**
      * Method to check exist name for category
-     * 
+     *
      */
     public function checkName(Request $request){
         $data=$request->all();

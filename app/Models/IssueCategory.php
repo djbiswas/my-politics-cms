@@ -28,17 +28,17 @@ class IssueCategory extends Model
     }
 
 
-    public function getImageAttribute()
-    {
-        if (!empty($this->attributes['image'])) {
-            $imagePath = config('constants.image.issue_category') . DIRECTORY_SEPARATOR . $this->attributes['image'];
-            $fetchImage = config('app.url').Storage::url($imagePath);
-        } else {
-            $fetchImage = config('constants.image.defaultImage');
-        }
+    // public function getImageAttribute()
+    // {
+    //     if (!empty($this->attributes['image'])) {
+    //         $imagePath = config('constants.image.issue_category') . DIRECTORY_SEPARATOR . $this->attributes['image'];
+    //         $fetchImage = config('app.url').Storage::url($imagePath);
+    //     } else {
+    //         $fetchImage = config('constants.image.defaultImage');
+    //     }
 
-        return $fetchImage;
-    }
+    //     return $fetchImage;
+    // }
 
     // public static function boot()
     // {

@@ -91,6 +91,9 @@
                     <x-nav-link :href="route('add.admin')" :active="request()->routeIs('add.admin')" >
                         Add Admin
                     </x-nav-link>
+
+
+
                 </div>
             </x-nav-li>
 
@@ -137,8 +140,6 @@
                         Categories
                     </x-nav-link>
                 </div>
-
-
             </x-nav-li>
 
             <x-nav-li  :active="request()->routeIs('posts.index','get.post','flag.index','get.flag')" class="v-dropdown">
