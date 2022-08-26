@@ -17,7 +17,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostFlagController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RolePermissionController;
-use App\Models\CourseCategory;
+use App\Http\Controllers\UserWarnController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +58,13 @@ Route::middleware('auth')->group(function () {
     Route::get('get-admin/{id}', [UserController::class, 'getAdmin'])->name('get.admin');
     Route::get('add-admin', [UserController::class, 'getAdmin'])->name('add.admin');
     Route::post('post-admin', [UserController::class, 'postAdmin'])->name('post.admin');
+
+    // Route Warn for user
+    Route::get('user-warns', [UserWarnController::class, 'index'])->name('user.warns');
+    Route::post('post-warn', [UserController::class, 'postWarn'])->name('post.warn');
+    Route::post('post-ban', [UserController::class, 'postBan'])->name('post.ban');
+    Route::post('post-block', [UserController::class, 'postBlock'])->name('post.block');
+
 
 
     //Route for rank

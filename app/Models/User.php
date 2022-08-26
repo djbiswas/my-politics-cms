@@ -30,7 +30,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'rank_id', 'role_id', 'login', 'email', 'password', 'first_name', 'last_name', 'display_name', 'phone',
-        'image', 'lock_rank', 'display_status', 'reg_status', 'status', 'registered_date', 'completed_step', 'otp_code', 'user_ban','ban_till','ban_reason'
+        'image', 'lock_rank', 'display_status', 'reg_status', 'status', 'registered_date', 'completed_step', 'otp_code', 'user_ban','ban_till','ban_reason', 'user_warn', 'user_block', 'block_reason'
     ];
 
     /**

@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Repositories\RankRepository;
 use App\Http\Controllers\csrf;
 use App\Models\Role;
+use App\Models\UserWarn;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -129,11 +130,13 @@ class UserController extends Controller
     public function getUser($id=null){
         $ranks = $this->rankRepository->fetchAllData([])->toArray();
         // $roles = Role::where('id', '>', '2')->pluck('role','id');
+
         $roles = Role::pluck('role','id');
         if($id){
+            $user_warns = UserWarn::where('user_id',$id)->get();
             $data=User::find($id);
             $metaData = $data->getMeta()->toArray();
-            return view('users.userform',['data'=>$data, 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>$metaData]);
+            return view('users.userform',['data'=>$data, 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>$metaData,'user_warns'=>$user_warns]);
         }
         return view('users.userform',['data'=>[], 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>[]]);
     }
@@ -169,6 +172,88 @@ class UserController extends Controller
             return redirect()->route('users.index');
         }
     }
+
+    /**
+     * Method to post user warn
+     *
+     */
+    public function postWarn(Request $request){
+        //$request->all();
+
+        $user_id = $request->id;
+        $warn_message = $request->warn_message;
+
+        $user = User::find($user_id);
+        $user->user_warn = 1;
+        $user->save();
+
+        $user_warn = New UserWarn();
+        $user_warn->user_id = $user_id;
+        $user_warn->warn_message = $warn_message;
+        $user_warn->save();
+
+        \Session::flash('success',trans('message.success'));
+        return redirect()->route('get.user',$user_id);
+
+    }
+
+
+    /**
+     * Method to post user BAN
+     *
+     */
+    public function postBan(Request $request){
+        // return $request->all();
+
+        if($request->user_ban){
+            $user_id = $request->id;
+            $user = User::find($user_id);
+            $user->user_ban = 1;
+            $user->ban_till = $request->ban_till;
+            $user->ban_reason = $request->ban_reason;
+            $user->save();
+        }else{
+            $user_id = $request->id;
+            $user = User::find($user_id);
+            $user->user_ban = 0;
+            $user->ban_till = null;
+            $user->ban_reason = null;
+            $user->save();
+        }
+
+        \Session::flash('success',trans('message.success'));
+        return redirect()->route('get.user',$user_id);
+
+    }
+
+
+
+    /**
+     * Method to post user BLOCK
+     *
+     */
+    public function postBlock(Request $request){
+        // return $request->all();
+
+        if($request->user_block){
+            $user_id = $request->id;
+            $user = User::find($user_id);
+            $user->user_block = 1;
+            $user->block_reason = $request->block_reason;
+            $user->save();
+        }else{
+            $user_id = $request->id;
+            $user = User::find($user_id);
+            $user->user_block = 0;
+            $user->block_reason = null;
+            $user->save();
+        }
+
+        \Session::flash('success',trans('message.success'));
+        return redirect()->route('get.user',$user_id);
+
+    }
+
 
     public function postAdmin(Request $request){
          $data=$request->all();

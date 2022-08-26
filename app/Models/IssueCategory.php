@@ -40,27 +40,27 @@ class IssueCategory extends Model
     //     return $fetchImage;
     // }
 
-    // public static function boot()
-    // {
-    //     parent::boot();
-    //     // registering a callback to be executed upon the creation of an activity AR
-    //     static::creating(function ($issueCategory) {
-    //         // produce a slug based on the activity title
-    //         $slug = Str::slug($issueCategory->title);
-    //         // check to see if any other slugs exist that are the same & count them
-    //         $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
-    //         // if other slugs exist that are the same, append the count to the slug
-    //         $issueCategory->slug = $count ? "{$slug}-{$count}" : $slug;
-    //     });
+    public static function boot()
+    {
+        parent::boot();
+        // registering a callback to be executed upon the creation of an activity AR
+        static::creating(function ($issueCategory) {
+            // produce a slug based on the activity title
+            $slug = Str::slug($issueCategory->title);
+            // check to see if any other slugs exist that are the same & count them
+            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
+            // if other slugs exist that are the same, append the count to the slug
+            $issueCategory->slug = $count ? "{$slug}-{$count}" : $slug;
+        });
 
-    //     static::updating(function ($issueCategory) {
-    //         // produce a slug based on the activity name
-    //         $slug = Str::slug($issueCategory->title);
-    //         // check to see if any other slugs exist that are the same & count them
-    //         // $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->where('id','!=',$this->id)->count()>1;
-    //         $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
-    //         // if other slugs exist that are the same, append the count to the slug
-    //         $issueCategory->slug = $count ? "{$slug}-{$count}" : $slug;
-    //     });
-    // }
+        static::updating(function ($issueCategory) {
+            // produce a slug based on the activity name
+            $slug = Str::slug($issueCategory->title);
+            // check to see if any other slugs exist that are the same & count them
+            // $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->where('id','!=',$this->id)->count()>1;
+            $count = static::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
+            // if other slugs exist that are the same, append the count to the slug
+            $issueCategory->slug = $count ? "{$slug}-{$count}" : $slug;
+        });
+    }
 }
