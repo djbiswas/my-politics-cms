@@ -204,10 +204,6 @@
     min-height: calc(95vh - 123px);
 }
 
-
-
-
-
 /* text devider  */
 .text-divider{
     margin: 2em 0;
@@ -224,3 +220,8 @@
     border-top: 1px solid #e3e3e3;
     border-bottom: 1px solid #f7f7f7;
 }
+
+/* login button color change  */
+.btn-primary {
+    background-color: #546CB6;
+  }

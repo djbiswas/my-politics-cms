@@ -90,7 +90,6 @@
             </div>
 
 
-
             <div class="row">
                 <div class="form-group col-6">
                     <div class="display_status">User Status</div>
@@ -132,7 +131,6 @@
                     <h6 class="text-divider"><span>WARN USER</span></h6>
                 </div>
             </div>
-
 
             <div class="row">
                 <div class="form-group quill-field-block col-6">
