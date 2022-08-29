@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Repositories\RankRepository;
 use App\Http\Controllers\csrf;
 use App\Models\Role;
+use App\Models\UserBan;
+use App\Models\UserBlock;
 use App\Models\UserWarn;
 use Illuminate\Support\Facades\Hash;
 
@@ -134,9 +136,11 @@ class UserController extends Controller
         $roles = Role::pluck('role','id');
         if($id){
             $user_warns = UserWarn::where('user_id',$id)->get();
+             $user_bans = UserBan::where('user_id',$id)->get();
+            $user_blocks = UserBlock::where('user_id',$id)->get();
             $data=User::find($id);
             $metaData = $data->getMeta()->toArray();
-            return view('users.userform',['data'=>$data, 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>$metaData,'user_warns'=>$user_warns]);
+            return view('users.userform',['data'=>$data, 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>$metaData,'user_warns'=>$user_warns, 'user_bans'=>$user_bans, 'user_blocks'=>$user_blocks ]);
         }
         return view('users.userform',['data'=>[], 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>[]]);
     }
@@ -212,6 +216,12 @@ class UserController extends Controller
             $user->ban_till = $request->ban_till;
             $user->ban_reason = $request->ban_reason;
             $user->save();
+
+            $user_ban = New UserBan();
+            $user_ban->user_id = $user_id;
+            $user_ban->ban_reason = $request->ban_reason;
+            $user_ban->ban_till = $request->ban_till;
+            $user_ban->save();
         }else{
             $user_id = $request->id;
             $user = User::find($user_id);
@@ -241,6 +251,12 @@ class UserController extends Controller
             $user->user_block = 1;
             $user->block_reason = $request->block_reason;
             $user->save();
+
+            $user_block = New UserBlock();
+            $user_block->user_id = $user_id;
+            $user_block->block_reason = $request->block_reason;
+            $user_block->save();
+
         }else{
             $user_id = $request->id;
             $user = User::find($user_id);
@@ -293,6 +309,7 @@ class UserController extends Controller
      * Method to check exist email
      *
      */
+
     public function checkEmail(Request $request){
         $data=$request->all();
         $id = $request->header('user-id');

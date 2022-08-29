@@ -154,14 +154,27 @@
         <div class="row mb-4">
             <div class="col-6">
                 <p class="text-divider"><span>Warn Log</span></p>
-                <ul class="list-group list-group-flush">
-                    @foreach ($user_warns as $user_warn)
-                        <li class="list-group-item">{!! $user_warn->warn_message !!}</li>
-                    @endforeach
-
-
-
-                  </ul>
+                <div class="card">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Warn Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php($i = 1)
+                            @foreach ($user_warns as $user_warn)
+                            <tr>
+                                <th scope="row">{{ $i }}</th>
+                                <td>{{ date_format($user_warn->created_at,"Y/m/d") }}</td>
+                                <td>{!! $user_warn->warn_message !!}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -174,7 +187,7 @@
 
             <div class="row">
                 <div class="col-6">
-                    <h6 class="text-divider"><span>BAN USER</span></h6>
+                    <h6 class="text-divider"><span>BAN user account</span></h6>
                 </div>
             </div>
 
@@ -185,6 +198,7 @@
                     <input type="date" required class="form-control" name='ban_till' id="ban_till" placeholder="Ban Duration" value="{{ (!empty($data)) ? $data->ban_till : '' }}">
                 </div>
             </div>
+
             <div class="row">
                 <div class="form-group col-6">
                     <label for="ban_reason">Ban Reason</label>
@@ -213,6 +227,34 @@
 
         </form>
 
+        <div class="row mb-4">
+            <div class="col-6">
+                <p class="text-divider"><span>User Ban Log</span></p>
+                <div class="card">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Ban Duration</th>
+                                <th scope="col">Ban Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php($i = 1)
+                            @foreach ($user_bans as $user_ban)
+                            <tr>
+                                <th scope="row">{{ $i }}</th>
+                                <td>{{ $user_ban->ban_till }}</td>
+                                <td>{!! $user_ban->ban_reason !!}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
         <form class="needs-validation-1" action="{{route('post.block')}}" method="post" id="validUserForm" name="form_01" enctype="multipart/form-data" novalidate>
 
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -221,7 +263,7 @@
 
             <div class="row">
                 <div class="col-6">
-                    <h6 class="text-divider"><span>BLOCK USER</span></h6>
+                    <h6 class="text-divider"><span>Block user account</span></h6>
                 </div>
             </div>
 
@@ -248,6 +290,34 @@
             </div>
 
         </form>
+
+        <div class="row mb-4">
+            <div class="col-6">
+                <p class="text-divider"><span>User Block Log</span></p>
+                <div class="card">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Block Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php($i = 1)
+                            @foreach ($user_blocks as $user_block)
+                            <tr>
+                                <th scope="row">{{ $i }}</th>
+                                <td>{{ date_format($user_block->created_at,"Y/m/d") }}</td>
+                                <td>{!! $user_block->block_reason !!}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
 
     </div>
     @push('scripts')
@@ -310,7 +380,7 @@
 
                     },
                     messages: {
-                        password: {
+                            password: {
                             pwcheck: "The password must have at least 10 characters including a number, a capital letter, a small letter and a special character."
                         },
                         re_password: {
