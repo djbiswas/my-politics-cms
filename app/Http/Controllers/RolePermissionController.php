@@ -100,7 +100,7 @@ class RolePermissionController extends Controller
      */
     public function getRolePermission($id=null){
 
-        $roles = Role::pluck('role', 'id');
+        $roles = Role::where('id','>','1')->pluck('role', 'id');
         $permissions = PermissionCategory::with('permission')->get();
         $permission_categoris = PermissionCategory::pluck('name','id');
 
@@ -124,28 +124,29 @@ class RolePermissionController extends Controller
 
 
     public function postRolePermission(Request $request){
-         $data=$request->all();
-        try{
+
+        // return $data=$request->all();
+
             // $condition = ['id' => $data['id']];
             if($request->permission_id){
+
                 $role_id = $request->role_id;
+
+                RolePermission::where('role_id', $role_id)->delete();
+
                 foreach($request->permission_id as $permission_id){
                     $rolePermission = new RolePermission();
                     $rolePermission->role_id = $role_id;
                     $rolePermission->permission_id = $permission_id;
                     $done = $rolePermission->save();
                 }
+
+                if($done){
+                    \Session::flash('success',trans('message.success'));
+                    return redirect()->route('get.role.permission',$role_id);
+                }
             }
 
-            //$this->rolePermissionRepository->saveData($condition, $data);
-
-            \Session::flash('success',trans('message.success'));
-            return redirect()->route('role.permissions.index');
-        }catch (\Exception $e){
-            \Log::info($e->getMessage());
-            \Session::flash('error',$e->getMessage());
-            return redirect()->route('role.permissions.index');
-        }
     }
 
     /**

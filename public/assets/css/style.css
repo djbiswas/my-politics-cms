@@ -223,5 +223,17 @@
 
 /* login button color change  */
 .btn-primary {
-    background-color: #546CB6;
-  }
+    background-color: rgb(60,82,139);
+}
+
+.btn-primary:hover {
+    -webkit-box-shadow: 0px 0px 0px 2px
+    #002072
+    ;
+    -moz-box-shadow: inset 0px 0px 0px 2px
+    #002072
+    ;
+    box-shadow: inset 0px 0px 0px 2px
+    #002072
+    ;
+}

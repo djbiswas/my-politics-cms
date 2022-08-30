@@ -13,7 +13,10 @@
             <div class="form-group col-12">
                 {!! Form::label('role_id', 'Select Role',) !!}
                 @if (isset($role_id))
-                    {!! Form::select('role_id', $roles, $data? $role_id : null, ['class' => 'form-control select2on', 'placeholder' => '--Select--', 'requird', 'readonly', 'disabled']) !!}
+                    {!! Form::select('role_id', $roles, $data? $role_id : null, ['class' => 'form-control select2on', 'placeholder' => '--Select--', 'requird']) !!}
+
+                    {{-- {!! Form::text('role_id', $role_id, ['hidden']) !!} --}}
+
                 @else
                     {!! Form::select('role_id', $roles, $data? $role_id : null, ['class' => 'form-control select2on', 'placeholder' => '--Select--', 'requird']) !!}
                 @endif
@@ -59,7 +62,7 @@
             @endforeach
         </div>
 
-        <input type="submit" name='Save' class="btn btn-primary" />
+        <input type="submit" name='Save' class="btn btn-primary" value="submit"/>
     </form>
 </div>
 
