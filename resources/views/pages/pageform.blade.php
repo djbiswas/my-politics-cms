@@ -3,7 +3,7 @@
         <h4>{{$data?'Edit' : 'Add'}}  Page</h4>
     </x-slot>
     <div class="generic-form" style="text-align: left;">
-        <form class="needs-validation-1" id="validPageForm" method="post" action="{{route('post.page')}}" enctype="multipart/form-data" novalidate>
+        <form class="needs-validation-1" id="validPageForm" method="post" action="{{route('post.page')}}"   enctype="multipart/form-data" novalidate>
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
             <div class="row a-i-center">
@@ -15,6 +15,12 @@
                     <label for="page_url">Page URL</label>
                     <input type="text" required class="form-control" name='page_url' id="page_url" placeholder="Page URL" value="{{$data?$data->page_url : ''}}">
                 </div>
+
+                <div class="form-group-two col-6 mb-3">
+                    <label for="cover" class="form-label">Page Cover</label>
+                    <x-display-image :data="$data?$data : ''" :fileName="'cover'" ></x-display-image>
+                </div>
+
                 <div class=" col-12">
                     <div class="form-group">
                         <label for="inputtexteditor">Page Content</label>
@@ -22,6 +28,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class=" col-6">
                     <div class="display_status">Display Status</div>
@@ -33,7 +40,7 @@
                     </div>
                 </div>
             </div>
-            <input type="submit" name='Save' class="btn btn-primary" />
+            <input type="submit" name='Save' class="btn btn-primary" value="submit"/>
         </form>
     </div>
 

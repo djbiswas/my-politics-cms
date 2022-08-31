@@ -62,7 +62,7 @@ class PageController extends Controller
 
     /**
      * Method to get Page Data through id
-     * 
+     *
      * @param $id
      */
     public function getPage($id=null){
@@ -72,10 +72,10 @@ class PageController extends Controller
 
     /**
      * Method to post page data
-     * 
+     *
      */
     public function postPage(Request $request){
-        $data=$request->all();
+        $data = $request->all();
         try{
             $condition = ['id' => $data['id']];
             $this->pageRepository->saveData($condition, $data);
@@ -90,10 +90,10 @@ class PageController extends Controller
 
     /**
      * Method to check exist name
-     * 
+     *
      */
     public function checkName(Request $request){
-        $data=$request->all();
+        $data = $request->all();
         $id = $request->header('page-id');
         try{
             if(empty($id)){

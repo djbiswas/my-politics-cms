@@ -149,6 +149,8 @@
 
         </form>
 
+        @if(isset($user_warns))
+
         <div class="row mb-4">
             <div class="col-6">
                 <p class="text-divider"><span>Warn Log</span></p>
@@ -175,7 +177,7 @@
                 </div>
             </div>
         </div>
-
+        @endif
 
         <form class="needs-validation-1" action="{{route('post.ban')}}" method="post" id="userbanform" name="form_03" enctype="multipart/form-data" novalidate>
 
@@ -225,6 +227,7 @@
 
         </form>
 
+        @if(isset($user_bans))
         <div class="row mb-4">
             <div class="col-6">
                 <p class="text-divider"><span>User Ban Log</span></p>
@@ -251,7 +254,7 @@
                 </div>
             </div>
         </div>
-
+        @endif
 
         <form class="needs-validation-1" action="{{route('post.block')}}" method="post" id="validUserForm" name="form_01" enctype="multipart/form-data" novalidate>
 
@@ -289,6 +292,7 @@
 
         </form>
 
+        @if(isset($user_blocks))
         <div class="row mb-4">
             <div class="col-6">
                 <p class="text-divider"><span>User Block Log</span></p>
@@ -315,7 +319,7 @@
                 </div>
             </div>
         </div>
-
+        @endif
 
     </div>
     @push('scripts')

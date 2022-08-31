@@ -26,4 +26,3 @@
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Sign in" name='input_signin'>
     </form>
 @stop
-
