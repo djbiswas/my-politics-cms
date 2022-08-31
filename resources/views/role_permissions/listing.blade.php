@@ -23,7 +23,7 @@
                 serverSide: true,
                 ajax: "{{ route('role.permissions.index') }}",
                 columns: [
-                        {data: 'role.role', name: 'role.role'},
+                        {data: 'role', name: 'role'},
                         // {data: 'permission.name', name: 'permission.name'},
                         // {data: 'updated_at', name: 'updated_at'},
                         {data: 'action', name: 'action', orderable: false, searchable: false},

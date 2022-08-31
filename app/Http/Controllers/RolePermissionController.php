@@ -61,21 +61,14 @@ class RolePermissionController extends Controller
         try {
             if ($request->ajax()) {
                 // $data = RolePermission::with('permission')->with('role')->get();
-                $data = RolePermission::where('role_id', '>', '1')->select('id','role_id')->groupBy('role_id')->with('role')->get();
+                $data = Role::where('id','>','1')->get();
+                //  $data = RolePermission::where('role_id', '>', '1')->select('id','role_id')->groupBy('role_id')->with('role')->get();
                 return Datatables::of($data)
                         ->addIndexColumn()
-                        // ->editColumn('content',function($row){
-                        //     return $this->commonService->limit_text($row->content,10);
-                        // })
-                        ->editColumn('updated_at',function($row){
-                            if(empty($row->updated_at)){
-                                return '';
-                            }
-                            return date('Y-m-d H:i',strtotime($row->updated_at));
-                        })
+
                         ->addColumn('action', function($row){
-                            $btn = '<a href="'.route('get.role.permission',$row->role_id).'">Permissions </a> |';
-                            $btn .= '<form method="POST" action="'.route('role.permission.delete', $row->role_id).'" style="float:right;">
+                            $btn = '<a href="'.route('get.role.permission',$row->id).'">Permissions </a> |';
+                            $btn .= '<form method="POST" action="'.route('role.permission.delete', $row->id).'" style="float:right;">
                                         <input type="hidden" name="_token" value="'.csrf_token().'">
                                         <input name="_method" type="hidden" value="DELETE">
                                         <a href="javascript:void(0)" class="btn-delete" onclick="return DeleteFunction($(this))"> Delete</a>
@@ -107,7 +100,7 @@ class RolePermissionController extends Controller
         if($id){
             $role = Role::where('id', $id)->first();
             $role_id = $role->id;
-            $role_name = $role->name;
+            $role_name = $role->role;
             $data = RolePermission::where('role_id', $id)->with('permission')->get();
 
             $permission_ids = [];

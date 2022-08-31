@@ -2,20 +2,23 @@
     <?php
         $edit_data = $sub_action = $sub_btn_text = "";
     ?>
-    <h4>Assign role permissions</h4>
+
+    <h4>Assign role permissions @if (isset($role_id)) to {{$role_name}} @endif</h4>
 
         {!! Form::open(['route' => 'post.role.permission', 'class' =>'needs-validation-1', 'id' => 'validRankForm','enctype' =>'multipart/form-data', 'novalidate'])  !!}
 
+        @if (isset($role_id))
+            <input type="hidden" name="role_id" value="{{$role_id?$role_id : ''}}">
+        @endif
 
-        {{-- <input type="hidden" name="id" value="{{$data?$data->id : ''}}"> --}}
 
-        <div class="row">
+        {{-- <div class="row">
             <div class="form-group col-12">
                 {!! Form::label('role_id', 'Select Role',) !!}
                 @if (isset($role_id))
                     {!! Form::select('role_id', $roles, $data? $role_id : null, ['class' => 'form-control select2on', 'placeholder' => '--Select--', 'requird']) !!}
 
-                    {{-- {!! Form::text('role_id', $role_id, ['hidden']) !!} --}}
+                    {!! Form::text('role_id', $role_id, ['hidden']) !!}
 
                 @else
                     {!! Form::select('role_id', $roles, $data? $role_id : null, ['class' => 'form-control select2on', 'placeholder' => '--Select--', 'requird']) !!}
@@ -23,7 +26,7 @@
             </div>
         </div>
 
-        <span>Select Permissions For the Selected Role</span>
+        <span>Select Permissions For the Selected Role</span> --}}
 
         <hr>
 
@@ -62,7 +65,12 @@
             @endforeach
         </div>
 
-        <input type="submit" name='Save' class="btn btn-primary" value="submit"/>
+        @if (isset($role_id))
+            <input type="submit" name='Save' class="btn btn-primary" value="submit"  />
+        @else
+            <input type="submit" name='Save' class="btn btn-primary" value="submit" disabled />
+        @endif
+
     </form>
 </div>
 
