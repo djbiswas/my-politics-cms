@@ -1,11 +1,10 @@
 <?php
 
+use App\Models\Politician;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\User;
-use App\Models\Post;
-use App\Models\Politician;
 
 return new class extends Migration
 {
@@ -16,16 +15,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('post_flags', function (Blueprint $table) {
+        Schema::create('politician_voting_alerts', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignIdFor(Post::class)->constant('posts')->onDelete('SET NULL');
             $table->foreignIdFor(Politician::class)->constant('politicians')->onDelete('SET NULL');
-            $table->foreignIdFor(User::class)->constant('users')->onDelete('SET NULL');
-            $table->tinyInteger('status')->default(1)->comment('0 => InActive, 1 => Active')->nullable();
-
+            $table->foreignIdFor(User::class)->nullable()->constant('users')->onDelete('CASCADE');
+            $table->date('date')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -36,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('post_flags');
+        Schema::dropIfExists('politician_voting_alerts');
     }
 };

@@ -44,7 +44,7 @@
                                 }
                             }
                         },
-                        {data: 'politician.name', name: 'politician.name'},
+                        {data: 'politician.name', defaultContent: 'Not Set Yet'},
                         {data: 'issue_category.title', name: 'issue_category.title'},
                         {data: 'updated_at', name: 'updated_at'},
                         {data: 'action', name: 'action', orderable: false, searchable: false},

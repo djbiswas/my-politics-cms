@@ -46,8 +46,7 @@ class IssueController extends Controller
 
     public function index(Request $request)
     {
-         $issues =  Issue::with('politician')->with('user')->with('issue_category')->get();
-
+        $issues =  Issue::with('politician')->with('user')->with('issue_category')->get();
         try {
             if ($request->ajax()) {
                 // $data = Issue::select('id', 'name', 'name_alias', 'position', 'politician_description', 'updated_at');
