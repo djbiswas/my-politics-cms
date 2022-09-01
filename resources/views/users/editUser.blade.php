@@ -261,7 +261,7 @@
                             @foreach ($user_bans as $user_ban)
                             <tr>
                                 <th scope="row">{{ $i }}</th>
-                                <td>{{ $user_ban->ban_till }}</td>
+                                <td>{{ $user_ban->ban_till}} - {{$user_ban->ban_till }}</td>
                                 <td>{!! $user_ban->ban_reason !!}</td>
                             </tr>
                             @endforeach
@@ -478,6 +478,7 @@
                     $( "#userbanform" ).submit();
                 }
             });
+
 
             $('#block_reason_error').hide();
             $("#user_block").change(function(){
