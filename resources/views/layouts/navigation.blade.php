@@ -20,7 +20,7 @@
                     <p>Dashboard</p>
                 </x-nav-link>
             </x-nav-li>
-            <x-nav-li :active="request()->routeIs('politicians.index', 'categories.index', 'get.category', 'add.politician', 'get.politician')" class="v-dropdown">
+            <x-nav-li :active="request()->routeIs('politicians.index', 'categories.index', 'get.category', 'add.politician', 'get.politician','politician.voting.alerts')" class="v-dropdown">
                 <x-nav-link :href="route('politicians.index')">
                     <i class="nc-icon nc-umbrella-13"></i>
                     <p>Politicians</p>
@@ -35,6 +35,9 @@
                     </x-nav-link>
                     <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.index', 'category.rank')" >
                         Categories
+                    </x-nav-link>
+                    <x-nav-link :href="route('politician.voting.alerts')" :active="request()->routeIs('politician.voting.alerts')" >
+                        Politician Voting
                     </x-nav-link>
                 </div>
             </x-nav-li>

@@ -13,11 +13,13 @@ use App\Http\Controllers\IssueCategoryController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\PermissionCategoryController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\PoliticianVotingAlertController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostFlagController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserWarnController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +46,12 @@ Route::middleware('auth')->group(function () {
     Route::post('post-politician', [PoliticianController::class, 'postPolitician'])->name('post.politician');
     Route::delete('politicians/{id}', [PoliticianController::class, 'delete'])->name('politicians.delete');
 
+
+    // Route for voting Alert
+    Route::get('politician-voting-alerts', [PoliticianVotingAlertController::class, 'index'])->name('politician.voting.alerts');
+    Route::get('politician-voting-alert/{id}', [PoliticianVotingAlertController::class, 'getPVA'])->name('get.pva');
+
+
     //Route for user
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('get-user/{id}', [UserController::class, 'getUser'])->name('get.user');
@@ -57,6 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::get('admin-users', [UserController::class, 'admin_users'])->name('admin.users');
     Route::get('get-admin/{id}', [UserController::class, 'getAdmin'])->name('get.admin');
     Route::get('add-admin', [UserController::class, 'getAdmin'])->name('add.admin');
+
     Route::post('post-admin', [UserController::class, 'postAdmin'])->name('post.admin');
 
     // Route Warn for user

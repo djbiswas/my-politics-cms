@@ -14,6 +14,7 @@ use App\Models\UserBan;
 use App\Models\UserBlock;
 use App\Models\UserWarn;
 use Illuminate\Support\Facades\Hash;
+Use App\Services\CommonService;
 
 class UserController extends Controller
 {
@@ -28,9 +29,15 @@ class UserController extends Controller
     private $rankRepository;
     //
 
-    public function __construct(UserRepository $userRepository, RankRepository $rankRepository) {
+    /**
+     * @var commonService
+     */
+    private $commonService;
+
+    public function __construct(UserRepository $userRepository, RankRepository $rankRepository, CommonService $commonService) {
         $this->userRepository = $userRepository;
         $this->rankRepository = $rankRepository;
+        $this->commonService = $commonService;
     }
 
     /**
@@ -136,13 +143,13 @@ class UserController extends Controller
         $roles = Role::pluck('role','id');
         if($id){
             $user_warns = UserWarn::where('user_id',$id)->get();
-             $user_bans = UserBan::where('user_id',$id)->get();
+            $user_bans = UserBan::where('user_id',$id)->get();
             $user_blocks = UserBlock::where('user_id',$id)->get();
             $data=User::find($id);
             $metaData = $data->getMeta()->toArray();
-            return view('users.userform',['data'=>$data, 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>$metaData,'user_warns'=>$user_warns, 'user_bans'=>$user_bans, 'user_blocks'=>$user_blocks ]);
+            return view('users.editUser',['data'=>$data, 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>$metaData,'user_warns'=>$user_warns, 'user_bans'=>$user_bans, 'user_blocks'=>$user_blocks ]);
         }
-        return view('users.userform',['data'=>[], 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>[]]);
+        return view('users.adduser',['data'=>[], 'ranks'=>$ranks, 'roles'=>$roles,'metaData'=>[]]);
     }
 
     public function getAdmin($id=null){
@@ -164,6 +171,10 @@ class UserController extends Controller
     public function postUser(Request $request){
         $data=$request->all();
         try{
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->commonService->storeImage($request->file('image'), config('constants.image.user'));
+            }
+
             $condition = ['id' => $data['id']];
             $metaData = ($data['meta'])? $data['meta'] : [];
             // $data['role_id'] = config('constants.role.user');
@@ -207,20 +218,27 @@ class UserController extends Controller
      *
      */
     public function postBan(Request $request){
-        // return $request->all();
+        $request->all();
+
+        $ban_date_range = $request->ban_till;
+        $ban_date_range = str_replace(' ', '', $ban_date_range);
+        $ban_date_range = explode ("-", $ban_date_range);
+
+        $ban_from = $ban_date_range[0];
+        $ban_till = $ban_date_range[1];
 
         if($request->user_ban){
             $user_id = $request->id;
             $user = User::find($user_id);
             $user->user_ban = 1;
-            $user->ban_till = $request->ban_till;
+            $user->ban_till = $ban_till;
             $user->ban_reason = $request->ban_reason;
             $user->save();
 
             $user_ban = New UserBan();
             $user_ban->user_id = $user_id;
             $user_ban->ban_reason = $request->ban_reason;
-            $user_ban->ban_till = $request->ban_till;
+            $user_ban->ban_till = $ban_till;
             $user_ban->save();
         }else{
             $user_id = $request->id;
@@ -273,25 +291,11 @@ class UserController extends Controller
 
     public function postAdmin(Request $request){
          $data=$request->all();
-
-        // $validateData = $request->validate([
-        //     'id' => 'sometimes',
-        //     'email' => 'required',
-        //     'phone' => 'required',
-        //     'meta' => 'required',
-        //     'first_name' => 'required',
-        //     'last_name' => 'required',
-        //     'password' => 'sometimes',
-        //     're_password' => 'sometimes',
-        //     'role_id' => 'required',
-        //     'status' => 'required',
-        // ]);
-
-        //   if($request->filled('password')){
-        //     return  $request->password;
-        //   }
-
         try{
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->commonService->storeImage($request->file('image'), config('constants.image.user'));
+            }
+
             $condition = ['id' => $data['id']];
             $metaData = ($data['meta'])? $data['meta'] : [];
             // $data['role_id'] = config('constants.role.user');

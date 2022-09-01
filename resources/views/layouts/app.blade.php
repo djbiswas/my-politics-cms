@@ -17,6 +17,7 @@
         <link href="{{ asset('assets/css/quill.bubble.css') }}" rel="stylesheet">
         <link href="{{ asset('assets/css/quill.snow.css') }}" rel="stylesheet">
         <link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
         <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
         @stack('css')
         <style>
@@ -110,6 +111,10 @@
                 }
             });
         </script>
-                <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
     </body>
 </html>

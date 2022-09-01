@@ -65,6 +65,13 @@
                 </div>
             </div>
 
+            <div class="row mb-4">
+                <div class="form-group-two col-6">
+                    <label for="formFile" class="form-label">User Image</label>
+                    <x-display-image :data="$data?$data : ''" :required="'true'"></x-display-image>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="form-group col-6">
                         <div class="display_status">Status</div>
@@ -97,6 +104,21 @@
                         && /[ `!@#$%^&*()_+\-=\\[\]{};':"\\|,.<>\\/?~]/.test(value) // has a special
                         && /\d/.test(value) // has a digit
                 });
+
+                $.validator.addMethod("ziprange", function(value, element) {
+                    return this.optional(element) || /^90[2-5]\d\{2\}-\d{4}$/.test(value);
+                }, "Your ZIP-code must be in the range 902xx-xxxx to 905-xx-xxxx");
+                // }, "Your ZIP-code must be in the range 902xx-xxxx to 905-xx-xxxx");
+
+
+                $.validator.addMethod("zipcodeUS", function(value, element) {
+                    return this.optional(element) || /\d{5}-\d{4}$|^\d{5}$/.test(value);
+                }, "The specified US ZIP Code is invalid");
+
+                $.validator.addMethod("notEqualTo", function(value, element, param) {
+                    return this.optional(element) || value != param;
+                }, "The specified US ZIP Code is invalid");
+
                 $("#validUserForm").validate({
                     ignore:":not(:visible)",
                     highlight: function(element) {
@@ -119,6 +141,11 @@
                             required:true,
                             equalTo : "#password"
 
+                        },
+                        "meta[zipcode]":{
+                            required: true,
+                            zipcodeUS: true,
+                            notEqualTo: "00000"
                         },
                         email:{
                             required:"#phone:blank",

@@ -6,25 +6,29 @@
         <form class="needs-validation-1" action="{{route('post.user')}}" method="post" id="validUserForm" name="form_01" enctype="multipart/form-data" novalidate>
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
+
             <div class="row a-i-center">
                 <div class="form-group col-3">
                     <label for="email">Email</label>
                     <input type="email"  class="form-control" name='email' id="email" placeholder="Email" value="{{ (!empty($data)) ? $data->email : '' }}">
                 </div>
+
                 <div class="form-group col-3 user-phone">
                     <label for="phone">Phone</label>
                     <input type="text" <?php echo isset($_GET['id'])?'readonly':'required'; ?> class="form-control" name='phone' id="phone" placeholder="Phone" value="{{ (!empty($data)) ? $data->phone : '' }}">
                 </div>
             </div>
+
             <div class="row a-i-end">
                 <div class="form-group col-3">
                     <label for="penName">Pen Name</label>
-                    <input type="text" required class="form-control" name='meta[p_first_name]' id="p_firstName" placeholder="First Name" value="{{ (!empty($metaData['p_first_name'])) ? $metaData['p_first_name'] : '' }}">
+                    <input type="text" class="form-control" name='meta[p_first_name]' id="p_firstName" placeholder="First Name" value="{{ (!empty($metaData['p_first_name'])) ? $metaData['p_first_name'] : '' }}">
                 </div>
                 <div class="form-group col-3">
-                    <input type="text" required class="form-control" name='meta[p_last_name]' id="p_lastName" placeholder="Last Name" value="{{ (!empty($metaData['p_last_name'])) ? $metaData['p_last_name'] : '' }}">
+                    <input type="text" class="form-control" name='meta[p_last_name]' id="p_lastName" placeholder="Last Name" value="{{ (!empty($metaData['p_last_name'])) ? $metaData['p_last_name'] : '' }}">
                 </div>
             </div>
+
             <div class="row a-i-end">
                 <div class="form-group col-3">
                     <label for="userName">User Name</label>
@@ -33,9 +37,10 @@
                 <div class="form-group col-3">
                     <input type="text" required class="form-control" name='last_name' id="lastName" placeholder="Last Name" value="{{ (!empty($data)) ? $data->last_name : '' }}">
                 </div>
-
             </div>
+
             {{-- <div class="row {{ (!empty($data)) ? 'hide' : '' }} "> --}}
+
             <div class="row ">
                 <div class="form-group col-3">
                     <label for="password">Password </label>
@@ -54,12 +59,14 @@
                     <input type="text" required class="form-control" name='meta[address]' id="address" placeholder="Address" value="{{ (!empty($metaData['address'])) ? $metaData['address'] : '' }}">
                 </div>
             </div>
+
             <div class="row">
                 <div class="form-group col-6">
                     <label for="zipcode">Zipcode</label>
                     <input type="text" required class="form-control" name='meta[zipcode]' id="zipcode" placeholder="Zipcode" value="{{ (!empty($metaData['zipcode'])) ? $metaData['zipcode'] : '' }}">
                 </div>
             </div>
+
             <div class="row">
                 <div class="form-group col-3">
                     <label for="zipcode">Rank</label>
@@ -79,6 +86,12 @@
                 <div class="form-group col-3">
                     {!! Form::label('role_id', 'Select User Role',) !!}
                     {!! Form::select('role_id', $roles, $data? $data->role_id : null, ['class' => 'form-control', 'placeholder' => '--Select--', 'requird']) !!}
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="form-group-two col-6">
+                    <label for="formFile" class="form-label">User Image</label>
+                    <x-display-image :data="$data?$data : ''" :required="'true'"></x-display-image>
                 </div>
             </div>
 
@@ -103,10 +116,11 @@
             </div>
 
             <?php
-            if (isset($_GET['id'])) {
-                echo '<input type="hidden" name="id" value="' . $_GET['id'] . '" />';
-            }
+                if (isset($_GET['id'])) {
+                    echo '<input type="hidden" name="id" value="' . $_GET['id'] . '" />';
+                }
             ?>
+
             <div class="row">
                 <div class="col-6">
                     <input type="submit" name='Save' class="btn btn-primary float-right"  value="Save">
@@ -115,215 +129,9 @@
 
         </form>
 
-        <div class="row">
-            <div class="col-6">
-                <hr>
-            </div>
-        </div>
-
-
-        <form class="needs-validation-2" action="{{route('post.warn')}}" method="post" id="validUserForm" name="form_02" novalidate>
-
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-            <div class="row">
-                <div class="col-6">
-                    <h6 class="text-divider"><span>WARN USER</span></h6>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group quill-field-block col-6">
-                    <label for="inputDescription">Warn Message</label>
-                    <textarea class="ckeditor" id="inputDescription" name='warn_message' placeholder="Enter description"></textarea>
-                </div>
-            </div>
-
-            <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
-
-            <div class="row">
-                <div class="col-6">
-                    <input type="submit" name='Send' class="btn btn-warning float-right"  value="Send">
-                </div>
-            </div>
-
-        </form>
-
-        @if(isset($user_warns))
-
-        <div class="row mb-4">
-            <div class="col-6">
-                <p class="text-divider"><span>Warn Log</span></p>
-                <div class="card">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Warn Message</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php($i = 1)
-                            @foreach ($user_warns as $user_warn)
-                            <tr>
-                                <th scope="row">{{ $i }}</th>
-                                <td>{{ date_format($user_warn->created_at,"Y/m/d") }}</td>
-                                <td>{!! $user_warn->warn_message !!}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        @endif
-
-        <form class="needs-validation-1" action="{{route('post.ban')}}" method="post" id="userbanform" name="form_03" enctype="multipart/form-data" novalidate>
-
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-            {{-- User Ban --}}
-
-            <div class="row">
-                <div class="col-6">
-                    <h6 class="text-divider"><span>BAN user account</span></h6>
-                </div>
-            </div>
-
-
-            <div class="row">
-                <div class="form-group col-6">
-                    <label for="ban_till">Ban Duration</label>
-                    <input type="date" required class="form-control" name='ban_till' id="ban_till" placeholder="Ban Duration" value="{{ (!empty($data)) ? $data->ban_till : '' }}">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group col-6">
-                    <label for="ban_reason">Ban Reason</label>
-                    <input type="text" required class="form-control" name='ban_reason' id="ban_reason" placeholder="Ban Reason" value="{{ (!empty($data)) ? $data->ban_reason : '' }}">
-                </div>
-            </div>
-
-
-            <div class="row">
-                <div class="form-group col-6">
-
-                    {{-- <div class="display_status">Ban Status</div> --}}
-                    <div class="form-group">
-                        <input type="checkbox" {{((!empty($data) && $data->user_ban == 1)) ? 'checked' : ''}} data-toggle="toggle" name="user_ban" value="1" data-on="Activate" data-off="Deactivate" data-onstyle="primary">
-                    </div>
-                </div>
-            </div>
-
-            <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
-
-            <div class="row">
-                <div class="col-6">
-                    <input type="submit" name='Send' class="btn btn-primary float-right"  value="Save">
-                </div>
-            </div>
-
-        </form>
-
-        @if(isset($user_bans))
-        <div class="row mb-4">
-            <div class="col-6">
-                <p class="text-divider"><span>User Ban Log</span></p>
-                <div class="card">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Ban Duration</th>
-                                <th scope="col">Ban Reason</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php($i = 1)
-                            @foreach ($user_bans as $user_ban)
-                            <tr>
-                                <th scope="row">{{ $i }}</th>
-                                <td>{{ $user_ban->ban_till }}</td>
-                                <td>{!! $user_ban->ban_reason !!}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        @endif
-
-        <form class="needs-validation-1" action="{{route('post.block')}}" method="post" id="validUserForm" name="form_01" enctype="multipart/form-data" novalidate>
-
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-            {{-- User Block --}}
-
-            <div class="row">
-                <div class="col-6">
-                    <h6 class="text-divider"><span>Block user account</span></h6>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group col-6">
-                    <label for="block_reason">Block Reason</label>
-                    <input type="text" required class="form-control" name='block_reason' id="block_reason" placeholder="Block Reason" value="{{ (!empty($data)) ? $data->block_reason : '' }}">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-6">
-                    <div class="form-group">
-                        <input type="checkbox" {{((!empty($data) && $data->user_block == 1)) ? 'checked' : ''}} data-toggle="toggle" name="user_block" value="1" data-on="Activate" data-off="Deactivate" data-onstyle="primary">
-                    </div>
-                </div>
-            </div>
-
-            <input type="hidden" name="id" value="{{$data?$data->id : ''}}">
-
-            <div class="row">
-                <div class="col-6">
-                    <input type="submit" name='Send' class="btn btn-primary float-right"  value="Save">
-                </div>
-            </div>
-
-        </form>
-
-        @if(isset($user_blocks))
-        <div class="row mb-4">
-            <div class="col-6">
-                <p class="text-divider"><span>User Block Log</span></p>
-                <div class="card">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Block Reason</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php($i = 1)
-                            @foreach ($user_blocks as $user_block)
-                            <tr>
-                                <th scope="row">{{ $i }}</th>
-                                <td>{{ date_format($user_block->created_at,"Y/m/d") }}</td>
-                                <td>{!! $user_block->block_reason !!}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        @endif
-
     </div>
     @push('scripts')
-
+    {{-- <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/additional-methods.js"></script> --}}
         <script>
             $('document').ready(function(){
                 $.validator.addMethod("pwcheck", function(value) {
@@ -333,6 +141,22 @@
                         && /[ `!@#$%^&*()_+\-=\\[\]{};':"\\|,.<>\\/?~]/.test(value) // has a special
                         && /\d/.test(value) // has a digit
                 });
+
+                $.validator.addMethod("ziprange", function(value, element) {
+                    return this.optional(element) || /^90[2-5]\d\{2\}-\d{4}$/.test(value);
+                }, "Your ZIP-code must be in the range 902xx-xxxx to 905-xx-xxxx");
+                // }, "Your ZIP-code must be in the range 902xx-xxxx to 905-xx-xxxx");
+
+
+                $.validator.addMethod("zipcodeUS", function(value, element) {
+                    return this.optional(element) || /\d{5}-\d{4}$|^\d{5}$/.test(value);
+                }, "The specified US ZIP Code is invalid");
+
+                $.validator.addMethod("notEqualTo", function(value, element, param) {
+                    return this.optional(element) || value != param;
+                }, "The specified US ZIP Code is invalid");
+
+
                 $("#validUserForm").validate({
                     ignore:":not(:visible)",
                     highlight: function(element) {
@@ -355,6 +179,11 @@
                             required:true,
                             equalTo : "#password"
 
+                        },
+                        "meta[zipcode]":{
+                            required: true,
+                            zipcodeUS: true,
+                            notEqualTo: "00000"
                         },
                         email:{
                             required:"#phone:blank",
@@ -406,8 +235,18 @@
         </script>
 
         <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
-        <script>
+
+        {{-- <script>
             $('.ckeditor').ckeditor();
-        </script>
+        </script> --}}
+        <script>
+            $(function() {
+              $('input[name="ban_till"]').daterangepicker({
+                opens: 'left'
+              }, function(start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+              });
+            });
+            </script>
     @endpush
 </x-app-layout>
