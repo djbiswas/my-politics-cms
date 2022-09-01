@@ -238,7 +238,7 @@ class UserController extends Controller
             $user_ban = New UserBan();
             $user_ban->user_id = $user_id;
             $user_ban->ban_reason = $request->ban_reason;
-            $user->ban_from = $ban_from;
+            $user_ban->ban_from = $ban_from;
             $user_ban->ban_till = $ban_till;
             $user_ban->save();
         }else{
