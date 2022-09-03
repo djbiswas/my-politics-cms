@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePoliticianVotingAlertRequest;
 use App\Http\Requests\UpdatePoliticianVotingAlertRequest;
+use App\Models\Politician;
 use App\Models\PoliticianVotingAlert;
 use Yajra\DataTables\DataTables;
 Use App\Services\CommonService;
@@ -19,12 +20,15 @@ class PoliticianVotingAlertController extends Controller
     public function index(Request $request)
     {
 
-        $data = PoliticianVotingAlert::with('politician')->with('user')->get();
+        // $data = PoliticianVotingAlert::with('politician')->with('user')->get();
+        // return $data = Politician::with('politicianVotingAlert')->get();
 
         try {
             if ($request->ajax()) {
 
-                $data = PoliticianVotingAlert::with('politician')->with('user')->get();
+                // $data = PoliticianVotingAlert::with('politician')->with('user')->get();
+                $data = Politician::with('politicianVotingAlert')->get();
+
 
                 return Datatables::of($data)
                         ->addIndexColumn()
@@ -37,12 +41,12 @@ class PoliticianVotingAlertController extends Controller
                         // })
 
                         ->addColumn('action', function($row){
-                            $btn = '<a href="'.route('get.pva',$row->id).'">Edit </a> |';
-                            $btn .= '<form method="POST" action="'.route('post.delete', $row->id).'" style="float:right;">
-                                        <input type="hidden" name="_token" value="'.csrf_token().'">
-                                        <input name="_method" type="hidden" value="DELETE">
-                                        <a href="javascript:void(0)" class="btn-delete" onclick="return DeleteFunction($(this))"> Delete</a>
-                                    </form>';
+                            $btn = '<a href="'.route('get.pva',$row->id).'">Set Vote Date</a>';
+                            // $btn .= '<form method="POST" action="'.route('post.delete', $row->id).'" style="float:right;">
+                            //             <input type="hidden" name="_token" value="'.csrf_token().'">
+                            //             <input name="_method" type="hidden" value="DELETE">
+                            //             <a href="javascript:void(0)" class="btn-delete" onclick="return DeleteFunction($(this))"> Delete</a>
+                            //         </form>';
                                 return $btn;
                         })
                         ->rawColumns(['action'])
@@ -56,18 +60,34 @@ class PoliticianVotingAlertController extends Controller
         }
     }
 
-
-
-
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\PoliticianVotingAlert  $politicianVotingAlert
-     * @return \Illuminate\Http\Response
      */
-    public function getPVA(PoliticianVotingAlert $politicianVotingAlert)
+    public function getPVA($id)
     {
-        // need to work for edit and other
+        $politician = Politician::find($id);
+        return view('politician_voating_alerts.pvform',compact('id','politician'));
+    }
+
+    /**
+     * Store Vote date
+     **/
+    public function postPVA(Request $request){
+
+        // return $request->all();
+
+        $pva = new PoliticianVotingAlert();
+        $pva->politician_id = $request->id;
+        $pva->user_id = $request->user_id;
+        $pva->date = $request->date;
+        $done = $pva->save();
+
+        if($done){
+            \Session::flash('success',trans('message.success'));
+            return redirect()->route('politician.voting.alerts');
+        }
+
+
     }
 
 

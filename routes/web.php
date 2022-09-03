@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
     // Route for voting Alert
     Route::get('politician-voting-alerts', [PoliticianVotingAlertController::class, 'index'])->name('politician.voting.alerts');
     Route::get('politician-voting-alert/{id}', [PoliticianVotingAlertController::class, 'getPVA'])->name('get.pva');
-
+    Route::post('post-pva', [PoliticianVotingAlertController::class, 'postPVA'])->name('post.pva');
 
     //Route for user
     Route::get('users', [UserController::class, 'index'])->name('users.index');
@@ -73,7 +73,6 @@ Route::middleware('auth')->group(function () {
     Route::post('post-warn', [UserController::class, 'postWarn'])->name('post.warn');
     Route::post('post-ban', [UserController::class, 'postBan'])->name('post.ban');
     Route::post('post-block', [UserController::class, 'postBlock'])->name('post.block');
-
 
 
     //Route for rank

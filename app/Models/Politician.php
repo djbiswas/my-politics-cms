@@ -31,6 +31,11 @@ class Politician extends Model
         return $this->hasMany(Post::class);
     }
 
+    public function politicianVotingAlert()
+    {
+        return $this->hasMany(PoliticianVotingAlert::class)->orderBy('id','DESC');
+    }
+
     public function votes()
     {
         return $this->hasMany(PoliticanVote::class);
